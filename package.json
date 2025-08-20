@@ -1,0 +1,47 @@
+{
+  "name": "amy",
+  "version": "1.0.0",
+  "description": "Custom Recruitment & Candidate Management Platform - Monorepo",
+  "private": true,
+  "scripts": {
+    "dev:api": "pnpm -C apps/api dev",
+    "dev:web": "pnpm -C apps/web dev",
+    "dev:app": "pnpm -C apps/app dev",
+    "dev:admin": "pnpm -C apps/admin dev",
+    "dev": "concurrently -k -n API,WEB,APP,ADMIN \"pnpm dev:api\" \"pnpm dev:web\" \"pnpm dev:app\" \"pnpm dev:admin\"",
+    "build": "turbo run build",
+    "start": "concurrently -k -n API,APP,ADMIN \"pnpm -C apps/api start\" \"pnpm -C apps/app start\" \"pnpm -C apps/admin start\"",
+    "db:generate": "pnpm -C packages/db prisma generate",
+    "db:migrate": "pnpm -C packages/db prisma migrate deploy",
+    "db:seed": "pnpm -C packages/db tsx seed.ts",
+    "db:studio": "pnpm -C packages/db prisma studio",
+    "test": "turbo run test",
+    "test:e2e": "turbo run test:e2e",
+    "lint": "turbo run lint",
+    "type-check": "turbo run type-check",
+    "docker:dev": "docker-compose -f docker/docker-compose.dev.yml up -d",
+    "docker:down": "docker-compose -f docker/docker-compose.dev.yml down"
+  },
+  "devDependencies": {
+    "@tanstack/react-query-devtools": "^5.85.3",
+    "concurrently": "^9.0.0",
+    "tsx": "^4.7.0",
+    "turbo": "^2.0.0"
+  },
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "engines": {
+    "node": ">=18.0.0",
+    "pnpm": ">=8.0.0"
+  },
+  "packageManager": "pnpm@10.14.0+sha512.ad27a79641b49c3e481a16a805baa71817a04bbe06a38d17e60e2eaee83f6a146c6a688125f5792e48dd5ba30e7da52a5cda4c3992b9ccf333f9ce223af84748",
+  "dependencies": {
+    "@hookform/resolvers": "^5.2.1",
+    "axios": "^1.11.0",
+    "react-hook-form": "^7.62.0",
+    "sonner": "^2.0.7",
+    "zod": "^3.25.76"
+  }
+}
