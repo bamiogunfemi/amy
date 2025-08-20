@@ -1,0 +1,30 @@
+{
+  "name": "@amy/auth",
+  "version": "1.0.0",
+  "description": "Authentication utilities for Amy",
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "type-check": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@amy/db": "workspace:*",
+    "@amy/config": "workspace:*",
+    "bcryptjs": "^2.4.3",
+    "jsonwebtoken": "^9.0.2",
+    "nodemailer": "^6.9.7",
+    "crypto": "^1.0.1"
+  },
+  "devDependencies": {
+    "@types/bcryptjs": "^2.4.6",
+    "@types/jsonwebtoken": "^9.0.5",
+    "@types/nodemailer": "^6.4.14",
+    "typescript": "^5.3.3"
+  },
+  "peerDependencies": {
+    "express": "^4.21.2"
+  }
+}
