@@ -26,6 +26,7 @@ import { ProtectedRoute } from './auth/ProtectedRoute'
 import { toast } from 'sonner'
 import { Badge } from './ui/badge'
 import { useLogout, useBlockUser, useUnblockUser, useDeleteUser, useAdminOverview, useAdminUsers, useAdminAuditLogs } from '@amy/ui'
+import type { AuditLog } from '@amy/ui'
 
 function AdminDashboardContent() {
   const [activeTab, setActiveTab] = useState('overview')
@@ -226,7 +227,7 @@ function AdminDashboardContent() {
                   <div className="h-3 w-16 bg-muted rounded animate-pulse" />
                 </div>
               ))
-              : auditLogs.slice(0, 5).map((log: any) => (
+              : auditLogs.slice(0, 5).map((log: AuditLog) => (
                 <div key={log.id} className="flex items-center justify-between text-sm">
                   <div>
                     <p className="font-medium">{log.action.replace('_', ' ')}</p>

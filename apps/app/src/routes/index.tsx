@@ -6,13 +6,10 @@ import {
   BarChart3,
   Shield,
   Zap,
-  CheckCircle,
   ArrowRight,
   Star,
   Building2,
-  Globe,
-  Mail,
-  Phone
+  Globe
 } from 'lucide-react'
 
 export function LandingPage() {

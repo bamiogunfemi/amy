@@ -15,7 +15,7 @@ import {
   Edit,
   MoreHorizontal,
 } from 'lucide-react'
-import { useLogout, useRecruiterMetrics, useCandidates, usePipelineStages, useApplications } from '@amy/ui'
+import { useLogout, useRecruiterMetrics, useCandidates, usePipelineStages } from '@amy/ui'
 
 export function RecruiterDashboard() {
   const [activeTab, setActiveTab] = useState('overview')
@@ -26,7 +26,7 @@ export function RecruiterDashboard() {
   const metricsQuery = useRecruiterMetrics()
   const candidatesQuery = useCandidates()
   const pipelineQuery = usePipelineStages()
-  const applicationsQuery = useApplications()
+
 
   const metrics = metricsQuery.data
   const candidates = candidatesQuery.data ?? []
@@ -264,13 +264,13 @@ export function RecruiterDashboard() {
                       <div className="flex items-center space-x-4 text-sm text-muted-foreground">
                         {candidate.email && (
                           <div className="flex items-center space-x-1">
-                            <Mail className="h-3 w-3" />
+                            <span className="text-xs">📧</span>
                             <span>{candidate.email}</span>
                           </div>
                         )}
                         {candidate.phone && (
                           <div className="flex items-center space-x-1">
-                            <Phone className="h-3 w-3" />
+                            <span className="text-xs">📞</span>
                             <span>{candidate.phone}</span>
                           </div>
                         )}
@@ -463,8 +463,8 @@ export function RecruiterDashboard() {
                   key={item.id}
                   onClick={() => setActiveTab(item.id)}
                   className={`w-full flex items-center space-x-3 px-4 py-3 rounded-xl text-left transition-all duration-200 ${activeTab === item.id
-                      ? 'bg-gradient-to-r from-rose-500 to-rose-600 text-white shadow-lg'
-                      : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
+                    ? 'bg-gradient-to-r from-rose-500 to-rose-600 text-white shadow-lg'
+                    : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
                     }`}
                 >
                   <Icon className="h-5 w-5" />

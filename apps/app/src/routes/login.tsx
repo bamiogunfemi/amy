@@ -1,9 +1,9 @@
 import { useState } from 'react'
 import { Link, useNavigate } from '@tanstack/react-router'
 import { Button, Input, Card, CardContent, CardHeader, CardTitle } from '@amy/ui'
-import { useLoginForm } from '@amy/ui'
-import { toast } from 'sonner'
+import { useLoginForm, useLogin } from '@amy/ui'
 import { Eye, EyeOff } from 'lucide-react'
+import type { LoginFormData } from '@amy/ui'
 
 export function LoginPage() {
   const [showPassword, setShowPassword] = useState(false)
@@ -15,14 +15,14 @@ export function LoginPage() {
     formState: { errors, isSubmitting },
   } = useLoginForm()
 
-  const onSubmit = async (data: any) => {
-    try {
-      // Handle login logic here
-      toast.success('Welcome back!')
-      navigate({ to: '/dashboard' })
-    } catch (error) {
-      toast.error('Invalid email or password')
-    }
+  const loginMutation = useLogin()
+
+  const onSubmit = async (data: LoginFormData) => {
+    loginMutation.mutate(data, {
+      onSuccess: () => {
+        navigate({ to: '/' })
+      }
+    })
   }
 
   return (
@@ -96,17 +96,10 @@ export function LoginPage() {
 
               <Button
                 type="submit"
-                className="w-full bg-gradient-to-r from-rose-500 to-rose-600 hover:from-rose-600 hover:to-rose-700 text-white py-3"
-                disabled={isSubmitting}
+                className="w-full bg-gradient-to-r from-rose-500 to-rose-600 hover:from-rose-600 hover:to-rose-700 text-white py-3 disabled:opacity-60"
+                loading={loginMutation.isPending}
               >
-                {isSubmitting ? (
-                  <div className="flex items-center">
-                    <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
-                    Signing in...
-                  </div>
-                ) : (
-                  'Sign In'
-                )}
+                Sign In
               </Button>
             </form>
 
@@ -119,7 +112,6 @@ export function LoginPage() {
               </p>
             </div>
 
-            {/* Divider */}
             <div className="relative my-6">
               <div className="absolute inset-0 flex items-center">
                 <div className="w-full border-t border-slate-200"></div>
@@ -129,7 +121,6 @@ export function LoginPage() {
               </div>
             </div>
 
-            {/* Social login */}
             <Button
               type="button"
               variant="outline"

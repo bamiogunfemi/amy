@@ -1,32 +1,28 @@
 import { useState } from 'react'
 import { Link, useNavigate } from '@tanstack/react-router'
 import { Button, Input, Card, CardContent, CardHeader, CardTitle } from '@amy/ui'
-import { useSignupForm } from '@amy/ui'
-import { toast } from 'sonner'
-import { Eye, EyeOff, CheckCircle } from 'lucide-react'
+import { useSignupForm, useSignup } from '@amy/ui'
+import { Eye, EyeOff } from 'lucide-react'
+import type { SignupFormData } from '@amy/ui'
 
 export function SignupPage() {
   const [showPassword, setShowPassword] = useState(false)
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false)
   const navigate = useNavigate()
 
   const {
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
-    watch,
   } = useSignupForm()
 
-  const password = watch('password')
+  const signupMutation = useSignup()
 
-  const onSubmit = async (data: any) => {
-    try {
-      // Handle signup logic here
-      toast.success('Account created successfully!')
-      navigate({ to: '/dashboard' })
-    } catch (error) {
-      toast.error('Failed to create account. Please try again.')
-    }
+  const onSubmit = async (data: SignupFormData) => {
+    signupMutation.mutate(data, {
+      onSuccess: () => {
+        navigate({ to: '/' })
+      }
+    })
   }
 
   return (
@@ -100,29 +96,7 @@ export function SignupPage() {
                 )}
               </div>
 
-              <div>
-                <label className="block text-sm font-medium text-slate-700 mb-2">
-                  Confirm Password
-                </label>
-                <div className="relative">
-                  <Input
-                    type={showConfirmPassword ? 'text' : 'password'}
-                    placeholder="Confirm your password"
-                    {...register('confirmPassword')}
-                    className={errors.confirmPassword ? 'border-red-500 pr-10' : 'pr-10'}
-                  />
-                  <button
-                    type="button"
-                    onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-slate-400 hover:text-slate-600"
-                  >
-                    {showConfirmPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-                  </button>
-                </div>
-                {errors.confirmPassword && (
-                  <p className="text-red-500 text-sm mt-1">{errors.confirmPassword.message}</p>
-                )}
-              </div>
+
 
               <div>
                 <label className="block text-sm font-medium text-slate-700 mb-2">
@@ -139,7 +113,6 @@ export function SignupPage() {
                 <label className="flex items-start space-x-3">
                   <input
                     type="checkbox"
-                    {...register('terms')}
                     className="mt-1 h-4 w-4 text-rose-600 border-slate-300 rounded focus:ring-rose-500"
                   />
                   <span className="text-sm text-slate-600">
@@ -153,14 +126,10 @@ export function SignupPage() {
                     </a>
                   </span>
                 </label>
-                {errors.terms && (
-                  <p className="text-red-500 text-sm">{errors.terms.message}</p>
-                )}
 
                 <label className="flex items-start space-x-3">
                   <input
                     type="checkbox"
-                    {...register('newsletter')}
                     className="mt-1 h-4 w-4 text-rose-600 border-slate-300 rounded focus:ring-rose-500"
                   />
                   <span className="text-sm text-slate-600">
@@ -171,17 +140,10 @@ export function SignupPage() {
 
               <Button
                 type="submit"
-                className="w-full bg-gradient-to-r from-rose-500 to-rose-600 hover:from-rose-600 hover:to-rose-700 text-white py-3"
-                disabled={isSubmitting}
+                className="w-full bg-gradient-to-r from-rose-500 to-rose-600 hover:from-rose-600 hover:to-rose-700 text-white py-3 disabled:opacity-60"
+                loading={signupMutation.isPending || isSubmitting}
               >
-                {isSubmitting ? (
-                  <div className="flex items-center">
-                    <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
-                    Creating account...
-                  </div>
-                ) : (
-                  'Create Account'
-                )}
+                Create Account
               </Button>
             </form>
 
@@ -192,29 +154,6 @@ export function SignupPage() {
                   Sign in
                 </Link>
               </p>
-            </div>
-
-            {/* Benefits */}
-            <div className="mt-8 pt-6 border-t border-slate-200">
-              <h4 className="text-sm font-semibold text-slate-900 mb-3">What you get with Amy:</h4>
-              <div className="space-y-2">
-                <div className="flex items-center text-sm text-slate-600">
-                  <CheckCircle className="h-4 w-4 text-green-500 mr-2" />
-                  14-day free trial
-                </div>
-                <div className="flex items-center text-sm text-slate-600">
-                  <CheckCircle className="h-4 w-4 text-green-500 mr-2" />
-                  No credit card required
-                </div>
-                <div className="flex items-center text-sm text-slate-600">
-                  <CheckCircle className="h-4 w-4 text-green-500 mr-2" />
-                  Cancel anytime
-                </div>
-                <div className="flex items-center text-sm text-slate-600">
-                  <CheckCircle className="h-4 w-4 text-green-500 mr-2" />
-                  Full access to all features
-                </div>
-              </div>
             </div>
           </CardContent>
         </Card>
