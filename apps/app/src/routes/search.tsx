@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Link } from '@tanstack/react-router'
+import { useNavigate } from '@tanstack/react-router'
 import { Button, Card, CardContent, CardHeader, CardTitle, Input, Badge } from '@amy/ui'
 import { useSearch, useSearchSkills } from '@amy/ui'
 import { toast } from 'sonner'
@@ -18,6 +18,7 @@ import {
 } from 'lucide-react'
 
 export function SearchPage() {
+  const navigate = useNavigate()
   const [searchQuery, setSearchQuery] = useState('')
   const [selectedSkills, setSelectedSkills] = useState<string[]>([])
   const [showFilters, setShowFilters] = useState(false)
@@ -214,14 +215,14 @@ export function SearchPage() {
 
                         {(candidate as any).skills && (candidate as any).skills.length > 0 && (
                           <div className="flex flex-wrap gap-1">
-                                                          {(candidate as any).skills.slice(0, 3).map((skill: any) => (
+                            {(candidate as any).skills.slice(0, 3).map((skill: any) => (
                               <Badge key={skill.id} variant="outline" className="text-xs">
                                 {skill.name}
                               </Badge>
                             ))}
-                                                          {(candidate as any).skills.length > 3 && (
+                            {(candidate as any).skills.length > 3 && (
                               <Badge variant="outline" className="text-xs">
-                                                                  +{(candidate as any).skills.length - 3} more
+                                +{(candidate as any).skills.length - 3} more
                               </Badge>
                             )}
                           </div>
@@ -243,8 +244,8 @@ export function SearchPage() {
                         >
                           <Tag className="h-4 w-4" />
                         </Button>
-                        <Button 
-                          variant="ghost" 
+                        <Button
+                          variant="ghost"
                           size="sm"
                           onClick={() => navigate({ to: '/candidates' })}
                         >

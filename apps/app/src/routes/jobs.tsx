@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Link } from '@tanstack/react-router'
+import { useNavigate } from '@tanstack/react-router'
 import { Button, Card, CardContent, CardHeader, CardTitle, Input, Badge } from '@amy/ui'
 import { toast } from 'sonner'
 import { Layout } from '@/components/layout'
@@ -20,6 +20,7 @@ import {
 } from 'lucide-react'
 
 export function JobsPage() {
+  const navigate = useNavigate()
   const [searchQuery, setSearchQuery] = useState('')
   const [showFilters, setShowFilters] = useState(false)
 
@@ -236,20 +237,20 @@ export function JobsPage() {
                     </div>
 
                     <div className="flex items-center space-x-2">
-                      <Button 
-                        variant="ghost" 
+                      <Button
+                        variant="ghost"
                         size="sm"
                         onClick={() => navigate({ to: '/jobs' })}
                       >
                         <Eye className="h-4 w-4" />
                       </Button>
-                                              <Button 
-                          variant="ghost" 
-                          size="sm"
-                          onClick={() => navigate({ to: '/jobs' })}
-                        >
-                          <Edit className="h-4 w-4" />
-                        </Button>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => navigate({ to: '/jobs' })}
+                      >
+                        <Edit className="h-4 w-4" />
+                      </Button>
                       <Button
                         variant="ghost"
                         size="sm"
