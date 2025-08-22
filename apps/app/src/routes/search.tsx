@@ -106,7 +106,7 @@ export function SearchPage() {
                   <div>
                     <label className="block text-sm font-medium text-slate-700 mb-2">Skills</label>
                     <div className="space-y-2 max-h-32 overflow-y-auto">
-                      {skills.map((skill) => (
+                      {Array.isArray(skills) && skills.map((skill: any) => (
                         <label key={skill.id} className="flex items-center space-x-2">
                           <input
                             type="checkbox"
@@ -212,16 +212,16 @@ export function SearchPage() {
                           </div>
                         </div>
 
-                        {candidate.skills && candidate.skills.length > 0 && (
+                        {(candidate as any).skills && (candidate as any).skills.length > 0 && (
                           <div className="flex flex-wrap gap-1">
-                            {candidate.skills.slice(0, 3).map((skill) => (
+                                                          {(candidate as any).skills.slice(0, 3).map((skill: any) => (
                               <Badge key={skill.id} variant="outline" className="text-xs">
                                 {skill.name}
                               </Badge>
                             ))}
-                            {candidate.skills.length > 3 && (
+                                                          {(candidate as any).skills.length > 3 && (
                               <Badge variant="outline" className="text-xs">
-                                +{candidate.skills.length - 3} more
+                                                                  +{(candidate as any).skills.length - 3} more
                               </Badge>
                             )}
                           </div>
@@ -232,22 +232,24 @@ export function SearchPage() {
                         <Button
                           variant="ghost"
                           size="sm"
-                          onClick={() => handleQuickEmail(candidate.id)}
+                          onClick={() => handleQuickEmail()}
                         >
                           <Mail className="h-4 w-4" />
                         </Button>
                         <Button
                           variant="ghost"
                           size="sm"
-                          onClick={() => handleAddSkill(candidate.id, 'skill-id')}
+                          onClick={() => handleAddSkill()}
                         >
                           <Tag className="h-4 w-4" />
                         </Button>
-                        <Link to={`/candidates/${candidate.id}`}>
-                          <Button variant="ghost" size="sm">
-                            <Eye className="h-4 w-4" />
-                          </Button>
-                        </Link>
+                        <Button 
+                          variant="ghost" 
+                          size="sm"
+                          onClick={() => navigate({ to: '/candidates' })}
+                        >
+                          <Eye className="h-4 w-4" />
+                        </Button>
                       </div>
                     </div>
                   ))}

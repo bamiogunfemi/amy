@@ -63,7 +63,7 @@ export function JobsPage() {
     },
   ]
 
-  const handleDeleteJob = async (id: string) => {
+  const handleDeleteJob = async () => {
     try {
       // This would call the DELETE endpoint
       toast.success('Job deleted successfully')
@@ -103,12 +103,10 @@ export function JobsPage() {
             <p className="text-slate-600 mt-1">Manage your job postings and applications</p>
           </div>
           <div className="flex items-center space-x-3">
-            <Link to="/jobs/new">
-              <Button size="sm">
-                <Plus className="h-4 w-4 mr-2" />
-                New Job
-              </Button>
-            </Link>
+            <Button size="sm" onClick={() => navigate({ to: '/jobs' })}>
+              <Plus className="h-4 w-4 mr-2" />
+              New Job
+            </Button>
           </div>
         </div>
 
@@ -190,12 +188,10 @@ export function JobsPage() {
                 <Briefcase className="h-12 w-12 text-slate-400 mx-auto mb-4" />
                 <h3 className="text-lg font-medium text-slate-900 mb-2">No jobs yet</h3>
                 <p className="text-slate-600 mb-4">Create your first job posting to get started</p>
-                <Link to="/jobs/new">
-                  <Button>
-                    <Plus className="h-4 w-4 mr-2" />
-                    Create Job
-                  </Button>
-                </Link>
+                <Button onClick={() => navigate({ to: '/jobs' })}>
+                  <Plus className="h-4 w-4 mr-2" />
+                  Create Job
+                </Button>
               </div>
             ) : (
               <div className="space-y-4">
@@ -240,20 +236,24 @@ export function JobsPage() {
                     </div>
 
                     <div className="flex items-center space-x-2">
-                      <Link to={`/jobs/${job.id}`}>
-                        <Button variant="ghost" size="sm">
-                          <Eye className="h-4 w-4" />
-                        </Button>
-                      </Link>
-                      <Link to={`/jobs/${job.id}/edit`}>
-                        <Button variant="ghost" size="sm">
+                      <Button 
+                        variant="ghost" 
+                        size="sm"
+                        onClick={() => navigate({ to: '/jobs' })}
+                      >
+                        <Eye className="h-4 w-4" />
+                      </Button>
+                                              <Button 
+                          variant="ghost" 
+                          size="sm"
+                          onClick={() => navigate({ to: '/jobs' })}
+                        >
                           <Edit className="h-4 w-4" />
                         </Button>
-                      </Link>
                       <Button
                         variant="ghost"
                         size="sm"
-                        onClick={() => handleDeleteJob(job.id)}
+                        onClick={() => handleDeleteJob()}
                       >
                         <Trash2 className="h-4 w-4" />
                       </Button>

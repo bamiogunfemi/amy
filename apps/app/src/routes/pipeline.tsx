@@ -26,7 +26,7 @@ export function PipelinePage() {
     e.dataTransfer.dropEffect = 'move'
   }
 
-  const handleDrop = async (e: React.DragEvent, stageId: string) => {
+  const handleDrop = async (e: React.DragEvent) => {
     e.preventDefault()
 
     if (!draggedApplication) return
