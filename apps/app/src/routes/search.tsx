@@ -10,10 +10,8 @@ import {
   Users,
   Tag,
   Mail,
-  Phone,
   Calendar,
   MapPin,
-  Plus,
   Eye,
   Star,
   Briefcase
@@ -24,13 +22,13 @@ export function SearchPage() {
   const [selectedSkills, setSelectedSkills] = useState<string[]>([])
   const [showFilters, setShowFilters] = useState(false)
 
-  const searchQuery_hook = useSearch(searchQuery)
+  const searchQuery_hook = useSearch()
   const skillsQuery = useSearchSkills()
 
   const candidates = searchQuery_hook.data || []
   const skills = skillsQuery.data || []
 
-  const handleQuickEmail = async (candidateId: string) => {
+  const handleQuickEmail = async () => {
     try {
       // This would call the email endpoint
       toast.success('Email sent successfully')
@@ -39,7 +37,7 @@ export function SearchPage() {
     }
   }
 
-  const handleAddSkill = async (candidateId: string, skillId: string) => {
+  const handleAddSkill = async () => {
     try {
       // This would call the add skill endpoint
       toast.success('Skill added successfully')

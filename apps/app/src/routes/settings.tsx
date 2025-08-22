@@ -1,6 +1,6 @@
 import { Layout } from '@/components/layout'
-import { Card, CardContent, CardHeader, CardTitle, Button, Input } from '@amy/ui'
-import { Settings, Bell, Shield, Database, Palette } from 'lucide-react'
+import { Card, CardContent, CardHeader, CardTitle, Button } from '@amy/ui'
+import { Bell, Shield, Database, Palette } from 'lucide-react'
 
 export function SettingsPage() {
   return (

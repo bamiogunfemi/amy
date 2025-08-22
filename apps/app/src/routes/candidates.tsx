@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Link } from '@tanstack/react-router'
+import { useNavigate } from '@tanstack/react-router'
 import { Button, Card, CardContent, CardHeader, CardTitle, Input, Badge } from '@amy/ui'
 import { useCandidates } from '@amy/ui'
 import { toast } from 'sonner'
@@ -17,12 +17,12 @@ import {
   Mail,
   Phone,
   Calendar,
-  MapPin,
   FileText,
   Tag
 } from 'lucide-react'
 
 export function CandidatesPage() {
+  const navigate = useNavigate()
   const [searchQuery, setSearchQuery] = useState('')
   const [showFilters, setShowFilters] = useState(false)
   const [selectedCandidates, setSelectedCandidates] = useState<string[]>([])
@@ -30,7 +30,7 @@ export function CandidatesPage() {
   const candidatesQuery = useCandidates()
   const candidates = candidatesQuery.data || []
 
-  const handleDeleteCandidate = async (id: string) => {
+  const handleDeleteCandidate = async () => {
     try {
       // This would call the DELETE endpoint
       toast.success('Candidate deleted successfully')
@@ -77,12 +77,10 @@ export function CandidatesPage() {
               <Upload className="h-4 w-4 mr-2" />
               Upload CV(s)
             </Button>
-            <Link to="/candidates/new">
-              <Button size="sm">
-                <Plus className="h-4 w-4 mr-2" />
-                New Candidate
-              </Button>
-            </Link>
+            <Button size="sm" onClick={() => navigate({ to: '/candidates' })}>
+              <Plus className="h-4 w-4 mr-2" />
+              New Candidate
+            </Button>
           </div>
         </div>
 
@@ -277,11 +275,13 @@ export function CandidatesPage() {
                     </div>
 
                     <div className="flex items-center space-x-2">
-                      <Link to={`/candidates/${candidate.id}`}>
-                        <Button variant="ghost" size="sm">
-                          <Eye className="h-4 w-4" />
-                        </Button>
-                      </Link>
+                                      <Button 
+                  variant="ghost" 
+                  size="sm"
+                  onClick={() => navigate({ to: '/candidates' })}
+                >
+                  <Eye className="h-4 w-4" />
+                </Button>
                       <Button variant="ghost" size="sm">
                         <Edit className="h-4 w-4" />
                       </Button>

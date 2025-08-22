@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { Link, useNavigate } from '@tanstack/react-router'
 import { Button, Input, Card, CardContent, CardHeader, CardTitle, Logo } from '@amy/ui'
 import { useLoginForm, useLogin } from '@amy/ui'
+import { toast } from 'sonner'
 import { Eye, EyeOff } from 'lucide-react'
 import type { LoginFormData } from '@amy/ui'
 
@@ -12,7 +13,7 @@ export function LoginPage() {
   const {
     register,
     handleSubmit,
-    formState: { errors, isSubmitting },
+    formState: { errors },
   } = useLoginForm()
 
   const loginMutation = useLogin()

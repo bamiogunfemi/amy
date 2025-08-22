@@ -14,14 +14,12 @@ import {
   UserCheck,
   ArrowRight,
   Clock,
-  CheckCircle,
-  AlertCircle
+  CheckCircle
 } from 'lucide-react'
 
 import { Layout } from '@/components/layout'
 
 export function DashboardPage() {
-  const [isCreatingCandidate, setIsCreatingCandidate] = useState(false)
   const metricsQuery = useRecruiterMetrics()
 
   const metrics = metricsQuery.data

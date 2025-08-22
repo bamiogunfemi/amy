@@ -1,5 +1,4 @@
 import { useState } from 'react'
-import { Link } from '@tanstack/react-router'
 import { Button, Card, CardContent, CardHeader, CardTitle, Badge } from '@amy/ui'
 import { usePipelineStages } from '@amy/ui'
 import { toast } from 'sonner'
@@ -9,9 +8,6 @@ import {
   Plus,
   Users,
   Calendar,
-  MapPin,
-  Mail,
-  Phone,
   ArrowRight,
   Clock
 } from 'lucide-react'
@@ -32,7 +28,7 @@ export function PipelinePage() {
     e.dataTransfer.dropEffect = 'move'
   }
 
-  const handleDrop = async (e: React.DragEvent, stageId: string) => {
+  const handleDrop = async (e: React.DragEvent) => {
     e.preventDefault()
 
     if (!draggedApplication) return
