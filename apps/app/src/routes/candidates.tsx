@@ -275,13 +275,13 @@ export function CandidatesPage() {
                     </div>
 
                     <div className="flex items-center space-x-2">
-                                      <Button 
-                  variant="ghost" 
-                  size="sm"
-                  onClick={() => navigate({ to: '/candidates' })}
-                >
-                  <Eye className="h-4 w-4" />
-                </Button>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => navigate({ to: '/candidates' })}
+                      >
+                        <Eye className="h-4 w-4" />
+                      </Button>
                       <Button variant="ghost" size="sm">
                         <Edit className="h-4 w-4" />
                       </Button>
