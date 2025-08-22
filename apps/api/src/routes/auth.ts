@@ -79,8 +79,11 @@ router.post(
   asyncHandler(async (req, res) => {
     const data = signupSchema.parse(req.body);
     const result = await authService.signup({
-      ...data,
+      email: data.email!,
+      password: data.password!,
+      name: data.name!,
       role: "RECRUITER" as const,
+      companyName: data.companyName,
     });
 
     res.json(result);

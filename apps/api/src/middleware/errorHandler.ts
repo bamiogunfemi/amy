@@ -1,8 +1,4 @@
 import { Request, Response, NextFunction } from "express";
-import {
-  PrismaClientKnownRequestError,
-  PrismaClientValidationError,
-} from "@prisma/client";
 
 export interface AppError extends Error {
   statusCode?: number;
@@ -24,33 +20,15 @@ export const errorHandler = (
     timestamp: new Date().toISOString(),
   });
 
-  // Prisma errors
-  if (error instanceof PrismaClientKnownRequestError) {
-    switch (error.code) {
-      case "P2002":
-        return res.status(409).json({
-          error: "Resource already exists",
-          code: "DUPLICATE_ENTRY",
-        });
-      case "P2025":
-        return res.status(404).json({
-          error: "Resource not found",
-          code: "NOT_FOUND",
-        });
-      case "P2003":
-        return res.status(400).json({
-          error: "Invalid reference",
-          code: "FOREIGN_KEY_CONSTRAINT",
-        });
-      default:
-        return res.status(400).json({
-          error: "Database error",
-          code: "DATABASE_ERROR",
-        });
-    }
+  // Prisma errors - simplified for now
+  if (error.name === "PrismaClientKnownRequestError") {
+    return res.status(400).json({
+      error: "Database error",
+      code: "DATABASE_ERROR",
+    });
   }
 
-  if (error instanceof PrismaClientValidationError) {
+  if (error.name === "PrismaClientValidationError") {
     return res.status(400).json({
       error: "Validation error",
       code: "VALIDATION_ERROR",

@@ -102,7 +102,14 @@ router.post(
 
     const candidate = await prisma.candidate.create({
       data: {
-        ...body,
+        firstName: body.firstName,
+        lastName: body.lastName,
+        email: body.email,
+        phone: body.phone,
+        location: body.location,
+        experienceLevel: body.experienceLevel,
+        headline: body.headline,
+        summary: body.summary,
         ownerRecruiterId: session.id,
         source: "MANUAL",
       },

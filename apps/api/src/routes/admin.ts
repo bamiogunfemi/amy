@@ -158,11 +158,11 @@ router.post(
   "/companies",
   asyncHandler(async (req: Request, res) => {
     const data = createCompanySchema.parse(req.body);
-    const company = await prisma.company.create({ 
+    const company = await prisma.company.create({
       data: {
         name: data.name!,
         slug: data.slug!,
-      }
+      },
     });
     res.json({ company });
   })
@@ -195,9 +195,7 @@ router.post(
       return res.status(404).json({ error: "Subscription not found" });
     }
 
-    const newEndDate = new Date(
-      subscription.trialEndsAt || new Date()
-    );
+    const newEndDate = new Date(subscription.trialEndsAt || new Date());
     newEndDate.setDate(newEndDate.getDate() + days);
 
     await prisma.subscription.update({
