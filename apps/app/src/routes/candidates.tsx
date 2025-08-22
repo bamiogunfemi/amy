@@ -220,12 +220,10 @@ export function CandidatesPage() {
                 <Users className="h-12 w-12 text-slate-400 mx-auto mb-4" />
                 <h3 className="text-lg font-medium text-slate-900 mb-2">No candidates yet</h3>
                 <p className="text-slate-600 mb-4">Get started by adding your first candidate</p>
-                <Link to="/candidates/new">
-                  <Button>
-                    <Plus className="h-4 w-4 mr-2" />
-                    Add Candidate
-                  </Button>
-                </Link>
+                <Button onClick={() => navigate({ to: '/candidates' })}>
+                  <Plus className="h-4 w-4 mr-2" />
+                  Add Candidate
+                </Button>
               </div>
             ) : (
               <div className="space-y-4">
@@ -288,7 +286,7 @@ export function CandidatesPage() {
                       <Button
                         variant="ghost"
                         size="sm"
-                        onClick={() => handleDeleteCandidate(candidate.id)}
+                        onClick={() => handleDeleteCandidate()}
                       >
                         <Trash2 className="h-4 w-4" />
                       </Button>

@@ -22,8 +22,8 @@ export function SearchPage() {
   const [selectedSkills, setSelectedSkills] = useState<string[]>([])
   const [showFilters, setShowFilters] = useState(false)
 
-  const searchQuery_hook = useSearch()
-  const skillsQuery = useSearchSkills()
+  const searchQuery_hook = useSearch(searchQuery)
+  const skillsQuery = useSearchSkills(searchQuery)
 
   const candidates = searchQuery_hook.data || []
   const skills = skillsQuery.data || []

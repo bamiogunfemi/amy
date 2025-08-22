@@ -6,10 +6,8 @@ import { Layout } from '@/components/layout'
 import {
   BarChart3,
   Plus,
-  Users,
   Calendar,
-  ArrowRight,
-  Clock
+  ArrowRight
 } from 'lucide-react'
 
 export function PipelinePage() {
@@ -28,7 +26,7 @@ export function PipelinePage() {
     e.dataTransfer.dropEffect = 'move'
   }
 
-  const handleDrop = async (e: React.DragEvent) => {
+  const handleDrop = async (e: React.DragEvent, stageId: string) => {
     e.preventDefault()
 
     if (!draggedApplication) return

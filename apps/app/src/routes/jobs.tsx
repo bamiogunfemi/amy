@@ -63,7 +63,7 @@ export function JobsPage() {
     },
   ]
 
-  const handleDeleteJob = async () => {
+  const handleDeleteJob = async (id: string) => {
     try {
       // This would call the DELETE endpoint
       toast.success('Job deleted successfully')

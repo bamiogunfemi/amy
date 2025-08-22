@@ -1,4 +1,4 @@
-import { useState } from 'react'
+
 import { Link } from '@tanstack/react-router'
 import { Button, Card, CardContent, CardHeader, CardTitle } from '@amy/ui'
 import { useRecruiterMetrics } from '@amy/ui'
@@ -32,14 +32,11 @@ export function DashboardPage() {
   }
 
   const handleCreateCandidate = async () => {
-    setIsCreatingCandidate(true)
     try {
       // This would open a modal or navigate to create page
       toast.success('Redirecting to create candidate...')
     } catch (error) {
       toast.error('Failed to create candidate')
-    } finally {
-      setIsCreatingCandidate(false)
     }
   }
 
