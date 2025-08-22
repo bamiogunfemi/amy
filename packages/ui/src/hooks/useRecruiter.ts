@@ -1,24 +1,26 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import apiClient from "../lib/axios";
+import { toast } from "sonner";
 import type {
-  Candidate,
-  PipelineStage,
-  Application,
+  CandidateWithCounts,
+  CandidateDetail,
+  PipelineData,
   RecruiterMetrics,
-  SearchResult,
   CreateCandidateData,
   UpdateCandidateData,
 } from "../types";
+import { ApiResponse, SkillData } from "../types/common";
 
 // Candidates
 export const useCandidates = () => {
   return useQuery({
     queryKey: ["recruiter", "candidates"],
-    queryFn: async (): Promise<Candidate[]> => {
-      const res = await apiClient.get<{ candidates: Candidate[] }>(
-        "/api/candidates"
-      );
-      return res.data.candidates;
+    queryFn: async (): Promise<CandidateWithCounts[]> => {
+      const res = await apiClient.get<{
+        ok: boolean;
+        data: { items: CandidateWithCounts[] };
+      }>("/api/recruiter/candidates");
+      return res.data.data.items;
     },
   });
 };
@@ -26,11 +28,11 @@ export const useCandidates = () => {
 export const useCandidate = (id: string) => {
   return useQuery({
     queryKey: ["recruiter", "candidates", id],
-    queryFn: async (): Promise<Candidate> => {
-      const res = await apiClient.get<{ candidate: Candidate }>(
-        `/api/candidates/${id}`
+    queryFn: async (): Promise<CandidateDetail> => {
+      const res = await apiClient.get<{ ok: boolean; data: CandidateDetail }>(
+        `/api/recruiter/candidates/${id}`
       );
-      return res.data.candidate;
+      return res.data.data;
     },
     enabled: !!id,
   });
@@ -40,14 +42,16 @@ export const useCreateCandidate = () => {
   const qc = useQueryClient();
   return useMutation({
     mutationFn: async (data: CreateCandidateData) => {
-      const res = await apiClient.post<{ candidate: Candidate }>(
-        "/api/candidates",
+      const res = await apiClient.post<{ ok: boolean; data: CandidateDetail }>(
+        "/api/recruiter/candidates",
         data
       );
-      return res.data.candidate;
+      return res.data.data;
     },
-    onSuccess: () =>
-      qc.invalidateQueries({ queryKey: ["recruiter", "candidates"] }),
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ["recruiter", "candidates"] });
+      toast.success("Candidate created successfully");
+    },
   });
 };
 
@@ -61,15 +65,16 @@ export const useUpdateCandidate = () => {
       id: string;
       data: UpdateCandidateData;
     }) => {
-      const res = await apiClient.put<{ candidate: Candidate }>(
-        `/api/candidates/${id}`,
+      const res = await apiClient.patch<{ ok: boolean; data: CandidateDetail }>(
+        `/api/recruiter/candidates/${id}`,
         data
       );
-      return res.data.candidate;
+      return res.data.data;
     },
     onSuccess: (_, { id }) => {
       qc.invalidateQueries({ queryKey: ["recruiter", "candidates"] });
       qc.invalidateQueries({ queryKey: ["recruiter", "candidates", id] });
+      toast.success("Candidate updated successfully");
     },
   });
 };
@@ -78,34 +83,39 @@ export const useDeleteCandidate = () => {
   const qc = useQueryClient();
   return useMutation({
     mutationFn: async (id: string) => {
-      await apiClient.delete(`/api/candidates/${id}`);
+      await apiClient.delete(`/api/recruiter/candidates/${id}`);
     },
-    onSuccess: () =>
-      qc.invalidateQueries({ queryKey: ["recruiter", "candidates"] }),
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ["recruiter", "candidates"] });
+      toast.success("Candidate deleted successfully");
+    },
   });
 };
 
 // Pipeline
 export const usePipelineStages = () => {
   return useQuery({
-    queryKey: ["recruiter", "pipeline", "stages"],
-    queryFn: async (): Promise<PipelineStage[]> => {
-      const res = await apiClient.get<{ stages: PipelineStage[] }>(
-        "/api/pipeline/stages"
+    queryKey: ["recruiter", "pipeline"],
+    queryFn: async (): Promise<PipelineData> => {
+      const res = await apiClient.get<{ ok: boolean; data: PipelineData }>(
+        "/api/recruiter/pipeline"
       );
-      return res.data.stages;
+      return res.data.data;
     },
   });
 };
 
 export const useApplications = () => {
-  return useQuery({
-    queryKey: ["recruiter", "pipeline", "applications"],
-    queryFn: async (): Promise<Application[]> => {
-      const res = await apiClient.get<{ applications: Application[] }>(
-        "/api/pipeline/applications"
+  return useMutation({
+    mutationFn: async (data: { candidateId: string; jobId: string }) => {
+      const res = await apiClient.post<ApiResponse<{ id: string }>>(
+        "/api/recruiter/applications",
+        data
       );
-      return res.data.applications;
+      return res.data.data;
+    },
+    onSuccess: () => {
+      toast.success("Application created successfully");
     },
   });
 };
@@ -114,11 +124,12 @@ export const useApplications = () => {
 export const useSearch = (query: string) => {
   return useQuery({
     queryKey: ["recruiter", "search", query],
-    queryFn: async (): Promise<SearchResult> => {
-      const res = await apiClient.get<SearchResult>("/api/search/candidates", {
-        params: { q: query },
-      });
-      return res.data;
+    queryFn: async (): Promise<CandidateWithCounts[]> => {
+      const res = await apiClient.get<{
+        ok: boolean;
+        data: { items: CandidateWithCounts[] };
+      }>("/api/recruiter/search", { params: { q: query } });
+      return res.data.data.items;
     },
     enabled: !!query && query.length > 2,
   });
@@ -127,11 +138,12 @@ export const useSearch = (query: string) => {
 export const useSearchSkills = (query: string) => {
   return useQuery({
     queryKey: ["recruiter", "search", "skills", query],
-    queryFn: async (): Promise<{ skills: any[] }> => {
-      const res = await apiClient.get<{ skills: any[] }>("/api/search/skills", {
-        params: { q: query },
-      });
-      return res.data;
+    queryFn: async (): Promise<{ skills: SkillData[] }> => {
+      const res = await apiClient.get<ApiResponse<{ skills: SkillData[] }>>(
+        "/api/admin/skills",
+        { params: { q: query } }
+      );
+      return res.data.data!;
     },
     enabled: !!query && query.length > 1,
   });
@@ -142,10 +154,10 @@ export const useRecruiterMetrics = () => {
   return useQuery({
     queryKey: ["recruiter", "metrics"],
     queryFn: async (): Promise<RecruiterMetrics> => {
-      const res = await apiClient.get<RecruiterMetrics>(
+      const res = await apiClient.get<{ ok: boolean; data: RecruiterMetrics }>(
         "/api/recruiter/metrics"
       );
-      return res.data;
+      return res.data.data;
     },
   });
 };

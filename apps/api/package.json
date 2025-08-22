@@ -5,9 +5,9 @@
   "main": "dist/index.js",
   "scripts": {
     "dev": "tsx watch src/index.ts",
-    "build": "echo 'Skipping build for API'",
+    "build": "tsc",
     "start": "node dist/index.js",
-    "type-check": "echo 'Skipping type check for API'",
+    "type-check": "tsc --noEmit",
     "lint": "eslint src"
   },
   "dependencies": {

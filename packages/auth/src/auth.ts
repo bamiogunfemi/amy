@@ -13,6 +13,15 @@ import {
 } from "./types";
 import { sendPasswordResetEmail } from "./email";
 
+interface JwtPayload {
+  userId: string;
+  email: string;
+  role: string;
+  companyId?: string;
+  iat: number;
+  exp: number;
+}
+
 export class AuthService {
   public prisma: PrismaClient;
 
@@ -43,7 +52,7 @@ export class AuthService {
 
   async verifyToken(token: string): Promise<AuthUser> {
     try {
-      const decoded = jwt.verify(token, env.JWT_SECRET) as any;
+      const decoded = jwt.verify(token, env.JWT_SECRET) as JwtPayload;
 
       const user = await this.prisma.user.findUnique({
         where: { id: decoded.userId },
@@ -104,6 +113,8 @@ export class AuthService {
       company: user.company || undefined,
       status,
       trialEndsAt: undefined, // Will be handled by subscription
+      createdAt: user.createdAt,
+      updatedAt: user.updatedAt,
     };
   }
 
@@ -168,7 +179,6 @@ export class AuthService {
     const newAccessToken = this.generateAccessToken(authUser);
     const newRefreshToken = this.generateRefreshToken();
 
-    // Delete old refresh token and save new one
     await this.prisma.refreshToken.delete({
       where: { id: tokenRecord.id },
     });
@@ -183,7 +193,7 @@ export class AuthService {
 
   async logout(accessToken: string): Promise<void> {
     try {
-      const decoded = jwt.verify(accessToken, env.JWT_SECRET) as any;
+      const decoded = jwt.verify(accessToken, env.JWT_SECRET) as JwtPayload;
 
       // Delete all refresh tokens for this user
       await this.prisma.refreshToken.deleteMany({

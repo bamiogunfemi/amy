@@ -1,5 +1,5 @@
 
-import { Button } from '@amy/ui'
+import { Button, Logo } from '@amy/ui'
 import { ArrowRight, Users, Shield, Upload, Search, BarChart3 } from 'lucide-react'
 
 export function LandingPage() {
@@ -8,12 +8,7 @@ export function LandingPage() {
       {/* Header */}
       <header className="border-b">
         <div className="container mx-auto px-4 py-4 flex items-center justify-between">
-          <div className="flex items-center space-x-2">
-            <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
-              <span className="text-primary-foreground font-bold text-lg">A</span>
-            </div>
-            <span className="text-xl font-bold">Amy</span>
-          </div>
+          <Logo size="sm" />
           <nav className="hidden md:flex items-center space-x-8">
             <a href="#features" className="text-muted-foreground hover:text-foreground transition-colors">
               Features

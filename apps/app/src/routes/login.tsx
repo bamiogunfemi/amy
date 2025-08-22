@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { Link, useNavigate } from '@tanstack/react-router'
-import { Button, Input, Card, CardContent, CardHeader, CardTitle } from '@amy/ui'
+import { Button, Input, Card, CardContent, CardHeader, CardTitle, Logo } from '@amy/ui'
 import { useLoginForm, useLogin } from '@amy/ui'
 import { Eye, EyeOff } from 'lucide-react'
 import type { LoginFormData } from '@amy/ui'
@@ -30,8 +30,8 @@ export function LoginPage() {
       <div className="w-full max-w-md">
         <Card className="shadow-xl border-0">
           <CardHeader className="text-center pb-4">
-            <div className="w-12 h-12 bg-gradient-to-br from-rose-500 to-rose-600 rounded-lg flex items-center justify-center mx-auto mb-4">
-              <span className="text-white font-bold text-lg">A</span>
+            <div className="flex justify-center mb-4">
+              <Logo size="lg" />
             </div>
             <CardTitle className="text-2xl font-bold text-slate-900">
               Welcome back

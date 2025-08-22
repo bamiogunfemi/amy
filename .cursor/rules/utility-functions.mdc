@@ -1,0 +1,289 @@
+---
+description: How to add or edit Cursor rules in our project
+alwaysApply: true
+---
+# Utility Functions - Conventions & Best Practices
+
+## Overview
+
+Utility functions are pure, reusable functions that perform common operations across the application. They should be well-typed, performant, and follow consistent patterns.
+
+## File Organization
+
+### Location
+
+- **Shared utilities**: `packages/ui/src/lib/utils.ts`
+- **App-specific utilities**: `apps/*/src/lib/utils.ts`
+- **Legacy utilities**: `src/lib/utils.ts` (deprecated, migrate to packages)
+
+### File Structure
+
+```typescript
+// 1. Imports (external libraries first)
+import { type ClassValue, clsx } from "clsx"
+import { twMerge } from "tailwind-merge"
+
+// 2. Utility functions (alphabetical order)
+export function cn(...inputs: ClassValue[]) { ... }
+export function debounce<T extends (...args: any[]) => any>(...) { ... }
+export function formatDate(date: Date | string) { ... }
+```
+
+## Function Conventions
+
+### Naming Patterns
+
+- **camelCase**: All function names use camelCase
+- **Descriptive**: Names clearly indicate purpose
+- **Verb-based**: Start with action verbs (format, slugify, debounce)
+
+### Type Safety
+
+- **Explicit types**: Always define parameter and return types
+- **Generic types**: Use generics for flexible, reusable functions
+- **Union types**: Accept multiple input types when appropriate
+
+### Function Structure
+
+```typescript
+// ✅ Good: Explicit types, clear purpose
+export function formatDate(date: Date | string): string {
+  return new Intl.DateTimeFormat("en-US", {
+    year: "numeric",
+    month: "short",
+    day: "numeric",
+  }).format(new Date(date));
+}
+
+// ✅ Good: Generic function with constraints
+export function debounce<T extends (...args: any[]) => any>(
+  func: T,
+  wait: number
+): (...args: Parameters<T>) => void {
+  // Implementation
+}
+```
+
+## Common Utility Categories
+
+### 1. Styling Utilities
+
+```typescript
+// Tailwind class merging
+export function cn(...inputs: ClassValue[]) {
+  return twMerge(clsx(inputs));
+}
+```
+
+- **Purpose**: Merge Tailwind classes with conflict resolution
+- **Usage**: Component className composition
+- **Dependencies**: `clsx`, `tailwind-merge`
+
+### 2. Date Formatting
+
+```typescript
+// Date formatting (date only)
+export function formatDate(date: Date | string): string {
+  return new Intl.DateTimeFormat("en-US", {
+    year: "numeric",
+    month: "short",
+    day: "numeric",
+  }).format(new Date(date));
+}
+
+// Date formatting (with time)
+export function formatDateTime(date: Date | string): string {
+  return new Intl.DateTimeFormat("en-US", {
+    year: "numeric",
+    month: "short",
+    day: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+  }).format(new Date(date));
+}
+```
+
+- **Purpose**: Consistent date formatting across the app
+- **Input**: Accepts both Date objects and date strings
+- **Output**: Localized, human-readable strings
+- **Locale**: Use 'en-US' for consistency
+
+### 3. File Utilities
+
+```typescript
+// File size formatting
+export function formatFileSize(bytes: number): string {
+  if (bytes === 0) return "0 Bytes";
+  const k = 1024;
+  const sizes = ["Bytes", "KB", "MB", "GB"];
+  const i = Math.floor(Math.log(bytes) / Math.log(k));
+  return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + " " + sizes[i];
+}
+```
+
+- **Purpose**: Convert bytes to human-readable file sizes
+- **Units**: Bytes, KB, MB, GB
+- **Precision**: 2 decimal places
+- **Edge case**: Handle 0 bytes explicitly
+
+### 4. String Utilities
+
+```typescript
+// URL-friendly slug generation
+export function slugify(text: string): string {
+  return text
+    .toLowerCase()
+    .replace(/[^\w ]+/g, "")
+    .replace(/ +/g, "-");
+}
+```
+
+- **Purpose**: Convert text to URL-friendly slugs
+- **Process**: Lowercase → Remove special chars → Replace spaces with hyphens
+- **Usage**: URLs, filenames, identifiers
+
+### 5. Performance Utilities
+
+```typescript
+// Debounce function
+export function debounce<T extends (...args: any[]) => any>(
+  func: T,
+  wait: number
+): (...args: Parameters<T>) => void {
+  let timeout: NodeJS.Timeout;
+  return (...args: Parameters<T>) => {
+    clearTimeout(timeout);
+    timeout = setTimeout(() => func(...args), wait);
+  };
+}
+```
+
+- **Purpose**: Prevent excessive function calls
+- **Generic**: Works with any function signature
+- **Type safety**: Preserves original function types
+- **Usage**: Search inputs, resize handlers, scroll events
+
+## Best Practices
+
+### 1. Pure Functions
+
+- **No side effects**: Functions should not modify external state
+- **Deterministic**: Same input always produces same output
+- **Immutable**: Don't modify input parameters
+
+### 2. Error Handling
+
+```typescript
+// ✅ Good: Handle edge cases
+export function formatFileSize(bytes: number): string {
+  if (bytes === 0) return "0 Bytes";
+  if (bytes < 0) throw new Error("File size cannot be negative");
+  // ... rest of implementation
+}
+```
+
+### 3. Performance
+
+- **Memoization**: Use for expensive calculations
+- **Lazy evaluation**: Only compute when needed
+- **Efficient algorithms**: Choose appropriate data structures
+
+### 4. Testing
+
+- **Unit tests**: Test all utility functions
+- **Edge cases**: Test boundary conditions
+- **Type safety**: Test with various input types
+
+## Import Patterns
+
+### From Shared Package
+
+```typescript
+// Import from UI package
+import { cn, formatDate, slugify } from "@amy/ui";
+```
+
+### From Local Utils
+
+```typescript
+// Import from local utils
+import { formatFileSize, debounce } from "../lib/utils";
+```
+
+## Migration Guidelines
+
+### From Legacy to Shared
+
+1. **Move functions** from `src/lib/utils.ts` to `packages/ui/src/lib/utils.ts`
+2. **Update imports** across all apps
+3. **Add tests** for moved functions
+4. **Remove duplicates** from legacy location
+
+### Version Control
+
+- **Breaking changes**: Use semantic versioning
+- **Deprecation**: Mark old functions as deprecated
+- **Migration path**: Provide clear upgrade instructions
+
+## Common Patterns to Avoid
+
+### ❌ Bad: Side effects
+
+```typescript
+// Don't modify external state
+export function formatDate(date: Date): string {
+  date.setHours(0, 0, 0, 0); // ❌ Modifies input
+  return date.toISOString();
+}
+```
+
+### ❌ Bad: Inconsistent types
+
+```typescript
+// Don't use any without constraints
+export function processData(data: any): any {
+  // ❌ Too loose
+  return data;
+}
+```
+
+### ❌ Bad: No error handling
+
+```typescript
+// Don't ignore potential errors
+export function divide(a: number, b: number): number {
+  return a / b; // ❌ No check for b === 0
+}
+```
+
+## Testing Examples
+
+```typescript
+// Test utility functions
+describe("formatDate", () => {
+  it("formats date correctly", () => {
+    const date = new Date("2023-12-25");
+    expect(formatDate(date)).toBe("Dec 25, 2023");
+  });
+
+  it("handles string input", () => {
+    expect(formatDate("2023-12-25")).toBe("Dec 25, 2023");
+  });
+});
+
+describe("slugify", () => {
+  it("converts text to slug", () => {
+    expect(slugify("Hello World!")).toBe("hello-world");
+  });
+
+  it("handles special characters", () => {
+    expect(slugify("Test@#$%^&*()")).toBe("test");
+  });
+});
+```
+
+description:
+globs:
+alwaysApply: false
+
+---

@@ -13,6 +13,7 @@ import type {
   DeleteUserData,
   ExtendTrialData,
 } from "../types";
+import { ApiError } from "../types/common";
 
 export const useLogin = () => {
   const queryClient = useQueryClient();
@@ -31,7 +32,7 @@ export const useLogin = () => {
       queryClient.setQueryData(["auth", "user"], data.user);
       toast.success("Login successful");
     },
-    onError: (error: any) => {
+    onError: (error: ApiError) => {
       const message =
         error.response?.data?.error || "Invalid email or password";
       toast.error(message);
@@ -56,7 +57,7 @@ export const useSignup = () => {
       queryClient.setQueryData(["auth", "user"], data.user);
       toast.success("Account created successfully!");
     },
-    onError: (error: any) => {
+    onError: (error: ApiError) => {
       const message = error.response?.data?.error || "Failed to create account";
       toast.error(message);
     },
@@ -72,7 +73,7 @@ export const useRequestPasswordReset = () => {
     onSuccess: () => {
       toast.success("Reset email sent successfully!");
     },
-    onError: (error: any) => {
+    onError: (error: ApiError) => {
       const message =
         error.response?.data?.error || "Failed to send reset email";
       toast.error(message);
@@ -92,7 +93,7 @@ export const useSetNewPassword = () => {
     onSuccess: () => {
       toast.success("Password updated successfully!");
     },
-    onError: (error: any) => {
+    onError: (error: ApiError) => {
       const message =
         error.response?.data?.error || "Failed to update password";
       toast.error(message);

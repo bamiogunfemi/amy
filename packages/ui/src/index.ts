@@ -2,6 +2,10 @@
 export { Button, buttonVariants } from "./components/button";
 export { Input } from "./components/input";
 export { Loader } from "./components/ui/loader";
+export { Badge } from "./components/ui/badge";
+export { Logo } from "./components/ui/logo";
+
+export * from "./constants";
 export {
   Card,
   CardHeader,

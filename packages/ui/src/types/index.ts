@@ -109,6 +109,8 @@ export interface AuthUser {
   };
   status: "ACTIVE" | "BLOCKED" | "DELETED";
   trialEndsAt?: Date;
+  createdAt: Date;
+  updatedAt: Date;
 }
 
 export interface LoginResponse {
@@ -286,4 +288,101 @@ export interface RecruiterMetrics {
 export interface SearchResult {
   candidates: Candidate[];
   skills: Skill[];
+}
+
+// Additional Recruiter Types
+export interface CandidateWithCounts {
+  id: string;
+  name: string;
+  email?: string;
+  phone?: string;
+  location?: string;
+  experienceLevel?: string;
+  source: string;
+  createdAt: Date;
+  _count: {
+    skills: number;
+    documents: number;
+  };
+}
+
+export interface CandidateDetail {
+  id: string;
+  name: string;
+  email?: string;
+  phone?: string;
+  location?: string;
+  experienceLevel?: string;
+  headline?: string;
+  summary?: string;
+  source: string;
+  createdAt: Date;
+  documents: Array<{
+    id: string;
+    originalName: string;
+    mimeType: string;
+    size: number;
+  }>;
+  skills: Array<{
+    id: string;
+    skill: {
+      id: string;
+      name: string;
+    };
+    proficiency?: string;
+  }>;
+  applications: Array<{
+    id: string;
+    job: {
+      id: string;
+      title: string;
+    };
+    stages: Array<{
+      stage: {
+        id: string;
+        name: string;
+      };
+    }>;
+  }>;
+}
+
+export interface Job {
+  id: string;
+  title: string;
+  location?: string;
+  seniority?: string;
+  salaryMin?: number;
+  salaryMax?: number;
+  type?: string;
+  jdMarkdown?: string;
+  status: string;
+  applicationsCount: number;
+  createdAt: Date;
+}
+
+export interface PipelineData {
+  stages: Array<{
+    id: string;
+    name: string;
+    order: number;
+  }>;
+  columns: Record<
+    string,
+    Array<{
+      id: string;
+      candidate: {
+        id: string;
+        name: string;
+        email?: string;
+      };
+      stages: Array<{
+        stageId: string;
+        stage: {
+          id: string;
+          name: string;
+        };
+      }>;
+      createdAt: Date;
+    }>
+  >;
 }

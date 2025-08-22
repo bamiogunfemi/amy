@@ -1,0 +1,327 @@
+---
+description: Guidelines for continuously improving Cursor rules based on emerging code patterns and best practices.
+globs: **/*
+alwaysApply: true
+---
+# Cursor Rules Location
+# Amy Recruitment Platform - Project Structure
+
+## Overview
+
+Amy is a monorepo recruitment platform built with React, TypeScript, and Node.js. The project uses pnpm workspaces with TanStack Start for frontend apps and a shared API backend.
+
+## Root Structure
+
+```
+amy/
+├── apps/                    # Frontend and backend applications
+├── packages/                # Shared packages and libraries
+├── src/                     # Legacy source files (deprecated)
+├── prisma/                  # Database schema and migrations
+├── .cursor/rules/           # Cursor IDE rules
+├── package.json             # Root package.json with workspace scripts
+├── pnpm-workspace.yaml      # pnpm workspace configuration
+├── turbo.json               # Turborepo configuration
+├── vitest.config.ts         # Testing configuration
+├── tsconfig.json            # Root TypeScript configuration
+├── tailwind.config.js       # Tailwind CSS configuration
+└── README.md                # Project documentation
+```
+
+## Apps Directory (`apps/`)
+
+### API Backend (`apps/api/`)
+
+- **Purpose**: Express.js API server with authentication and business logic
+- **Key Files**:
+  - `src/index.ts` - Server entry point
+  - `src/routes/` - API route handlers
+    - `auth.ts` - Authentication endpoints
+    - `recruiter.ts` - Recruiter-specific endpoints
+    - `admin.ts` - Admin-specific endpoints
+    - `candidates.ts` - Candidate management
+    - `pipeline.ts` - Pipeline management
+    - `search.ts` - Search functionality
+    - `imports.ts` - Data import endpoints
+    - `notifications.ts` - Notification endpoints
+    - `users.ts` - User management
+  - `src/middleware/` - Express middleware
+  - `src/config/` - API configuration
+
+### Recruiter App (`apps/app/`)
+
+- **Purpose**: Main recruiter dashboard application
+- **Key Files**:
+  - `src/main.tsx` - App entry point
+  - `src/routes/` - TanStack Router pages
+    - `index.tsx` - Landing page
+    - `login.tsx` - Login page
+    - `signup.tsx` - Signup page
+    - `dashboard.tsx` - Main dashboard
+    - `candidates.tsx` - Candidate management
+    - `pipeline.tsx` - Pipeline view
+    - `jobs.tsx` - Job management
+    - `search.tsx` - Search interface
+    - `profile.tsx` - User profile
+    - `settings.tsx` - Settings page
+    - `notifications.tsx` - Notifications
+    - `communications.tsx` - Communications
+    - `import.tsx` - Data import
+    - `reset-password.tsx` - Password reset
+  - `src/components/` - React components
+    - `layout.tsx` - Main layout wrapper
+    - `recruiter-dashboard.tsx` - Dashboard component
+    - `auth/` - Authentication components
+
+### Admin App (`apps/admin/`)
+
+- **Purpose**: Admin dashboard for platform management
+- **Key Files**:
+  - `src/main.tsx` - App entry point
+  - `src/routes/` - Admin pages
+    - `login.tsx` - Admin login
+    - `billing.extend-trial.tsx` - Trial extension
+  - `src/components/` - Admin components
+    - `admin-dashboard.tsx` - Main admin dashboard
+    - `CompanyManagement.tsx` - Company management
+    - `SkillsManagement.tsx` - Skills management
+    - `ImportsManagement.tsx` - Import management
+    - `users/` - User management components
+    - `billing/` - Billing components
+    - `auth/` - Admin auth components
+
+### Web App (`apps/web/`)
+
+- **Purpose**: Public landing page and marketing site
+- **Key Files**:
+  - `src/main.tsx` - App entry point
+  - `src/components/landing-page.tsx` - Main landing page
+  - `nginx.conf` - Nginx configuration for production
+
+## Packages Directory (`packages/`)
+
+### UI Package (`packages/ui/`)
+
+- **Purpose**: Shared UI components, hooks, and utilities
+- **Key Files**:
+  - `src/index.ts` - Main exports
+  - `src/components/` - React components
+    - `button.tsx` - Button component
+    - `input.tsx` - Input component
+    - `card.tsx` - Card components
+    - `ui/` - Additional UI components
+      - `badge.tsx` - Badge component
+      - `logo.tsx` - Logo component
+      - `loader.tsx` - Loading component
+  - `src/hooks/` - React Query hooks
+    - `useAuth.ts` - Authentication hooks
+    - `useRecruiter.ts` - Recruiter data hooks
+    - `useAdmin.ts` - Admin data hooks
+    - `useForms.ts` - Form management hooks
+  - `src/types/` - TypeScript type definitions
+    - `index.ts` - Main type exports
+    - `common.ts` - Common types
+  - `src/constants/` - Application constants
+    - `index.ts` - API endpoints, user roles, etc.
+  - `src/lib/` - Utility libraries
+    - `axios.ts` - HTTP client configuration
+    - `utils.ts` - Utility functions
+
+### Auth Package (`packages/auth/`)
+
+- **Purpose**: Authentication and authorization logic
+- **Key Files**:
+  - `src/auth.ts` - AuthService class
+  - `src/guards.ts` - Express middleware guards
+  - `src/types.ts` - Auth-related types
+  - `src/email.ts` - Email service
+  - `src/index.ts` - Package exports
+
+### Database Package (`packages/db/`)
+
+- **Purpose**: Database schema and client
+- **Key Files**:
+  - `prisma/schema.prisma` - Database schema
+  - `src/index.ts` - Prisma client exports
+  - `seed.ts` - Database seeding script
+
+### Config Package (`packages/config/`)
+
+- **Purpose**: Shared configuration
+- **Key Files**:
+  - `src/env.ts` - Environment variable validation
+  - `src/index.ts` - Config exports
+
+## Testing Structure
+
+### Test Files Location
+
+- Component tests: `packages/ui/src/components/*.test.tsx`
+- Hook tests: `packages/ui/src/hooks/*.test.ts`
+- Service tests: `packages/auth/src/*.test.ts`
+- Test utilities: `src/test/utils.tsx`
+- Test setup: `src/test/setup.ts`
+
+### Test Configuration
+
+- `vitest.config.ts` - Vitest configuration
+- Test environment: jsdom
+- Coverage reporting enabled
+
+## Important Configuration Files
+
+### Root Configuration
+
+- `package.json` - Workspace scripts and dependencies
+- `pnpm-workspace.yaml` - pnpm workspace definition
+- `turbo.json` - Turborepo build pipeline
+- `tsconfig.json` - TypeScript configuration
+- `tailwind.config.js` - Tailwind CSS configuration
+
+### Build Tools
+
+- `vite.config.ts` - Vite configuration for frontend apps
+- `postcss.config.js` - PostCSS configuration
+- `eslint.config.js` - ESLint configuration
+
+## Development Workflow
+
+### Scripts
+
+- `pnpm dev` - Start all development servers
+- `pnpm build` - Build all packages and apps
+- `pnpm test` - Run all tests
+- `pnpm test:ui` - Run tests with UI
+- `pnpm test:coverage` - Run tests with coverage
+- `pnpm db:generate` - Generate Prisma client
+- `pnpm db:migrate` - Run database migrations
+- `pnpm db:seed` - Seed database with test data
+
+### Development Servers
+
+- API: `http://localhost:3001`
+- Recruiter App: `http://localhost:5174`
+- Admin App: `http://localhost:5175`
+- Web App: `http://localhost:5173`
+
+## Key Technologies
+
+### Frontend
+
+- React 19 with TypeScript
+- TanStack Router for routing
+- TanStack Query for data fetching
+- Tailwind CSS for styling
+- shadcn/ui for components
+- Vite for build tooling
+
+### Backend
+
+- Node.js with Express
+- Prisma ORM with PostgreSQL
+- JWT authentication
+- bcrypt for password hashing
+
+### Development
+
+- pnpm for package management
+- Turborepo for monorepo orchestration
+- Vitest for testing
+- ESLint for linting
+- TypeScript for type safety
+
+## File Naming Conventions
+
+### Components
+
+- React components: PascalCase (e.g., `UserProfile.tsx`)
+- Test files: `ComponentName.test.tsx`
+- Index files: `index.ts` or `index.tsx`
+
+### Routes
+
+- TanStack Router files: kebab-case (e.g., `user-profile.tsx`)
+- API routes: kebab-case (e.g., `user-profile.ts`)
+
+### Utilities
+
+- Utility functions: camelCase (e.g., `formatDate.ts`)
+- Constants: UPPER_SNAKE_CASE (e.g., `API_ENDPOINTS`)
+
+## Import Patterns
+
+### Internal Imports
+
+```typescript
+// UI components
+import { Button, Card } from "@amy/ui";
+
+// Auth utilities
+import { AuthService } from "@amy/auth";
+
+// Database
+import { prisma } from "@amy/db";
+
+// Configuration
+import { env } from "@amy/config";
+```
+
+### Relative Imports
+
+```typescript
+// Within same package
+import { useAuth } from "../hooks/useAuth";
+import { Button } from "./components/Button";
+```
+
+## Best Practices
+
+1. **Type Safety**: Always use TypeScript with strict mode
+2. **Component Structure**: Use functional components with hooks
+3. **State Management**: Use TanStack Query for server state
+4. **Styling**: Use Tailwind CSS with shadcn/ui components
+5. **Testing**: Write tests for all components and hooks
+6. **Error Handling**: Implement proper error boundaries and loading states
+7. **Performance**: Use React.memo and useMemo where appropriate
+8. **Accessibility**: Follow ARIA guidelines and keyboard navigation
+
+## File Organization Rules
+
+### Types Organization
+
+- **Shared Types**: Place in `packages/ui/src/types/`
+  - `index.ts` - Main type exports for the entire project
+  - `common.ts` - Common interfaces used across multiple packages
+- **Package-Specific Types**: Place in the respective package's `src/types/` folder
+- **Component Types**: Define interfaces in the same file as the component
+- **API Types**: Define in the API route file or in `packages/ui/src/types/common.ts`
+
+### Constants Organization
+
+- **Shared Constants**: Place in `packages/ui/src/constants/`
+  - `index.ts` - API endpoints, user roles, statuses, pagination, toast messages
+- **Package-Specific Constants**: Place in the respective package's `src/constants/` folder
+- **Component Constants**: Define in the same file as the component if only used there
+- **Environment Constants**: Use `packages/config/src/env.ts` for environment validation
+
+### Import Patterns for Types and Constants
+
+```typescript
+// Import shared types and constants
+import { AuthUser, ApiError } from "@amy/ui";
+import { API_ENDPOINTS, USER_ROLES } from "@amy/ui";
+
+// Import package-specific types
+import { AuthService } from "@amy/auth";
+import { prisma } from "@amy/db";
+
+// Import local types (same file or relative path)
+import { UserProfileProps } from "./types";
+import { LOCAL_CONSTANTS } from "./constants";
+```
+
+description:
+globs:
+alwaysApply: false
+
+---

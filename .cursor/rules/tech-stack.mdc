@@ -1,0 +1,318 @@
+---
+alwaysApply: true
+---
+# Amy Recruitment Platform - Tech Stack & Dependencies
+
+## Overview
+
+Amy is built with a modern, type-safe tech stack using React 18, TypeScript 5, and Node.js. The platform follows current best practices with a focus on performance, maintainability, and developer experience.
+
+## Core Technologies
+
+### Runtime & Package Management
+
+- **Node.js**: `>=18.0.0` (LTS version)
+- **pnpm**: `10.14.0` (Fast, disk space efficient package manager)
+- **TypeScript**: `5.3.2` (Latest stable with strict mode)
+
+### Monorepo Architecture
+
+- **Turborepo**: `2.0.0` (Build system for monorepos)
+- **pnpm Workspaces**: Native workspace support
+- **Concurrently**: `9.0.0` (Run multiple commands in parallel)
+
+## Frontend Stack
+
+### React Ecosystem
+
+- **React**: `18.2.0` (Latest stable with concurrent features)
+- **React DOM**: `18.2.0` (Matching React version)
+- **TypeScript**: `5.3.2` (Strict mode enabled)
+
+### Routing & State Management
+
+- **TanStack Router**: `1.16.0` (Type-safe file-based routing)
+- **TanStack Query**: `5.17.0` (Server state management)
+- **TanStack Table**: `8.11.0` (Headless table library)
+- **TanStack Virtual**: `3.0.0` (Virtual scrolling for large lists)
+
+### UI & Styling
+
+- **Tailwind CSS**: `3.3.6` (Utility-first CSS framework)
+- **Radix UI**: `1.0.x` (Headless UI primitives)
+  - Dialog, Dropdown Menu, Select, Tabs, Toast, Tooltip
+- **Lucide React**: `0.294.0` (Icon library)
+- **Class Variance Authority**: `0.7.0` (Component variant management)
+- **clsx**: `2.0.0` (Conditional className utility)
+- **tailwind-merge**: `2.2.0` (Tailwind class merging)
+
+### Forms & Validation
+
+- **React Hook Form**: `7.62.0` (Performant form library)
+- **Zod**: `3.25.76` (TypeScript-first schema validation)
+- **@hookform/resolvers**: `5.2.1` (Zod integration for React Hook Form)
+
+### Notifications & UX
+
+- **Sonner**: `2.0.7` (Toast notifications)
+
+## Backend Stack
+
+### Server Framework
+
+- **Express.js**: `4.18.2` (Web application framework)
+- **CORS**: `2.8.5` (Cross-origin resource sharing)
+- **Helmet**: `7.1.0` (Security headers)
+- **Compression**: `1.7.4` (Response compression)
+- **Express Rate Limit**: `7.1.5` (Rate limiting middleware)
+
+### Authentication & Security
+
+- **Passport.js**: `0.7.0` (Authentication middleware)
+  - **passport-local**: `1.0.0` (Local strategy)
+  - **passport-google-oauth20**: `2.0.0` (Google OAuth)
+- **bcryptjs**: `2.4.3` (Password hashing)
+- **jsonwebtoken**: `9.0.2` (JWT tokens)
+- **express-session**: `1.17.3` (Session management)
+- **connect-pg-simple**: `8.0.0` (PostgreSQL session store)
+
+### Database & ORM
+
+- **Prisma**: `5.7.0` (Type-safe database toolkit)
+- **@prisma/client**: `5.22.0` (Generated database client)
+- **PostgreSQL**: Primary database (via Prisma)
+
+### File Processing & Integrations
+
+- **Multer**: `1.4.5-lts.1` (File upload middleware)
+- **AWS SDK**: `2.1531.0` (S3-compatible storage)
+- **Google APIs**: `128.0.0` (Google Drive, Sheets integration)
+- **Airtable**: `0.12.2` (Airtable integration)
+- **Nodemailer**: `6.9.7` (Email sending)
+
+### Document Processing
+
+- **pdf-parse**: `1.1.1` (PDF text extraction)
+- **mammoth**: `1.6.0` (Word document parsing)
+- **csv-parser**: `3.0.0` (CSV file parsing)
+- **xlsx**: `0.18.5` (Excel file processing)
+
+### Background Jobs
+
+- **BullMQ**: `5.0.0` (Redis-based job queue)
+- **Redis**: `4.6.10` (Job queue backend)
+
+### Environment & Configuration
+
+- **dotenv**: `16.3.1` (Environment variable loading)
+
+## Development Tools
+
+### Build Tools
+
+- **Vite**: `5.0.7` (Fast build tool and dev server)
+- **@vitejs/plugin-react**: `4.2.1` (React plugin for Vite)
+- **TypeScript**: `5.3.2` (Type checking and compilation)
+
+### Testing
+
+- **Vitest**: `1.3.1` (Fast unit testing framework)
+- **@vitest/ui**: `1.3.1` (Vitest UI for test visualization)
+- **jsdom**: `24.0.0` (DOM environment for tests)
+- **@testing-library/react**: `14.2.1` (React testing utilities)
+- **@testing-library/jest-dom**: `6.4.2` (Custom Jest matchers)
+- **@testing-library/user-event**: `14.5.2` (User interaction simulation)
+
+### Linting & Code Quality
+
+- **ESLint**: `8.55.0` (JavaScript/TypeScript linting)
+- **@typescript-eslint/eslint-plugin**: `6.13.1` (TypeScript ESLint rules)
+- **@typescript-eslint/parser**: `6.13.1` (TypeScript parser for ESLint)
+- **eslint-plugin-react**: `7.33.2` (React-specific ESLint rules)
+- **eslint-plugin-react-hooks**: `4.6.0` (React Hooks ESLint rules)
+
+### Development Utilities
+
+- **tsx**: `4.7.0` (TypeScript execution engine)
+- **@tanstack/react-query-devtools**: `5.85.3` (React Query dev tools)
+
+## Version Analysis & Best Practices
+
+### ✅ Excellent Choices
+
+1. **React 18.2.0**: Latest stable with concurrent features
+
+   - **Best Practice**: Use concurrent features like `Suspense` and `useTransition`
+   - **Note**: Consider upgrading to React 19 when stable
+
+2. **TypeScript 5.3.2**: Latest stable with strict mode
+
+   - **Best Practice**: Keep `strict: true` in tsconfig
+   - **Note**: Excellent choice for type safety
+
+3. **TanStack Query 5.17.0**: Modern server state management
+
+   - **Best Practice**: Use for all server state, avoid local state for server data
+   - **Note**: Consider upgrading to v5.85.3 for latest features
+
+4. **Prisma 5.7.0**: Type-safe database toolkit
+
+   - **Best Practice**: Use generated client, leverage type safety
+   - **Note**: Excellent choice for database operations
+
+5. **Vite 5.0.7**: Fast build tool
+   - **Best Practice**: Leverage fast HMR and build times
+   - **Note**: Excellent choice for development experience
+
+### ⚠️ Areas for Attention
+
+1. **TanStack Router Version Inconsistency**:
+
+   - Admin app: `1.131.22` (very old)
+   - Other apps: `1.16.0` (also old)
+   - **Recommendation**: Upgrade to latest stable version
+
+2. **React Query Version Inconsistency**:
+
+   - Root: `5.85.3` (devtools)
+   - App/Web: `5.17.0`
+   - Admin: `5.85.3`
+   - **Recommendation**: Align all apps to `5.85.3`
+
+3. **Zod Version Inconsistency**:
+   - Root: `3.25.76`
+   - Apps: `3.22.4`
+   - **Recommendation**: Align all to latest version
+
+### 🔧 Recommended Updates
+
+```json
+{
+  "@tanstack/react-router": "^1.16.0",
+  "@tanstack/react-query": "^5.85.3",
+  "zod": "^3.25.76"
+}
+```
+
+## Security Considerations
+
+### ✅ Good Security Practices
+
+- **Helmet**: Security headers enabled
+- **bcryptjs**: Proper password hashing
+- **express-rate-limit**: Rate limiting implemented
+- **CORS**: Cross-origin protection
+- **JWT**: Secure token-based authentication
+
+### 🔒 Additional Recommendations
+
+- Implement CSRF protection
+- Add input sanitization
+- Use HTTPS in production
+- Regular dependency updates
+- Security audits with `npm audit`
+
+## Performance Optimizations
+
+### Frontend
+
+- **Vite**: Fast HMR and builds
+- **TanStack Virtual**: Virtual scrolling for large lists
+- **React.memo**: Component memoization
+- **Code splitting**: Route-based splitting
+
+### Backend
+
+- **Compression**: Response compression
+- **Rate limiting**: API protection
+- **Connection pooling**: Database optimization
+- **Caching**: Redis for session storage
+
+## Development Workflow
+
+### Scripts
+
+```bash
+# Development
+pnpm dev                    # Start all apps
+pnpm dev:api               # API only
+pnpm dev:app               # Recruiter app only
+pnpm dev:admin             # Admin app only
+pnpm dev:web               # Web app only
+
+# Database
+pnpm db:generate           # Generate Prisma client
+pnpm db:migrate            # Run migrations
+pnpm db:seed               # Seed database
+pnpm db:studio             # Open Prisma Studio
+
+# Testing
+pnpm test                  # Run all tests
+pnpm test:ui               # Run tests with UI
+pnpm test:coverage         # Run tests with coverage
+
+# Build & Deploy
+pnpm build                 # Build all packages
+pnpm lint                  # Lint all packages
+pnpm type-check            # Type check all packages
+```
+
+## Environment Requirements
+
+### Node.js
+
+- **Minimum**: 18.0.0 (LTS)
+- **Recommended**: 20.x.x (Latest LTS)
+- **Features**: ES2022, async/await, optional chaining
+
+### pnpm
+
+- **Minimum**: 8.0.0
+- **Current**: 10.14.0
+- **Features**: Workspaces, fast installs, disk efficiency
+
+### Database
+
+- **PostgreSQL**: 12+ (for Prisma compatibility)
+- **Redis**: 6+ (for BullMQ and sessions)
+
+## Monitoring & Observability
+
+### Current Setup
+
+- **Console logging**: Basic logging
+- **Error boundaries**: React error handling
+
+### Recommended Additions
+
+- **Sentry**: Error tracking
+- **DataDog/New Relic**: Application monitoring
+- **LogRocket**: Session replay
+- **Analytics**: User behavior tracking
+
+## Deployment Considerations
+
+### Frontend Apps
+
+- **Build**: Vite production builds
+- **Hosting**: Vercel, Netlify, or similar
+- **CDN**: Static asset optimization
+
+### Backend API
+
+- **Runtime**: Node.js 18+
+- **Process Manager**: PM2 or similar
+- **Reverse Proxy**: Nginx
+- **SSL**: Let's Encrypt or similar
+
+### Database
+
+- **PostgreSQL**: Managed service (AWS RDS, Supabase, etc.)
+- **Redis**: Managed service (Upstash, Redis Cloud, etc.)
+- **Backups**: Automated daily backups
+- **Migrations**: Zero-downtime deployments
+  description:
+  globs:
+  alwaysApply: false
+
+---

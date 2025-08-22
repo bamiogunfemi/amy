@@ -9,6 +9,8 @@ export interface AuthUser {
   company?: Company;
   status: "ACTIVE" | "BLOCKED" | "DELETED";
   trialEndsAt?: Date;
+  createdAt: Date;
+  updatedAt: Date;
 }
 
 export interface LoginRequest {

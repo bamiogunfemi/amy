@@ -117,7 +117,9 @@ router.get(
   "/me",
   requireAuth(authService),
   asyncHandler(async (req: Request, res) => {
-    res.json({ user: (req as any).user });
+    const user = (req as any).user;
+    console.log("User data in /me endpoint:", user);
+    res.json({ user });
   })
 );
 

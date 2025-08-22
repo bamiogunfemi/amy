@@ -1,6 +1,6 @@
 
 import { useState } from 'react'
-import { Button, Card, CardContent, CardHeader, CardTitle } from '@amy/ui'
+import { Button, Card, CardContent, CardHeader, CardTitle, Logo } from '@amy/ui'
 import {
   Users,
   UserCheck,
@@ -17,6 +17,7 @@ import {
 } from 'lucide-react'
 import { useLogout, useRecruiterMetrics, useCandidates, usePipelineStages } from '@amy/ui'
 
+
 export function RecruiterDashboard() {
   const [activeTab, setActiveTab] = useState('overview')
   const [searchQuery, setSearchQuery] = useState('')
@@ -30,7 +31,7 @@ export function RecruiterDashboard() {
 
   const metrics = metricsQuery.data
   const candidates = candidatesQuery.data ?? []
-  const pipelineStages = pipelineQuery.data ?? []
+  const pipelineStages = pipelineQuery.data?.stages ?? []
 
 
   const handleSignOut = () => {
@@ -59,7 +60,7 @@ export function RecruiterDashboard() {
           <div>
             <h2 className="text-3xl font-bold mb-2">{getGreeting()}! 👋</h2>
             <p className="text-rose-100 text-lg">
-              Here's what's happening with your recruitment pipeline today
+              Here&apos;s what&apos;s happening with your recruitment pipeline today
             </p>
           </div>
           <div className="hidden md:block">
@@ -334,24 +335,24 @@ export function RecruiterDashboard() {
                 <CardTitle className="flex items-center justify-between">
                   <span>{stage.name}</span>
                   <span className="text-sm text-muted-foreground">
-                    {stage.applications.length}
+                    {(stage as { applications?: unknown[] }).applications?.length || 0}
                   </span>
                 </CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="space-y-3">
-                  {stage.applications.map((app) => (
+                  {(stage as { applications?: Array<{ id: string; application?: { candidate?: { name?: string }; createdAt?: string } }> }).applications?.map((app) => (
                     <div key={app.id} className="p-3 border rounded-lg">
                       <div className="flex items-center space-x-2">
                         <div className="h-8 w-8 bg-primary rounded-full flex items-center justify-center">
                           <span className="text-primary-foreground text-xs font-medium">
-                            {app.application.candidate.name.charAt(0)}
+                            {app.application?.candidate?.name?.charAt(0) || '?'}
                           </span>
                         </div>
                         <div className="flex-1">
-                          <p className="text-sm font-medium">{app.application.candidate.name}</p>
+                          <p className="text-sm font-medium">{app.application?.candidate?.name || 'Unknown'}</p>
                           <p className="text-xs text-muted-foreground">
-                            {new Date(app.application.createdAt).toLocaleDateString()}
+                            {app.application?.createdAt ? new Date(app.application.createdAt).toLocaleDateString() : 'Unknown date'}
                           </p>
                         </div>
                       </div>
@@ -391,7 +392,7 @@ export function RecruiterDashboard() {
 
             {searchQuery && (
               <div className="text-sm text-muted-foreground">
-                Search results for "{searchQuery}" will appear here...
+                Search results for &rdquo;{searchQuery}&rdquo; will appear here...
               </div>
             )}
           </div>
@@ -420,22 +421,12 @@ export function RecruiterDashboard() {
       {/* Header */}
       <header className="bg-white/80 backdrop-blur-sm border-b border-slate-200 sticky top-0 z-50">
         <div className="px-6 py-4 flex items-center justify-between">
-          <div className="flex items-center space-x-3">
-            <div className="w-10 h-10 bg-gradient-to-br from-rose-500 to-rose-600 rounded-xl flex items-center justify-center shadow-lg">
-              <span className="text-white font-bold text-lg">A</span>
-            </div>
-            <div>
-              <h1 className="text-xl font-bold bg-gradient-to-r from-rose-600 to-rose-800 bg-clip-text text-transparent">
-                Amy
-              </h1>
-              <p className="text-xs text-slate-500">Recruitment Platform</p>
-            </div>
-          </div>
+          <Logo size="md" />
 
           <div className="flex items-center space-x-4">
             <div className="text-right">
               <p className="text-sm font-medium text-slate-900">{getGreeting()}, Recruiter</p>
-              <p className="text-xs text-slate-500">Welcome back to your dashboard</p>
+
             </div>
             <div className="w-8 h-8 bg-gradient-to-br from-rose-500 to-rose-600 rounded-full flex items-center justify-center">
               <span className="text-white text-sm font-medium">R</span>

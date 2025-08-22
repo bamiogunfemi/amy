@@ -4,6 +4,15 @@ import { AuthService } from "./auth";
 import { AuthUser } from "./types";
 import { env } from "@amy/config";
 
+interface JwtPayload {
+  userId: string;
+  email: string;
+  role: string;
+  companyId?: string;
+  iat: number;
+  exp: number;
+}
+
 export interface AuthenticatedRequest extends Request {
   user?: AuthUser;
   headers: Request["headers"];
@@ -22,8 +31,8 @@ export function requireAuth(authService: AuthService) {
       }
 
       const token = authHeader.substring(7);
-      const decoded = jwt.verify(token, env.JWT_SECRET) as any;
-      
+      const decoded = jwt.verify(token, env.JWT_SECRET) as JwtPayload;
+
       // Get user from database to ensure they still exist and are not blocked
       const user = await authService.prisma.user.findUnique({
         where: { id: decoded.userId },
@@ -41,10 +50,16 @@ export function requireAuth(authService: AuthService) {
         role: user.role as "ADMIN" | "RECRUITER",
         companyId: user.companyId || undefined,
         company: user.company || undefined,
-        status: user.status?.isDeleted ? "DELETED" : user.status?.isBlocked ? "BLOCKED" : "ACTIVE",
+        status: user.status?.isDeleted
+          ? "DELETED"
+          : user.status?.isBlocked
+          ? "BLOCKED"
+          : "ACTIVE",
         trialEndsAt: undefined,
+        createdAt: user.createdAt,
+        updatedAt: user.updatedAt,
       };
-      
+
       next();
     } catch (error) {
       return res.status(401).json({ error: "Invalid token" });
