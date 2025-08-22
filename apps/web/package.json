@@ -5,7 +5,7 @@
   "description": "Landing page for Amy platform",
   "scripts": {
     "dev": "vite",
-    "build": "tsc -b && vite build",
+    "build": "pnpm -C ../../packages/ui build && tsc -b && vite build",
     "preview": "vite preview",
     "type-check": "tsc --noEmit",
     "lint": "eslint src"
