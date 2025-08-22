@@ -1,7 +1,7 @@
 {
   "name": "@amy/config",
   "version": "1.0.0",
-  "type": "module",
+
   "description": "Shared configuration for Amy platform",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
