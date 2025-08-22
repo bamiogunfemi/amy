@@ -19,7 +19,7 @@ const router = Router();
 const prisma = new PrismaClient();
 
 // Apply admin middleware to all routes
-router.use((req, res, next) => requireAdmin(req, res, next));
+router.use(requireAdmin());
 
 // Get admin overview metrics
 router.get(
@@ -40,7 +40,7 @@ router.get(
     const importJobsFailed = await prisma.importJob.count({
       where: {
         status: "FAILED",
-        updatedAt: { gte: new Date(Date.now() - 24 * 60 * 60 * 1000) },
+        completedAt: { gte: new Date(Date.now() - 24 * 60 * 60 * 1000) },
       },
     });
 
@@ -158,7 +158,12 @@ router.post(
   "/companies",
   asyncHandler(async (req: Request, res) => {
     const data = createCompanySchema.parse(req.body);
-    const company = await prisma.company.create({ data });
+    const company = await prisma.company.create({ 
+      data: {
+        name: data.name!,
+        slug: data.slug!,
+      }
+    });
     res.json({ company });
   })
 );
@@ -191,7 +196,7 @@ router.post(
     }
 
     const newEndDate = new Date(
-      subscription.trialEndsAt || subscription.endsAt || new Date()
+      subscription.trialEndsAt || new Date()
     );
     newEndDate.setDate(newEndDate.getDate() + days);
 
@@ -259,7 +264,7 @@ router.get(
     const status = (req.query.status as string) || undefined;
     const where = status ? { status } : undefined;
     const jobs = await prisma.importJob.findMany({
-      where,
+      where: { status: where.status as any },
       orderBy: { createdAt: "desc" },
       take: 100,
     });

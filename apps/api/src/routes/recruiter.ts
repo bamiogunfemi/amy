@@ -7,6 +7,9 @@ import { z } from "zod";
 const router = Router();
 const prisma = new PrismaClient();
 
+// Apply recruiter middleware to all routes
+router.use(requireRecruiter());
+
 // Type for authenticated requests
 interface AuthenticatedRequest extends Request {
   user?: any;
@@ -54,7 +57,7 @@ async function createAuditLog(
 router.get(
   "/candidates",
   asyncHandler(async (req: AuthenticatedRequest, res) => {
-    const session = await requireRecruiter(req);
+    const session = req.user!;
     const { page = "1", perPage = "10" } = req.query;
 
     const where = {
@@ -94,7 +97,7 @@ router.get(
 router.post(
   "/candidates",
   asyncHandler(async (req: AuthenticatedRequest, res) => {
-    const session = await requireRecruiter(req);
+    const session = req.user!;
     const body = candidateCreateSchema.parse(req.body);
 
     const candidate = await prisma.candidate.create({
@@ -105,7 +108,12 @@ router.post(
       },
     });
 
-    await createAuditLog(session.id, "CREATE_CANDIDATE", "CANDIDATE", candidate.id);
+    await createAuditLog(
+      session.id,
+      "CREATE_CANDIDATE",
+      "CANDIDATE",
+      candidate.id
+    );
 
     res.json({ ok: true, data: candidate });
   })
@@ -114,7 +122,7 @@ router.post(
 router.get(
   "/candidates/:id",
   asyncHandler(async (req: AuthenticatedRequest, res) => {
-    const session = await requireRecruiter(req);
+    const session = req.user!;
     const { id } = req.params;
 
     const candidate = await prisma.candidate.findUnique({
@@ -141,7 +149,7 @@ router.get(
 router.patch(
   "/candidates/:id",
   asyncHandler(async (req: AuthenticatedRequest, res) => {
-    const session = await requireRecruiter(req);
+    const session = req.user!;
     const { id } = req.params;
     const body = candidateUpdateSchema.parse(req.body);
 
@@ -168,7 +176,7 @@ router.patch(
 router.post(
   "/candidates/:id/skills",
   asyncHandler(async (req: AuthenticatedRequest, res) => {
-    const session = await requireRecruiter(req);
+    const session = req.user!;
     const { id } = req.params;
     const body = skillAddSchema.parse(req.body);
 
@@ -207,7 +215,7 @@ router.post(
 router.get(
   "/pipeline",
   asyncHandler(async (req: AuthenticatedRequest, res) => {
-    const session = await requireRecruiter(req);
+    const session = req.user!;
 
     const stages = await prisma.pipelineStage.findMany({
       where: { recruiterId: session.id },
@@ -233,7 +241,7 @@ router.get(
 router.get(
   "/search",
   asyncHandler(async (req: AuthenticatedRequest, res) => {
-    const session = await requireRecruiter(req);
+    const session = req.user!;
     const { q, page = "1", perPage = "10" } = req.query;
 
     if (!q) {
@@ -300,7 +308,7 @@ router.get(
 router.get(
   "/notifications",
   asyncHandler(async (req: AuthenticatedRequest, res) => {
-    const session = await requireRecruiter(req);
+    const session = req.user!;
     const { page = "1", perPage = "20" } = req.query;
 
     const where = {
@@ -332,7 +340,7 @@ router.get(
 router.post(
   "/notifications/:id/read",
   asyncHandler(async (req: AuthenticatedRequest, res) => {
-    const session = await requireRecruiter(req);
+    const session = req.user!;
     const { id } = req.params;
 
     await prisma.notification.update({
@@ -348,7 +356,7 @@ router.post(
 router.get(
   "/settings",
   asyncHandler(async (req: AuthenticatedRequest, res) => {
-    const session = await requireRecruiter(req);
+    const session = req.user!;
 
     const profile = await prisma.recruiterProfile.findUnique({
       where: { userId: session.id },
@@ -361,7 +369,7 @@ router.get(
 router.patch(
   "/settings",
   asyncHandler(async (req: AuthenticatedRequest, res) => {
-    const session = await requireRecruiter(req);
+    const session = req.user!;
     const body = req.body;
 
     const profile = await prisma.recruiterProfile.upsert({

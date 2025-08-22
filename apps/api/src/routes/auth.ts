@@ -35,7 +35,10 @@ router.post(
   asyncHandler(async (req, res) => {
     try {
       const credentials = loginSchema.parse(req.body);
-      const result = await authService.login(credentials);
+      const result = await authService.login({
+        email: credentials.email!,
+        password: credentials.password!,
+      });
       return res.json(result);
     } catch (error) {
       return res.status(403).json({ error: "Invalid email or password" });
@@ -75,7 +78,10 @@ router.post(
   "/signup",
   asyncHandler(async (req, res) => {
     const data = signupSchema.parse(req.body);
-    const result = await authService.signup(data);
+    const result = await authService.signup({
+      ...data,
+      role: "RECRUITER" as const,
+    });
 
     res.json(result);
   })
@@ -120,7 +126,10 @@ router.post(
   requireAuth(authService),
   asyncHandler(async (req: Request, res) => {
     const data = changePasswordSchema.parse(req.body);
-    await authService.changePassword((req as any).user!.id, data);
+    await authService.changePassword((req as any).user!.id, {
+      currentPassword: data.currentPassword!,
+      newPassword: data.newPassword!,
+    });
 
     res.json({ message: "Password changed successfully" });
   })
