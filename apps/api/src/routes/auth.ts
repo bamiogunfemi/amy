@@ -3,13 +3,18 @@ import { PrismaClient } from "@amy/db";
 import { AuthService } from "@amy/auth";
 import { requireAuth } from "@amy/auth";
 import { asyncHandler } from "../middleware/errorHandler";
-import {
-  loginSchema,
-  signupSchema,
-  resetPasswordSchema,
-  setNewPasswordSchema,
-  changePasswordSchema,
-} from "@amy/ui";
+import { z } from "zod";
+
+const loginSchema = z.object({ email: z.string().email(), password: z.string() });
+const signupSchema = z.object({ 
+  email: z.string().email(), 
+  password: z.string().min(8),
+  name: z.string(),
+  companyName: z.string().optional()
+});
+const resetPasswordSchema = z.object({ email: z.string().email() });
+const setNewPasswordSchema = z.object({ token: z.string(), newPassword: z.string().min(8) });
+const changePasswordSchema = z.object({ currentPassword: z.string(), newPassword: z.string().min(8) });
 
 const router = Router();
 const prisma = new PrismaClient();

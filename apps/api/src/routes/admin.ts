@@ -2,14 +2,14 @@ import { Router, Request } from "express";
 import { PrismaClient } from "@amy/db";
 import { requireAuth, requireAdmin } from "@amy/auth";
 import { asyncHandler } from "../middleware/errorHandler";
-import {
-  blockUserSchema,
-  unblockUserSchema,
-  deleteUserSchema,
-  extendTrialSchema,
-  createCompanySchema,
-  updateCompanySchema,
-} from "@amy/ui";
+import { z } from "zod";
+
+const blockUserSchema = z.object({ userId: z.string() });
+const unblockUserSchema = z.object({ userId: z.string() });
+const deleteUserSchema = z.object({ userId: z.string() });
+const extendTrialSchema = z.object({ userId: z.string(), days: z.number() });
+const createCompanySchema = z.object({ name: z.string(), slug: z.string() });
+const updateCompanySchema = z.object({ id: z.string(), name: z.string(), slug: z.string() });
 
 const router = Router();
 const prisma = new PrismaClient();
@@ -24,7 +24,7 @@ router.get(
     const [totalUsers, totalCandidates, totalCompanies, activeTrials] =
       await Promise.all([
         prisma.user.count({ where: { deletedAt: null } }),
-        prisma.candidate.count({ where: { deletedAt: null } }),
+        prisma.candidate.count(),
         prisma.company.count(),
         prisma.subscription.count({ where: { status: "trial" } }),
       ]);
@@ -58,7 +58,7 @@ router.get(
   "/users",
   asyncHandler(async (req: Request, res) => {
     const users = await prisma.user.findMany({
-      where: { deletedAt: null },
+
       include: {
         company: true,
         status: true,

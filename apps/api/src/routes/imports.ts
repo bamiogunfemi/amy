@@ -10,7 +10,7 @@ router.get("/sources", async (req: Request, res) => {
 
   const sources = await prisma.importSource.findMany({
     where: {
-      userId: session.userId,
+      userId: session.id,
     },
     include: {
       jobs: {
@@ -30,7 +30,7 @@ router.post("/sources", async (req: Request, res) => {
   const source = await prisma.importSource.create({
     data: {
       ...req.body,
-      userId: session.userId,
+      userId: session.id,
     },
   });
 
@@ -44,7 +44,7 @@ router.get("/jobs", async (req: Request, res) => {
   const jobs = await prisma.importJob.findMany({
     where: {
       source: {
-        userId: session.userId,
+        userId: session.id,
       },
     },
     include: {
