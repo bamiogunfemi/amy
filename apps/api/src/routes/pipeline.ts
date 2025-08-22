@@ -52,4 +52,4 @@ router.get('/applications', async (req: AuthenticatedRequest, res) => {
   res.json({ applications })
 })
 
-export { router as pipelineRoutes }
+export { router as pipelineRoutes };

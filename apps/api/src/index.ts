@@ -7,15 +7,15 @@ import session from "express-session";
 import passport from "passport";
 import dotenv from "dotenv";
 
-import authRoutes from "./routes/auth";
-import recruiterRoutes from "./routes/recruiter";
-import adminRoutes from "./routes/admin";
-import candidateRoutes from "./routes/candidates";
-import pipelineRoutes from "./routes/pipeline";
-import searchRoutes from "./routes/search";
-import importRoutes from "./routes/imports";
-import notificationRoutes from "./routes/notifications";
-import userRoutes from "./routes/users";
+import { authRoutes } from "./routes/auth";
+import { recruiterRoutes } from "./routes/recruiter";
+import { adminRoutes } from "./routes/admin";
+import { candidateRoutes } from "./routes/candidates";
+import { pipelineRoutes } from "./routes/pipeline";
+import { searchRoutes } from "./routes/search";
+import { importRoutes } from "./routes/imports";
+import { notificationRoutes } from "./routes/notifications";
+import { userRoutes } from "./routes/users";
 
 dotenv.config();
 

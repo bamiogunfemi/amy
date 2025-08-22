@@ -1,9 +1,7 @@
 import axios from "axios";
+import { getApiUrl } from "../constants/environment";
 
-const API_BASE_URL =
-  typeof window !== "undefined" && (window as any).__ENV__?.VITE_API_URL
-    ? (window as any).__ENV__.VITE_API_URL
-    : "http://localhost:3001";
+const API_BASE_URL = getApiUrl();
 
 export const apiClient = axios.create({
   baseURL: API_BASE_URL,

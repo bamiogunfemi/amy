@@ -55,4 +55,4 @@ router.get('/skills', async (req: AuthenticatedRequest, res) => {
   res.json({ skills })
 })
 
-export { router as searchRoutes }
+export { router as searchRoutes };

@@ -37,4 +37,4 @@ router.put('/:id/read', async (req: AuthenticatedRequest, res) => {
   res.json({ message: 'Notification marked as read' })
 })
 
-export { router as notificationRoutes }
+export { router as notificationRoutes };

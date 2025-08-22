@@ -36,4 +36,4 @@ router.put('/profile', async (req: AuthenticatedRequest, res) => {
   res.json({ user })
 })
 
-export { router as userRoutes }
+export { router as userRoutes };

@@ -80,6 +80,8 @@ export const PAGINATION = {
   MAX_PER_PAGE: 100,
 } as const;
 
+export * from "./environment";
+
 export const TOAST_MESSAGES = {
   SUCCESS: {
     LOGIN: "Logged in successfully",
