@@ -153,18 +153,21 @@ pnpm db:seed
 Set these in each Vercel project's environment variables:
 
 #### **Admin App Environment Variables**
+
 ```env
 VITE_API_URL=https://amy-api.railway.app
 VITE_APP_NAME=Amy Admin Dashboard
 ```
 
 #### **Recruiter App Environment Variables**
+
 ```env
 VITE_API_URL=https://amy-api.railway.app
 VITE_APP_NAME=Amy Recruiter Dashboard
 ```
 
 #### **Web App Environment Variables**
+
 ```env
 VITE_API_URL=https://amy-api.railway.app
 VITE_APP_NAME=Amy Recruitment Platform

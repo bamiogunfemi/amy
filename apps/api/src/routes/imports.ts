@@ -1,60 +1,59 @@
-import { Router, Request } from 'express'
-import { PrismaClient } from '@amy/db'
+import { Router, Request } from "express";
+import { PrismaClient } from "@amy/db";
 
-
-const router = Router()
-const prisma = new PrismaClient()
+const router = Router();
+const prisma = new PrismaClient();
 
 // Get import sources
-router.get('/sources', async (req: Request, res) => {
-  const session = req.user!
-  
+router.get("/sources", async (req: Request, res) => {
+  const session = req.user!;
+
   const sources = await prisma.importSource.findMany({
     where: {
-      userId: session.userId
+      userId: session.userId,
     },
     include: {
       jobs: {
-        orderBy: { createdAt: 'desc' },
-        take: 5
-      }
-    }
-  })
+        orderBy: { createdAt: "desc" },
+        take: 5,
+      },
+    },
+  });
 
-  res.json({ sources })
-})
+  res.json({ sources });
+});
 
 // Create import source
-router.post('/sources', async (req: Request, res) => {
-  const session = req.user!
-  
+router.post("/sources", async (req: Request, res) => {
+  const session = req.user!;
+
   const source = await prisma.importSource.create({
     data: {
       ...req.body,
-      userId: session.userId
-    }
-  })
+      userId: session.userId,
+    },
+  });
 
-  res.status(201).json({ source })
-})
+  res.status(201).json({ source });
+});
 
 // Get import jobs
-router.get('/jobs', async (req: Request, res) => {
-  const session = req.user!
-  
+router.get("/jobs", async (req: Request, res) => {
+  const session = req.user!;
+
   const jobs = await prisma.importJob.findMany({
     where: {
       source: {
-        userId: session.userId
-      }
+        userId: session.userId,
+      },
     },
     include: {
-      source: true
+      source: true,
     },
-    orderBy: { createdAt: 'desc' }
-  })
+    orderBy: { createdAt: "desc" },
+  });
 
-  res.json({ jobs })
-})
+  res.json({ jobs });
+});
 
 export { router as importRoutes };
