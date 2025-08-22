@@ -1,5 +1,8 @@
 import { Request, Response, NextFunction } from "express";
-import { PrismaClientKnownRequestError, PrismaClientValidationError } from "@prisma/client";
+import {
+  PrismaClientKnownRequestError,
+  PrismaClientValidationError,
+} from "@prisma/client";
 
 export interface AppError extends Error {
   statusCode?: number;

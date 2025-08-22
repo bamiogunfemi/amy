@@ -9,7 +9,11 @@ const unblockUserSchema = z.object({ userId: z.string() });
 const deleteUserSchema = z.object({ userId: z.string() });
 const extendTrialSchema = z.object({ userId: z.string(), days: z.number() });
 const createCompanySchema = z.object({ name: z.string(), slug: z.string() });
-const updateCompanySchema = z.object({ id: z.string(), name: z.string(), slug: z.string() });
+const updateCompanySchema = z.object({
+  id: z.string(),
+  name: z.string(),
+  slug: z.string(),
+});
 
 const router = Router();
 const prisma = new PrismaClient();
@@ -58,7 +62,6 @@ router.get(
   "/users",
   asyncHandler(async (req: Request, res) => {
     const users = await prisma.user.findMany({
-
       include: {
         company: true,
         status: true,
