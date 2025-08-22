@@ -14,7 +14,7 @@ This guide covers deploying all Amy platform applications to production using fr
 
 ### **Backend API (Railway - Recommended)**
 
-- **API Server**: `https://amy-api.railway.app`
+- **API Server**: `https://amy-8a0j.onrender.com`
 - **Cost**: $5/month (free tier)
 - **Features**: Auto-deploy, SSL, custom domains
 
@@ -155,21 +155,21 @@ Set these in each Vercel project's environment variables:
 #### **Admin App Environment Variables**
 
 ```env
-VITE_API_URL=https://amy-api.railway.app
+VITE_API_URL=https://amy-8a0j.onrender.com
 VITE_APP_NAME=Amy Admin Dashboard
 ```
 
 #### **Recruiter App Environment Variables**
 
 ```env
-VITE_API_URL=https://amy-api.railway.app
+VITE_API_URL=https://amy-8a0j.onrender.com
 VITE_APP_NAME=Amy Recruiter Dashboard
 ```
 
 #### **Web App Environment Variables**
 
 ```env
-VITE_API_URL=https://amy-api.railway.app
+VITE_API_URL=https://amy-8a0j.onrender.com
 VITE_APP_NAME=Amy Recruitment Platform
 ```
 
@@ -215,7 +215,7 @@ After deployment, update the API URLs in your frontend apps:
 // packages/ui/src/constants/index.ts
 export const API_BASE_URL =
   process.env.NODE_ENV === "production"
-    ? "https://amy-api.railway.app"
+    ? "https://amy-8a0j.onrender.com"
     : "http://localhost:3001";
 ```
 
@@ -228,7 +228,7 @@ The API server is already configured to accept requests from your Vercel domains
 ### **Health Check**
 
 ```bash
-curl https://amy-api.railway.app/api/health
+curl https://amy-8a0j.onrender.com/api/health
 ```
 
 ### **Test Frontend Apps**
@@ -316,4 +316,4 @@ Your Amy platform is now deployed and ready for production use!
 - **Landing Page**: https://amy-web.vercel.app
 - **Recruiter Dashboard**: https://amy-app.vercel.app
 - **Admin Dashboard**: https://amy-admin.vercel.app
-- **API Backend**: https://amy-api.railway.app
+- **API Backend**: https://amy-8a0j.onrender.com
