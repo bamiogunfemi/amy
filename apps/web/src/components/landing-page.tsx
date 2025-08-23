@@ -5,7 +5,6 @@ import { ArrowRight, Users, Shield, Upload, Search, BarChart3 } from 'lucide-rea
 export function LandingPage() {
   return (
     <div className="min-h-screen bg-background">
-      {/* Header */}
       <header className="border-b">
         <div className="container mx-auto px-4 py-4 flex items-center justify-between">
           <Logo size="sm" />
@@ -22,16 +21,15 @@ export function LandingPage() {
           </nav>
           <div className="flex items-center space-x-4">
             <Button variant="ghost" asChild>
-              <a href="http://localhost:5174/login">Sign In</a>
+              <a href={`${import.meta.env.VITE_DASHBOARD_URL}/login`}>Sign In</a>
             </Button>
             <Button asChild>
-              <a href="http://localhost:5174/signup">Get Started</a>
+              <a href={`${import.meta.env.VITE_DASHBOARD_URL}/signup`}>Get Started</a>
             </Button>
           </div>
         </div>
       </header>
 
-      {/* Hero Section */}
       <section className="py-20 px-4">
         <div className="container mx-auto text-center">
           <h1 className="text-5xl md:text-6xl font-bold mb-6">
@@ -45,7 +43,7 @@ export function LandingPage() {
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Button size="lg" asChild>
-              <a href="http://localhost:5174/signup">
+              <a href={`${import.meta.env.VITE_DASHBOARD_URL}/signup`}>
                 Start Free Trial
                 <ArrowRight className="ml-2 h-4 w-4" />
               </a>
@@ -57,7 +55,6 @@ export function LandingPage() {
         </div>
       </section>
 
-      {/* Features Section */}
       <section id="features" className="py-20 px-4 bg-muted/50">
         <div className="container mx-auto">
           <div className="text-center mb-16">
@@ -133,7 +130,6 @@ export function LandingPage() {
         </div>
       </section>
 
-      {/* Pricing Section */}
       <section id="pricing" className="py-20 px-4">
         <div className="container mx-auto">
           <div className="text-center mb-16">
@@ -168,7 +164,7 @@ export function LandingPage() {
                 </li>
               </ul>
               <Button variant="outline" className="w-full" asChild>
-                <a href="http://localhost:5174/signup">Start Trial</a>
+                <a href={`${import.meta.env.VITE_DASHBOARD_URL}/signup`}>Start Trial</a>
               </Button>
             </div>
 
@@ -198,7 +194,7 @@ export function LandingPage() {
                 </li>
               </ul>
               <Button className="w-full" asChild>
-                <a href="http://localhost:5174/signup">Get Started</a>
+                <a href={`${import.meta.env.VITE_DASHBOARD_URL}/signup`}>Get Started</a>
               </Button>
             </div>
 
@@ -228,14 +224,13 @@ export function LandingPage() {
                 </li>
               </ul>
               <Button variant="outline" className="w-full" asChild>
-                <a href="http://localhost:5174/signup">Get Started</a>
+                <a href={`${import.meta.env.VITE_DASHBOARD_URL}/signup`}>Get Started</a>
               </Button>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Footer */}
       <footer className="border-t py-12 px-4">
         <div className="container mx-auto">
           <div className="grid md:grid-cols-4 gap-8">

@@ -1,0 +1,254 @@
+# React Comments & Code Documentation Guidelines
+
+## Overview
+
+This rule establishes guidelines for when and how to use comments in React components and across the codebase. The goal is to maintain clean, self-documenting code while avoiding unnecessary or redundant comments.
+
+## Comment Guidelines
+
+### ❌ Forbidden Comments
+
+1. **JSX Section Comments**
+
+   ```tsx
+   // ❌ Bad - Don't comment obvious JSX sections
+   {
+     /* Header */
+   }
+   <header>...</header>;
+
+   {
+     /* Hero Section */
+   }
+   <section>...</section>;
+
+   {
+     /* Footer */
+   }
+   <footer>...</footer>;
+   ```
+
+2. **Redundant Comments**
+
+   ```tsx
+   // ❌ Bad - Comment states the obvious
+   const [count, setCount] = useState(0); // Initialize count state
+
+   // ❌ Bad - Comment repeats the code
+   const handleClick = () => {
+     setCount(count + 1); // Increment count by 1
+   };
+   ```
+
+3. **Component Structure Comments**
+
+   ```tsx
+   // ❌ Bad - Don't comment component structure
+   {
+     /* Main Container */
+   }
+   <div className="container">
+     {/* Navigation */}
+     <nav>...</nav>
+
+     {/* Content Area */}
+     <main>...</main>
+   </div>;
+   ```
+
+4. **Import Comments**
+   ```tsx
+   // ❌ Bad - Don't comment imports
+   import React from "react"; // React library
+   import { Button } from "./ui/button"; // Button component
+   ```
+
+### ✅ Allowed Comments
+
+1. **Complex Business Logic**
+
+   ```tsx
+   // ✅ Good - Explains complex algorithm
+   const calculateDiscount = (price: number, userType: string) => {
+     // Apply tiered discount: 10% for premium, 5% for standard, 0% for basic
+     const discountRates = { premium: 0.1, standard: 0.05, basic: 0 };
+     return price * (1 - discountRates[userType] || 0);
+   };
+   ```
+
+2. **Non-Obvious Workarounds**
+
+   ```tsx
+   // ✅ Good - Explains why this workaround is needed
+   useEffect(() => {
+     // Force re-render on window resize due to chart library bug
+     const handleResize = () => setForceUpdate((prev) => !prev);
+     window.addEventListener("resize", handleResize);
+     return () => window.removeEventListener("resize", handleResize);
+   }, []);
+   ```
+
+3. **API Integration Notes**
+
+   ```tsx
+   // ✅ Good - Documents API behavior
+   const fetchUserData = async (userId: string) => {
+     // API returns 404 for deleted users, not null
+     const response = await api.get(`/users/${userId}`);
+     if (response.status === 404) return null;
+     return response.data;
+   };
+   ```
+
+4. **Performance Optimizations**
+   ```tsx
+   // ✅ Good - Explains performance consideration
+   const expensiveCalculation = useMemo(() => {
+     // Memoize to avoid recalculating on every render
+     return data.reduce((acc, item) => acc + item.value, 0);
+   }, [data]);
+   ```
+
+## React Component Structure
+
+### Self-Documenting Components
+
+```tsx
+// ✅ Good - Component structure is self-documenting
+export function UserProfile({ user, onUpdate }: UserProfileProps) {
+  const [isEditing, setIsEditing] = useState(false);
+
+  const handleSave = async (data: UserData) => {
+    await updateUser(user.id, data);
+    setIsEditing(false);
+  };
+
+  return (
+    <div className="user-profile">
+      <UserAvatar user={user} />
+      <UserDetails user={user} isEditing={isEditing} onSave={handleSave} />
+      <UserActions onEdit={() => setIsEditing(true)} />
+    </div>
+  );
+}
+```
+
+### Component Organization
+
+1. **Imports** (external libraries first, then internal)
+2. **Types/Interfaces** (if not in separate file)
+3. **Component definition**
+4. **Hooks and state**
+5. **Event handlers**
+6. **Effects**
+7. **Render logic**
+
+## File-Level Comments
+
+### ✅ Allowed File Comments
+
+```tsx
+// ✅ Good - Explains file purpose when not obvious
+/**
+ * Custom hook for managing form validation state
+ * Provides real-time validation feedback and submission handling
+ */
+export function useFormValidation<T>(schema: ZodSchema<T>) {
+  // Implementation...
+}
+```
+
+### ❌ Forbidden File Comments
+
+```tsx
+// ❌ Bad - Obvious from filename and content
+/**
+ * User profile component
+ * Displays user information and allows editing
+ */
+export function UserProfile() {
+  // Implementation...
+}
+```
+
+## Testing Comments
+
+### ✅ Allowed Test Comments
+
+```tsx
+// ✅ Good - Explains test scenario
+describe("UserProfile", () => {
+  it("should handle network errors gracefully", () => {
+    // Mock API failure to test error boundary
+    server.use(
+      rest.get("/api/user", (req, res, ctx) => {
+        return res(ctx.status(500));
+      })
+    );
+
+    render(<UserProfile userId="123" />);
+    expect(screen.getByText(/error/i)).toBeInTheDocument();
+  });
+});
+```
+
+## Documentation Standards
+
+### When Comments Are Required
+
+1. **Public APIs** - Document exported functions and components
+2. **Complex algorithms** - Explain the logic, not the code
+3. **Business rules** - Document why certain decisions were made
+4. **Performance considerations** - Explain optimizations and trade-offs
+5. **Security measures** - Document security-related code
+
+### Comment Quality Standards
+
+1. **Explain WHY, not WHAT** - The code shows what it does
+2. **Keep comments up-to-date** - Outdated comments are worse than no comments
+3. **Use clear, concise language** - Avoid jargon and be specific
+4. **Focus on intent** - Explain the purpose, not the implementation
+
+## Enforcement
+
+- **Linting**: Use ESLint rules to catch obvious comment violations
+- **Code Review**: Reviewers should flag unnecessary comments
+- **Refactoring**: Remove comments during refactoring if they become redundant
+- **Documentation**: Prefer README files and API docs over inline comments
+
+## Examples of Clean Code
+
+```tsx
+// ✅ Good - No unnecessary comments, self-documenting
+export function CandidateCard({ candidate, onSelect }: CandidateCardProps) {
+  const { data: skills } = useSkills(candidate.id);
+  const { mutate: updateStatus } = useUpdateCandidateStatus();
+
+  const handleStatusChange = (newStatus: CandidateStatus) => {
+    updateStatus({ id: candidate.id, status: newStatus });
+  };
+
+  return (
+    <Card className="candidate-card">
+      <CardHeader>
+        <CandidateAvatar candidate={candidate} />
+        <CandidateInfo candidate={candidate} />
+      </CardHeader>
+      <CardContent>
+        <SkillsList skills={skills} />
+        <StatusSelector
+          currentStatus={candidate.status}
+          onStatusChange={handleStatusChange}
+        />
+      </CardContent>
+    </Card>
+  );
+}
+```
+
+Remember: **Code should be self-documenting. Comments should only explain the "why" behind complex logic, not the "what" that the code already clearly shows.**
+description:
+globs:
+alwaysApply: false
+
+---

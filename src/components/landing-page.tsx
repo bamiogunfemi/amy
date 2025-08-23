@@ -16,10 +16,10 @@ export function LandingPage() {
           </div>
           <div className="flex items-center space-x-4">
             <Button variant="ghost" asChild>
-              <a href="/login">Sign In</a>
+              <a href={`${import.meta.env.VITE_DASHBOARD_URL}/login`}>Sign In</a>
             </Button>
             <Button asChild>
-              <a href="/signup">Get Started</a>
+              <a href={`${import.meta.env.VITE_DASHBOARD_URL}/signup`}>Get Started</a>
             </Button>
           </div>
         </div>
@@ -37,7 +37,7 @@ export function LandingPage() {
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Button size="lg" asChild>
-              <a href="/signup">Start Free Trial</a>
+              <a href={`${import.meta.env.VITE_DASHBOARD_URL}/signup`}>Start Free Trial</a>
             </Button>
             <Button variant="outline" size="lg" asChild>
               <a href="#features">Learn More</a>
@@ -121,7 +121,7 @@ export function LandingPage() {
                   <li>• Email support</li>
                 </ul>
                 <Button className="w-full" variant="outline" asChild>
-                  <a href="/signup">Start Trial</a>
+                  <a href={`${import.meta.env.VITE_DASHBOARD_URL}/signup`}>Start Trial</a>
                 </Button>
               </CardContent>
             </Card>
@@ -140,7 +140,7 @@ export function LandingPage() {
                   <li>• Pipeline management</li>
                 </ul>
                 <Button className="w-full" asChild>
-                  <a href="/signup">Get Started</a>
+                  <a href={`${import.meta.env.VITE_DASHBOARD_URL}/signup`}>Get Started</a>
                 </Button>
               </CardContent>
             </Card>
@@ -159,7 +159,7 @@ export function LandingPage() {
                   <li>• Priority support</li>
                 </ul>
                 <Button className="w-full" variant="outline" asChild>
-                  <a href="/signup">Get Started</a>
+                  <a href={`${import.meta.env.VITE_DASHBOARD_URL}/signup`}>Get Started</a>
                 </Button>
               </CardContent>
             </Card>
