@@ -14,9 +14,132 @@ import {
   Eye,
   Edit,
   MoreHorizontal,
+  LogOut,
 } from 'lucide-react'
 import { useLogout, useRecruiterMetrics, useCandidates, usePipelineStages } from '@amy/ui'
 
+// Configuration objects
+const NAVIGATION_ITEMS = [
+  { id: 'overview', label: 'Overview', icon: BarChart3 },
+  { id: 'candidates', label: 'Candidates', icon: Users },
+  { id: 'pipeline', label: 'Pipeline', icon: Briefcase },
+  { id: 'search', label: 'Search', icon: Search },
+] as const
+
+const METRIC_CARDS = [
+  {
+    key: 'totalCandidates',
+    label: 'Total Candidates',
+    icon: Users,
+    color: 'from-blue-500 to-blue-600',
+    change: '+20.1% from last month',
+    changeColor: 'text-green-600'
+  },
+  {
+    key: 'activeApplications',
+    label: 'Active Applications',
+    icon: UserCheck,
+    color: 'from-green-500 to-green-600',
+    change: '+5.2% from last week',
+    changeColor: 'text-green-600'
+  },
+  {
+    key: 'interviewsScheduled',
+    label: 'Interviews Scheduled',
+    icon: Calendar,
+    color: 'from-purple-500 to-purple-600',
+    change: 'This week',
+    changeColor: 'text-purple-600'
+  },
+  {
+    key: 'offersExtended',
+    label: 'Offers Extended',
+    icon: Briefcase,
+    color: 'from-orange-500 to-orange-600',
+    change: 'This month',
+    changeColor: 'text-orange-600'
+  }
+] as const
+
+// Reusable components
+const MetricCard = ({
+  label,
+  value,
+  icon: Icon,
+  color,
+  change,
+  changeColor,
+  isLoading
+}: {
+  label: string
+  value: number
+  icon: React.ComponentType<{ className?: string }>
+  color: string
+  change: string
+  changeColor: string
+  isLoading: boolean
+}) => (
+  <div className="bg-white rounded-2xl p-6 shadow-sm border border-slate-200 hover:shadow-lg transition-all duration-200">
+    <div className="flex items-center justify-between mb-4">
+      <div className={`w-12 h-12 bg-gradient-to-br ${color} rounded-xl flex items-center justify-center`}>
+        <Icon className="h-6 w-6 text-white" />
+      </div>
+      <span className="text-2xl font-bold text-slate-900">
+        {isLoading ? (
+          <div className="h-8 w-16 bg-slate-200 rounded animate-pulse" />
+        ) : (
+          value || 0
+        )}
+      </span>
+    </div>
+    <h3 className="text-sm font-semibold text-slate-900 mb-1">{label}</h3>
+    <p className={`text-xs font-medium ${changeColor}`}>
+      {change}
+    </p>
+  </div>
+)
+
+const NavigationItem = ({
+  item,
+  isActive,
+  onClick
+}: {
+  item: typeof NAVIGATION_ITEMS[number]
+  isActive: boolean
+  onClick: () => void
+}) => {
+  const Icon = item.icon
+  return (
+    <button
+      onClick={onClick}
+      className={`w-full flex items-center space-x-3 px-4 py-3 rounded-xl text-left transition-all duration-200 ${isActive
+          ? 'bg-gradient-to-r from-rose-500 to-rose-600 text-white shadow-lg'
+          : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
+        }`}
+    >
+      <Icon className="h-5 w-5" />
+      <span className="font-medium">{item.label}</span>
+    </button>
+  )
+}
+
+const WelcomeSection = ({ greeting }: { greeting: string }) => (
+  <div className="bg-gradient-to-r from-rose-500 to-rose-600 rounded-2xl p-8 text-white">
+    <div className="flex items-center justify-between">
+      <div>
+        <h2 className="text-3xl font-bold mb-2">{greeting}! 👋</h2>
+        <p className="text-rose-100 text-lg">
+          Here&apos;s what&apos;s happening with your recruitment pipeline today
+        </p>
+      </div>
+      <div className="hidden md:block">
+        <div className="w-20 h-20 bg-white/20 rounded-full flex items-center justify-center">
+          <BarChart3 className="h-10 w-10 text-white" />
+        </div>
+      </div>
+    </div>
+  </div>
+)
 
 export function RecruiterDashboard() {
   const [activeTab, setActiveTab] = useState('overview')
@@ -38,13 +161,6 @@ export function RecruiterDashboard() {
     logoutMutation.mutate()
   }
 
-  const navigation = [
-    { id: 'overview', label: 'Overview', icon: BarChart3 },
-    { id: 'candidates', label: 'Candidates', icon: Users },
-    { id: 'pipeline', label: 'Pipeline', icon: Briefcase },
-    { id: 'search', label: 'Search', icon: Search },
-  ]
-
   const getGreeting = () => {
     const hour = new Date().getHours()
     if (hour < 12) return 'Good morning'
@@ -54,100 +170,27 @@ export function RecruiterDashboard() {
 
   const renderOverview = () => (
     <div className="space-y-8">
-      {/* Welcome Section */}
-      <div className="bg-gradient-to-r from-rose-500 to-rose-600 rounded-2xl p-8 text-white">
-        <div className="flex items-center justify-between">
-          <div>
-            <h2 className="text-3xl font-bold mb-2">{getGreeting()}! 👋</h2>
-            <p className="text-rose-100 text-lg">
-              Here&apos;s what&apos;s happening with your recruitment pipeline today
-            </p>
-          </div>
-          <div className="hidden md:block">
-            <div className="w-20 h-20 bg-white/20 rounded-full flex items-center justify-center">
-              <BarChart3 className="h-10 w-10 text-white" />
-            </div>
-          </div>
-        </div>
-      </div>
+      <WelcomeSection greeting={getGreeting()} />
 
-      {/* Stats Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        <div className="bg-white rounded-2xl p-6 shadow-sm border border-slate-200 hover:shadow-lg transition-all duration-200">
-          <div className="flex items-center justify-between mb-4">
-            <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl flex items-center justify-center">
-              <Users className="h-6 w-6 text-white" />
-            </div>
-            <span className="text-2xl font-bold text-slate-900">
-              {metricsQuery.isLoading ? (
-                <div className="h-8 w-16 bg-slate-200 rounded animate-pulse" />
-              ) : (
-                metrics?.totalCandidates || 0
-              )}
-            </span>
-          </div>
-          <h3 className="text-sm font-semibold text-slate-900 mb-1">Total Candidates</h3>
-          <p className="text-xs text-green-600 font-medium">
-            +20.1% from last month
-          </p>
-        </div>
-
-        <div className="bg-white rounded-2xl p-6 shadow-sm border border-slate-200 hover:shadow-lg transition-all duration-200">
-          <div className="flex items-center justify-between mb-4">
-            <div className="w-12 h-12 bg-gradient-to-br from-green-500 to-green-600 rounded-xl flex items-center justify-center">
-              <UserCheck className="h-6 w-6 text-white" />
-            </div>
-            <span className="text-2xl font-bold text-slate-900">
-              {metricsQuery.isLoading ? (
-                <div className="h-8 w-16 bg-slate-200 rounded animate-pulse" />
-              ) : (
-                metrics?.activeApplications || 0
-              )}
-            </span>
-          </div>
-          <h3 className="text-sm font-semibold text-slate-900 mb-1">Active Applications</h3>
-          <p className="text-xs text-green-600 font-medium">
-            +5.2% from last week
-          </p>
-        </div>
-
-        <div className="bg-white rounded-2xl p-6 shadow-sm border border-slate-200 hover:shadow-lg transition-all duration-200">
-          <div className="flex items-center justify-between mb-4">
-            <div className="w-12 h-12 bg-gradient-to-br from-purple-500 to-purple-600 rounded-xl flex items-center justify-center">
-              <Calendar className="h-6 w-6 text-white" />
-            </div>
-            <span className="text-2xl font-bold text-slate-900">
-              {metricsQuery.isLoading ? (
-                <div className="h-8 w-16 bg-slate-200 rounded animate-pulse" />
-              ) : (
-                metrics?.interviewsScheduled || 0
-              )}
-            </span>
-          </div>
-          <h3 className="text-sm font-semibold text-slate-900 mb-1">Interviews Scheduled</h3>
-          <p className="text-xs text-purple-600 font-medium">
-            This week
-          </p>
-        </div>
-
-        <div className="bg-white rounded-2xl p-6 shadow-sm border border-slate-200 hover:shadow-lg transition-all duration-200">
-          <div className="flex items-center justify-between mb-4">
-            <div className="w-12 h-12 bg-gradient-to-br from-orange-500 to-orange-600 rounded-xl flex items-center justify-center">
-              <Briefcase className="h-6 w-6 text-white" />
-            </div>
-            <span className="text-2xl font-bold text-slate-900">
-              {metricsQuery.isLoading ? (
-                <div className="h-8 w-16 bg-slate-200 rounded animate-pulse" />
-              ) : (
-                metrics?.offersExtended || 0
-              )}
-            </span>
-          </div>
-          <h3 className="text-sm font-semibold text-slate-900 mb-1">Offers Extended</h3>
-          <p className="text-xs text-orange-600 font-medium">
-            This month
-          </p>
-        </div>
+        {METRIC_CARDS.map((card) => (
+          <MetricCard
+            key={card.key}
+            label={card.label}
+            value={
+              typeof metrics?.[card.key as keyof typeof metrics] === 'number'
+                ? metrics[card.key as keyof typeof metrics] as number
+                : Array.isArray(metrics?.[card.key as keyof typeof metrics])
+                ? (metrics[card.key as keyof typeof metrics] as any[]).length
+                : 0
+            }
+            icon={card.icon}
+            color={card.color}
+            change={card.change}
+            changeColor={card.changeColor}
+            isLoading={metricsQuery.isLoading}
+          />
+        ))}
       </div>
 
       {/* Recent Activity */}
@@ -447,23 +490,27 @@ export function RecruiterDashboard() {
         {/* Sidebar */}
         <aside className="w-64 bg-white/80 backdrop-blur-sm border-r border-slate-200 min-h-screen">
           <nav className="p-6 space-y-2">
-            {navigation.map((item) => {
-              const Icon = item.icon
-              return (
-                <button
-                  key={item.id}
-                  onClick={() => setActiveTab(item.id)}
-                  className={`w-full flex items-center space-x-3 px-4 py-3 rounded-xl text-left transition-all duration-200 ${activeTab === item.id
-                    ? 'bg-gradient-to-r from-rose-500 to-rose-600 text-white shadow-lg'
-                    : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
-                    }`}
-                >
-                  <Icon className="h-5 w-5" />
-                  <span className="font-medium">{item.label}</span>
-                </button>
-              )
-            })}
+            {NAVIGATION_ITEMS.map((item) => (
+              <NavigationItem
+                key={item.id}
+                item={item}
+                isActive={activeTab === item.id}
+                onClick={() => setActiveTab(item.id)}
+              />
+            ))}
           </nav>
+          
+          <div className="px-6 mt-auto pt-8">
+            <Button
+              variant="ghost"
+              className="w-full justify-start text-slate-600 hover:text-slate-900"
+              onClick={handleSignOut}
+              disabled={logoutMutation.isPending}
+            >
+              <LogOut className="h-5 w-5 mr-3" />
+              {logoutMutation.isPending ? 'Signing out...' : 'Sign Out'}
+            </Button>
+          </div>
         </aside>
 
         {/* Main content */}
