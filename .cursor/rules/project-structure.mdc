@@ -3,7 +3,9 @@ description: Guidelines for continuously improving Cursor rules based on emergin
 globs: **/*
 alwaysApply: true
 ---
+
 # Cursor Rules Location
+
 # Amy Recruitment Platform - Project Structure
 
 ## Overview
@@ -159,7 +161,6 @@ amy/
 - Component tests: `packages/ui/src/components/*.test.tsx`
 - Hook tests: `packages/ui/src/hooks/*.test.ts`
 - Service tests: `packages/auth/src/*.test.ts`
-
 
 ### Test Configuration
 

@@ -2,6 +2,167 @@
 import { Button, Logo } from '@amy/ui'
 import { ArrowRight, Users, Shield, Upload, Search, BarChart3 } from 'lucide-react'
 
+// Configuration objects
+const NAV_LINKS = [
+  { href: '#features', label: 'Features' },
+  { href: '#pricing', label: 'Pricing' },
+  { href: '#contact', label: 'Contact' }
+] as const
+
+const FEATURES = [
+  {
+    icon: Users,
+    title: 'Candidate Management',
+    description: 'Organize and track candidates with powerful search and filtering capabilities.'
+  },
+  {
+    icon: Shield,
+    title: 'Strict Isolation',
+    description: 'Complete data separation between recruiters and companies with role-based access.'
+  },
+  {
+    icon: Upload,
+    title: 'Multi-Source Imports',
+    description: 'Import candidates from Google Drive, Airtable, Sheets, CSV, and Excel files.'
+  },
+  {
+    icon: Search,
+    title: 'Advanced Search',
+    description: 'Full-text search across candidate profiles, skills, and documents.'
+  },
+  {
+    icon: BarChart3,
+    title: 'Pipeline Management',
+    description: 'Custom Kanban boards to track candidates through your recruitment process.'
+  },
+  {
+    icon: Shield,
+    title: 'Admin Controls',
+    description: 'Comprehensive admin dashboard for user management and system oversight.'
+  }
+] as const
+
+const PRICING_PLANS = [
+  {
+    name: 'Free Trial',
+    price: '$0',
+    period: '/month',
+    features: ['200 candidates', '300 daily imports', 'Basic search', '14-day trial'],
+    cta: 'Start Trial',
+    variant: 'outline' as const,
+    popular: false
+  },
+  {
+    name: 'Starter',
+    price: '$29',
+    period: '/month',
+    features: ['1,000 candidates', '1,000 daily imports', 'Advanced search', 'Pipeline management', 'Import integrations'],
+    cta: 'Get Started',
+    variant: 'default' as const,
+    popular: true
+  },
+  {
+    name: 'Professional',
+    price: '$79',
+    period: '/month',
+    features: ['5,000 candidates', '5,000 daily imports', 'Team collaboration', 'Advanced analytics', 'Priority support'],
+    cta: 'Get Started',
+    variant: 'outline' as const,
+    popular: false
+  }
+] as const
+
+const FOOTER_LINKS = [
+  {
+    title: 'Product',
+    links: [
+      { href: '#features', label: 'Features' },
+      { href: '#pricing', label: 'Pricing' },
+      { href: '#', label: 'API' }
+    ]
+  },
+  {
+    title: 'Company',
+    links: [
+      { href: '#', label: 'About' },
+      { href: '#', label: 'Blog' },
+      { href: '#', label: 'Careers' }
+    ]
+  },
+  {
+    title: 'Support',
+    links: [
+      { href: '#', label: 'Help Center' },
+      { href: '#', label: 'Contact' },
+      { href: '#', label: 'Status' }
+    ]
+  }
+] as const
+
+// Reusable components
+const NavLink = ({ href, label }: { href: string; label: string }) => (
+  <a href={href} className="text-muted-foreground hover:text-foreground transition-colors">
+    {label}
+  </a>
+)
+
+const FeatureCard = ({ icon: Icon, title, description }: {
+  icon: React.ComponentType<{ className?: string }>
+  title: string
+  description: string
+}) => (
+  <div className="bg-background p-6 rounded-lg border">
+    <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center mb-4">
+      <Icon className="h-6 w-6 text-primary" />
+    </div>
+    <h3 className="text-xl font-semibold mb-2">{title}</h3>
+    <p className="text-muted-foreground">{description}</p>
+  </div>
+)
+
+const PricingCard = ({ name, price, period, features, cta, variant, popular }: {
+  name: string
+  price: string
+  period: string
+  features: readonly string[]
+  cta: string
+  variant: 'default' | 'outline'
+  popular: boolean
+}) => (
+  <div className={`bg-background p-8 rounded-lg border ${popular ? 'border-primary' : ''}`}>
+    <h3 className="text-2xl font-bold mb-2">{name}</h3>
+    <div className="text-3xl font-bold mb-4">
+      {price}<span className="text-lg text-muted-foreground">{period}</span>
+    </div>
+    <ul className="space-y-3 mb-8">
+      {features.map((feature, index) => (
+        <li key={index} className="flex items-center">
+          <span className="w-2 h-2 bg-primary rounded-full mr-3" />
+          {feature}
+        </li>
+      ))}
+    </ul>
+    <Button variant={variant} className="w-full" asChild>
+      <a href={`${import.meta.env.VITE_DASHBOARD_URL}/signup`}>{cta}</a>
+    </Button>
+  </div>
+)
+
+const FooterSection = ({ title, links }: { title: string; links: readonly { href: string; label: string }[] }) => (
+  <div>
+    <h4 className="font-semibold mb-4">{title}</h4>
+    <ul className="space-y-2 text-muted-foreground">
+      {links.map((link, index) => (
+        <li key={index}>
+          <a href={link.href} className="hover:text-foreground transition-colors">
+            {link.label}
+          </a>
+        </li>
+      ))}
+    </ul>
+  </div>
+)
+
 export function LandingPage() {
   return (
     <div className="min-h-screen bg-background">
@@ -9,15 +170,9 @@ export function LandingPage() {
         <div className="container mx-auto px-4 py-4 flex items-center justify-between">
           <Logo size="sm" />
           <nav className="hidden md:flex items-center space-x-8">
-            <a href="#features" className="text-muted-foreground hover:text-foreground transition-colors">
-              Features
-            </a>
-            <a href="#pricing" className="text-muted-foreground hover:text-foreground transition-colors">
-              Pricing
-            </a>
-            <a href="#contact" className="text-muted-foreground hover:text-foreground transition-colors">
-              Contact
-            </a>
+            {NAV_LINKS.map((link, index) => (
+              <NavLink key={index} {...link} />
+            ))}
           </nav>
           <div className="flex items-center space-x-4">
             <Button variant="ghost" asChild>
@@ -67,65 +222,9 @@ export function LandingPage() {
           </div>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            <div className="bg-background p-6 rounded-lg border">
-              <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center mb-4">
-                <Users className="h-6 w-6 text-primary" />
-              </div>
-              <h3 className="text-xl font-semibold mb-2">Candidate Management</h3>
-              <p className="text-muted-foreground">
-                Organize and track candidates with powerful search and filtering capabilities.
-              </p>
-            </div>
-
-            <div className="bg-background p-6 rounded-lg border">
-              <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center mb-4">
-                <Shield className="h-6 w-6 text-primary" />
-              </div>
-              <h3 className="text-xl font-semibold mb-2">Strict Isolation</h3>
-              <p className="text-muted-foreground">
-                Complete data separation between recruiters and companies with role-based access.
-              </p>
-            </div>
-
-            <div className="bg-background p-6 rounded-lg border">
-              <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center mb-4">
-                <Upload className="h-6 w-6 text-primary" />
-              </div>
-              <h3 className="text-xl font-semibold mb-2">Multi-Source Imports</h3>
-              <p className="text-muted-foreground">
-                Import candidates from Google Drive, Airtable, Sheets, CSV, and Excel files.
-              </p>
-            </div>
-
-            <div className="bg-background p-6 rounded-lg border">
-              <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center mb-4">
-                <Search className="h-6 w-6 text-primary" />
-              </div>
-              <h3 className="text-xl font-semibold mb-2">Advanced Search</h3>
-              <p className="text-muted-foreground">
-                Full-text search across candidate profiles, skills, and documents.
-              </p>
-            </div>
-
-            <div className="bg-background p-6 rounded-lg border">
-              <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center mb-4">
-                <BarChart3 className="h-6 w-6 text-primary" />
-              </div>
-              <h3 className="text-xl font-semibold mb-2">Pipeline Management</h3>
-              <p className="text-muted-foreground">
-                Custom Kanban boards to track candidates through your recruitment process.
-              </p>
-            </div>
-
-            <div className="bg-background p-6 rounded-lg border">
-              <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center mb-4">
-                <Shield className="h-6 w-6 text-primary" />
-              </div>
-              <h3 className="text-xl font-semibold mb-2">Admin Controls</h3>
-              <p className="text-muted-foreground">
-                Comprehensive admin dashboard for user management and system oversight.
-              </p>
-            </div>
+            {FEATURES.map((feature, index) => (
+              <FeatureCard key={index} {...feature} />
+            ))}
           </div>
         </div>
       </section>
@@ -142,91 +241,9 @@ export function LandingPage() {
           </div>
 
           <div className="grid md:grid-cols-3 gap-8 max-w-4xl mx-auto">
-            <div className="bg-background p-8 rounded-lg border">
-              <h3 className="text-2xl font-bold mb-2">Free Trial</h3>
-              <div className="text-3xl font-bold mb-4">$0<span className="text-lg text-muted-foreground">/month</span></div>
-              <ul className="space-y-3 mb-8">
-                <li className="flex items-center">
-                  <span className="w-2 h-2 bg-primary rounded-full mr-3"></span>
-                  200 candidates
-                </li>
-                <li className="flex items-center">
-                  <span className="w-2 h-2 bg-primary rounded-full mr-3"></span>
-                  300 daily imports
-                </li>
-                <li className="flex items-center">
-                  <span className="w-2 h-2 bg-primary rounded-full mr-3"></span>
-                  Basic search
-                </li>
-                <li className="flex items-center">
-                  <span className="w-2 h-2 bg-primary rounded-full mr-3"></span>
-                  14-day trial
-                </li>
-              </ul>
-              <Button variant="outline" className="w-full" asChild>
-                <a href={`${import.meta.env.VITE_DASHBOARD_URL}/signup`}>Start Trial</a>
-              </Button>
-            </div>
-
-            <div className="bg-background p-8 rounded-lg border border-primary">
-              <h3 className="text-2xl font-bold mb-2">Starter</h3>
-              <div className="text-3xl font-bold mb-4">$29<span className="text-lg text-muted-foreground">/month</span></div>
-              <ul className="space-y-3 mb-8">
-                <li className="flex items-center">
-                  <span className="w-2 h-2 bg-primary rounded-full mr-3"></span>
-                  1,000 candidates
-                </li>
-                <li className="flex items-center">
-                  <span className="w-2 h-2 bg-primary rounded-full mr-3"></span>
-                  1,000 daily imports
-                </li>
-                <li className="flex items-center">
-                  <span className="w-2 h-2 bg-primary rounded-full mr-3"></span>
-                  Advanced search
-                </li>
-                <li className="flex items-center">
-                  <span className="w-2 h-2 bg-primary rounded-full mr-3"></span>
-                  Pipeline management
-                </li>
-                <li className="flex items-center">
-                  <span className="w-2 h-2 bg-primary rounded-full mr-3"></span>
-                  Import integrations
-                </li>
-              </ul>
-              <Button className="w-full" asChild>
-                <a href={`${import.meta.env.VITE_DASHBOARD_URL}/signup`}>Get Started</a>
-              </Button>
-            </div>
-
-            <div className="bg-background p-8 rounded-lg border">
-              <h3 className="text-2xl font-bold mb-2">Professional</h3>
-              <div className="text-3xl font-bold mb-4">$79<span className="text-lg text-muted-foreground">/month</span></div>
-              <ul className="space-y-3 mb-8">
-                <li className="flex items-center">
-                  <span className="w-2 h-2 bg-primary rounded-full mr-3"></span>
-                  5,000 candidates
-                </li>
-                <li className="flex items-center">
-                  <span className="w-2 h-2 bg-primary rounded-full mr-3"></span>
-                  5,000 daily imports
-                </li>
-                <li className="flex items-center">
-                  <span className="w-2 h-2 bg-primary rounded-full mr-3"></span>
-                  Team collaboration
-                </li>
-                <li className="flex items-center">
-                  <span className="w-2 h-2 bg-primary rounded-full mr-3"></span>
-                  Advanced analytics
-                </li>
-                <li className="flex items-center">
-                  <span className="w-2 h-2 bg-primary rounded-full mr-3"></span>
-                  Priority support
-                </li>
-              </ul>
-              <Button variant="outline" className="w-full" asChild>
-                <a href={`${import.meta.env.VITE_DASHBOARD_URL}/signup`}>Get Started</a>
-              </Button>
-            </div>
+            {PRICING_PLANS.map((plan, index) => (
+              <PricingCard key={index} {...plan} />
+            ))}
           </div>
         </div>
       </section>
@@ -246,32 +263,9 @@ export function LandingPage() {
               </p>
             </div>
 
-            <div>
-              <h4 className="font-semibold mb-4">Product</h4>
-              <ul className="space-y-2 text-muted-foreground">
-                <li><a href="#features" className="hover:text-foreground transition-colors">Features</a></li>
-                <li><a href="#pricing" className="hover:text-foreground transition-colors">Pricing</a></li>
-                <li><a href="#" className="hover:text-foreground transition-colors">API</a></li>
-              </ul>
-            </div>
-
-            <div>
-              <h4 className="font-semibold mb-4">Company</h4>
-              <ul className="space-y-2 text-muted-foreground">
-                <li><a href="#" className="hover:text-foreground transition-colors">About</a></li>
-                <li><a href="#" className="hover:text-foreground transition-colors">Blog</a></li>
-                <li><a href="#" className="hover:text-foreground transition-colors">Careers</a></li>
-              </ul>
-            </div>
-
-            <div>
-              <h4 className="font-semibold mb-4">Support</h4>
-              <ul className="space-y-2 text-muted-foreground">
-                <li><a href="#" className="hover:text-foreground transition-colors">Help Center</a></li>
-                <li><a href="#" className="hover:text-foreground transition-colors">Contact</a></li>
-                <li><a href="#" className="hover:text-foreground transition-colors">Status</a></li>
-              </ul>
-            </div>
+            {FOOTER_LINKS.map((section, index) => (
+              <FooterSection key={index} {...section} />
+            ))}
           </div>
 
           <div className="border-t mt-8 pt-8 text-center text-muted-foreground">

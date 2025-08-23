@@ -2,6 +2,7 @@
 description: How to add or edit Cursor rules in our project
 alwaysApply: true
 ---
+
 # Utility Functions - Conventions & Best Practices
 
 ## Overview
@@ -14,7 +15,6 @@ Utility functions are pure, reusable functions that perform common operations ac
 
 - **Shared utilities**: `packages/ui/src/lib/utils.ts`
 - **App-specific utilities**: `apps/*/src/lib/utils.ts`
-
 
 ### File Structure
 
@@ -213,7 +213,6 @@ import { formatFileSize, debounce } from "../lib/utils";
 ## Migration Guidelines
 
 ### From Legacy to Shared
-
 
 2. **Update imports** across all apps
 3. **Add tests** for moved functions
