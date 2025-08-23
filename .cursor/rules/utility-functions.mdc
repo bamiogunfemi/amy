@@ -14,7 +14,7 @@ Utility functions are pure, reusable functions that perform common operations ac
 
 - **Shared utilities**: `packages/ui/src/lib/utils.ts`
 - **App-specific utilities**: `apps/*/src/lib/utils.ts`
-- **Legacy utilities**: `src/lib/utils.ts` (deprecated, migrate to packages)
+
 
 ### File Structure
 
@@ -214,7 +214,7 @@ import { formatFileSize, debounce } from "../lib/utils";
 
 ### From Legacy to Shared
 
-1. **Move functions** from `src/lib/utils.ts` to `packages/ui/src/lib/utils.ts`
+
 2. **Update imports** across all apps
 3. **Add tests** for moved functions
 4. **Remove duplicates** from legacy location

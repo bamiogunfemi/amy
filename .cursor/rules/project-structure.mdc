@@ -16,7 +16,7 @@ Amy is a monorepo recruitment platform built with React, TypeScript, and Node.js
 amy/
 ├── apps/                    # Frontend and backend applications
 ├── packages/                # Shared packages and libraries
-├── src/                     # Legacy source files (deprecated)
+
 ├── prisma/                  # Database schema and migrations
 ├── .cursor/rules/           # Cursor IDE rules
 ├── package.json             # Root package.json with workspace scripts
@@ -159,8 +159,7 @@ amy/
 - Component tests: `packages/ui/src/components/*.test.tsx`
 - Hook tests: `packages/ui/src/hooks/*.test.ts`
 - Service tests: `packages/auth/src/*.test.ts`
-- Test utilities: `src/test/utils.tsx`
-- Test setup: `src/test/setup.ts`
+
 
 ### Test Configuration
 

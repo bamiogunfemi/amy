@@ -1,0 +1,295 @@
+# Web App Folder Organization & Cleanup Standards
+
+## Overview
+
+This rule establishes standards for maintaining a clean, production-ready React web application within a pnpm workspace monorepo. Focuses on file organization, cleanup, and deployment optimization for the `apps/web/` folder.
+
+## Essential File Structure
+
+### Required Files (Keep These)
+
+```
+apps/web/
+├── src/
+│   ├── components/
+│   │   └── landing-page.tsx
+│   ├── main.tsx
+│   ├── index.css
+│   ├── vite-env.d.ts
+│   └── routeTree.gen.ts
+├── package.json
+├── vercel.json
+├── eslint.config.js
+├── vite.config.ts
+├── tsconfig.json
+├── tailwind.config.js
+├── postcss.config.js
+└── index.html
+```
+
+### Files to Remove (Unnecessary)
+
+- ❌ `Dockerfile` - Not needed for Vercel deployment
+- ❌ `nginx.conf` - Not needed for Vercel deployment
+- ❌ `eslint.config.cjs` - Duplicate of `eslint.config.js`
+- ❌ `tsconfig.tsbuildinfo` - Build artifact (regenerated)
+- ❌ `.turbo/` - Build cache (regenerated)
+- ❌ `dist/` - Build output (regenerated)
+
+## Code Quality Standards
+
+### No Unnecessary Comments
+
+```tsx
+// ❌ Bad - Remove JSX section comments
+{/* Header */}
+<header>...</header>
+
+{/* Hero Section */}
+<section>...</section>
+
+{/* Footer */}
+<footer>...</footer>
+
+// ✅ Good - Self-documenting structure
+<header>...</header>
+<section>...</section>
+<footer>...</footer>
+```
+
+### Environment Variables Usage
+
+```tsx
+// ❌ Bad - Hardcoded URLs
+<a href="http://localhost:5174/signup">Sign Up</a>
+
+// ✅ Good - Environment variables
+<a href={`${import.meta.env.VITE_DASHBOARD_URL}/signup`}>Sign Up</a>
+```
+
+### TypeScript Environment Definitions
+
+```typescript
+// apps/web/src/vite-env.d.ts
+interface ImportMetaEnv {
+  readonly VITE_API_URL: string;
+  readonly VITE_APP_NAME: string;
+  readonly VITE_DASHBOARD_URL: string;
+}
+
+interface ImportMeta {
+  readonly env: ImportMetaEnv;
+}
+```
+
+## Monorepo Integration
+
+### Package.json Scripts
+
+```json
+{
+  "scripts": {
+    "dev": "vite",
+    "build": "pnpm -C ../../packages/ui build && tsc -b && vite build",
+    "preview": "vite preview",
+    "type-check": "tsc --noEmit",
+    "lint": "eslint src"
+  }
+}
+```
+
+### Workspace Dependencies
+
+```json
+{
+  "dependencies": {
+    "@amy/ui": "workspace:*",
+    "@tanstack/react-router": "^1.16.0",
+    "@tanstack/react-query": "^5.17.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "lucide-react": "^0.294.0"
+  }
+}
+```
+
+### ESLint Configuration
+
+```javascript
+// apps/web/eslint.config.js
+import baseConfig from "../../packages/config/eslint.config.js";
+export default baseConfig;
+```
+
+## Component Organization
+
+### Landing Page Structure
+
+```tsx
+// apps/web/src/components/landing-page.tsx
+import { Button, Logo } from "@amy/ui";
+import {
+  ArrowRight,
+  Users,
+  Shield,
+  Upload,
+  Search,
+  BarChart3,
+} from "lucide-react";
+
+export function LandingPage() {
+  return (
+    <div className="min-h-screen bg-background">
+      <header className="border-b">{/* Navigation content */}</header>
+
+      <section className="py-20 px-4">{/* Hero content */}</section>
+
+      <section id="features" className="py-20 px-4 bg-muted/50">
+        {/* Features content */}
+      </section>
+
+      <section id="pricing" className="py-20 px-4">
+        {/* Pricing content */}
+      </section>
+
+      <footer className="border-t py-12 px-4">{/* Footer content */}</footer>
+    </div>
+  );
+}
+```
+
+## Build Configuration
+
+### Vite Configuration
+
+```typescript
+// apps/web/vite.config.ts
+import { defineConfig } from "vite";
+import react from "@vitejs/plugin-react";
+import path from "path";
+
+export default defineConfig({
+  plugins: [react()],
+  resolve: {
+    alias: {
+      "@": path.resolve(__dirname, "./src"),
+    },
+  },
+  build: {
+    outDir: "dist",
+    sourcemap: true,
+  },
+});
+```
+
+### Vercel Configuration
+
+```json
+// apps/web/vercel.json
+{
+  "buildCommand": "pnpm build",
+  "outputDirectory": "dist",
+  "framework": "vite",
+  "installCommand": "pnpm install",
+  "devCommand": "pnpm dev",
+  "rewrites": [
+    {
+      "source": "/(.*)",
+      "destination": "/index.html"
+    }
+  ],
+  "headers": [
+    {
+      "source": "/assets/(.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=31536000, immutable"
+        }
+      ]
+    }
+  ]
+}
+```
+
+## Quality Assurance
+
+### Pre-commit Checklist
+
+1. ✅ **No unnecessary files** - Remove Docker, nginx, duplicates
+2. ✅ **No hardcoded URLs** - Use environment variables
+3. ✅ **No JSX section comments** - Self-documenting code
+4. ✅ **Proper TypeScript types** - All env vars defined
+5. ✅ **Lint passes** - `pnpm lint` succeeds
+6. ✅ **Build succeeds** - `pnpm build` works
+7. ✅ **Workspace dependencies** - Proper monorepo imports
+
+### Environment Variables
+
+```bash
+# .env (local development)
+VITE_API_URL=http://localhost:3001
+VITE_APP_NAME=Amy
+VITE_DASHBOARD_URL=http://localhost:5174
+
+# Production (Vercel)
+VITE_API_URL=https://your-api.vercel.app
+VITE_APP_NAME=Amy
+VITE_DASHBOARD_URL=https://your-dashboard.vercel.app
+```
+
+## File Naming Conventions
+
+### Components
+
+- **PascalCase**: `landing-page.tsx` → `LandingPage.tsx`
+- **Descriptive names**: Clear purpose indication
+- **Single responsibility**: One component per file
+
+### Configuration Files
+
+- **kebab-case**: `vite.config.ts`, `tailwind.config.js`
+- **Standard names**: Follow framework conventions
+- **No duplicates**: Single config file per tool
+
+## Deployment Optimization
+
+### Vercel-Specific
+
+- **No Docker files** - Vercel handles containerization
+- **No nginx config** - Vercel handles routing
+- **Optimized build** - Fast build times
+- **Environment variables** - Configurable per environment
+
+### Build Artifacts
+
+- **Remove generated files** - `dist/`, `.turbo/`, `tsconfig.tsbuildinfo`
+- **Clean source directory** - Only source files
+- **Git ignore patterns** - Proper `.gitignore` setup
+
+## Maintenance Standards
+
+### Regular Cleanup
+
+1. **Remove unused imports** - Keep dependencies minimal
+2. **Update environment types** - Add new env vars to `vite-env.d.ts`
+3. **Check for duplicates** - Single config files only
+4. **Validate build process** - Ensure monorepo build order
+5. **Test deployment** - Verify Vercel deployment works
+
+### Code Review Checklist
+
+- [ ] No unnecessary comments
+- [ ] Environment variables used correctly
+- [ ] TypeScript types defined
+- [ ] No hardcoded URLs
+- [ ] Proper workspace imports
+- [ ] Clean file structure
+- [ ] Build artifacts removed
+
+Remember: **Keep it minimal, clean, and production-ready. Every file should have a clear purpose and contribute to the application's functionality.**
+description:
+globs:
+alwaysApply: false
+
+---
