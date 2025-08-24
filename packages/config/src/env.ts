@@ -55,8 +55,12 @@ const envSchema = z.object({
   REDIS_URL: z.string().url().optional(),
 
   // Security
-  JWT_SECRET: z.string().optional(),
-  COOKIE_SECRET: z.string().optional(),
+  JWT_SECRET: z
+    .string()
+    .default("amy-dev-jwt-secret-key-2024-change-in-production"),
+  COOKIE_SECRET: z
+    .string()
+    .default("amy-dev-cookie-secret-key-2024-change-in-production"),
 
   // Rate Limiting
   RATE_LIMIT_WINDOW_MS: z.string().transform(Number).default("900000"),

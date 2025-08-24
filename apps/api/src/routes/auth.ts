@@ -73,16 +73,36 @@ router.post(
 router.post(
   "/signup",
   asyncHandler(async (req, res) => {
-    const data = signupSchema.parse(req.body);
-    const result = await authService.signup({
-      email: data.email!,
-      password: data.password!,
-      name: data.name!,
-      role: "RECRUITER" as const,
-      companyName: data.companyName,
-    });
+    try {
+      const data = signupSchema.parse(req.body);
 
-    res.json(result);
+      const companySlug = data.companyName
+        ? data.companyName
+            .toLowerCase()
+            .replace(/[^a-z0-9]/g, "-")
+            .replace(/-+/g, "-")
+            .replace(/^-|-$/g, "")
+        : undefined;
+
+      const result = await authService.signup({
+        email: data.email!,
+        password: data.password!,
+        name: data.name!,
+        role: "RECRUITER" as const,
+        companyName: data.companyName,
+        companySlug,
+      });
+
+      res.json(result);
+    } catch (error) {
+      if (error instanceof Error) {
+        if (error.message === "User already exists") {
+          return res.status(409).json({ error: "User already exists" });
+        }
+        return res.status(400).json({ error: error.message });
+      }
+      throw error;
+    }
   })
 );
 

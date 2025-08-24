@@ -24,6 +24,7 @@ export const errorHandler = (
     return res.status(400).json({
       error: "Database error",
       code: "DATABASE_ERROR",
+      details: error.message,
     });
   }
 
@@ -32,6 +33,13 @@ export const errorHandler = (
       error: "Validation error",
       code: "VALIDATION_ERROR",
       details: error.message,
+    });
+  }
+
+  if (error.name === "PrismaClientInitializationError") {
+    return res.status(500).json({
+      error: "Database connection error",
+      code: "DATABASE_CONNECTION_ERROR",
     });
   }
 
