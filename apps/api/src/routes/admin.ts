@@ -1,6 +1,6 @@
 import { Router, Request } from "express";
 import { PrismaClient } from "@amy/db";
-import { requireAuth, requireAdmin } from "@amy/auth";
+import { requireAdmin } from "@amy/auth";
 import { asyncHandler } from "../middleware/errorHandler";
 import { z } from "zod";
 
