@@ -123,7 +123,7 @@ export function RecruiterDashboard() {
               typeof metrics?.[card.key as keyof typeof metrics] === 'number'
                 ? metrics[card.key as keyof typeof metrics] as number
                 : Array.isArray(metrics?.[card.key as keyof typeof metrics])
-                  ? (metrics[card.key as keyof typeof metrics] as any[]).length
+                  ? (metrics[card.key as keyof typeof metrics] as unknown[]).length
                   : 0
             }
             icon={card.icon}

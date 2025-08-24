@@ -22,6 +22,9 @@ export function Logo({ size = 'md', className = '' }: LogoProps) {
           e.currentTarget.style.display = 'none';
           e.currentTarget.nextElementSibling?.classList.remove('hidden');
         }}
+        onLoad={() => {
+          console.log('Logo loaded successfully');
+        }}
       />
       <span className={`${sizeClasses[size]} font-bold text-slate-900 hidden`}>
         Amy
