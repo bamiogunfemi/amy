@@ -5,7 +5,6 @@ import { AuthenticatedRequest } from "../middleware/auth";
 const router = Router();
 const prisma = new PrismaClient();
 
-// Search candidates
 router.get("/candidates", async (req: AuthenticatedRequest, res) => {
   const session = req.user!;
   const { q } = req.query;
@@ -36,7 +35,6 @@ router.get("/candidates", async (req: AuthenticatedRequest, res) => {
   res.json({ candidates });
 });
 
-// Search skills
 router.get("/skills", async (req: AuthenticatedRequest, res) => {
   const { q } = req.query;
 

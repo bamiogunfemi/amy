@@ -18,10 +18,8 @@ const updateCompanySchema = z.object({
 const router = Router();
 const prisma = new PrismaClient();
 
-// Apply admin middleware to all routes
 router.use(requireAdmin());
 
-// Get admin overview metrics
 router.get(
   "/overview",
   asyncHandler(async (req: Request, res) => {
@@ -57,7 +55,6 @@ router.get(
   })
 );
 
-// Get all users
 router.get(
   "/users",
   asyncHandler(async (req: Request, res) => {
@@ -73,7 +70,6 @@ router.get(
   })
 );
 
-// Block user
 router.post(
   "/users/block",
   asyncHandler(async (req: Request, res) => {
@@ -89,7 +85,6 @@ router.post(
   })
 );
 
-// Unblock user
 router.post(
   "/users/unblock",
   asyncHandler(async (req: Request, res) => {
@@ -104,7 +99,6 @@ router.post(
   })
 );
 
-// Delete user (soft delete)
 router.post(
   "/users/delete",
   asyncHandler(async (req: Request, res) => {
@@ -119,7 +113,6 @@ router.post(
   })
 );
 
-// Get companies
 router.get(
   "/companies",
   asyncHandler(async (req: Request, res) => {
@@ -153,7 +146,6 @@ router.get(
   })
 );
 
-// Create company
 router.post(
   "/companies",
   asyncHandler(async (req: Request, res) => {
@@ -168,7 +160,6 @@ router.post(
   })
 );
 
-// Update company
 router.put(
   "/companies/:id",
   asyncHandler(async (req: Request, res) => {
@@ -181,7 +172,6 @@ router.put(
   })
 );
 
-// Extend trial
 router.post(
   "/subscriptions/extend-trial",
   asyncHandler(async (req: Request, res) => {
@@ -207,7 +197,6 @@ router.post(
   })
 );
 
-// Skills CRUD
 router.get(
   "/skills",
   asyncHandler(async (_req: Request, res) => {
@@ -255,7 +244,6 @@ router.delete(
   })
 );
 
-// Imports listing and retry
 router.get(
   "/imports",
   asyncHandler(async (req: Request, res) => {
@@ -281,7 +269,6 @@ router.post(
   })
 );
 
-// Get audit logs
 router.get(
   "/audit-logs",
   asyncHandler(async (req: Request, res) => {

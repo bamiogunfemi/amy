@@ -22,11 +22,9 @@ dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 3001;
 
-// Security middleware
 app.use(helmet());
 app.use(compression());
 
-// CORS configuration
 app.use(
   cors({
     origin:
@@ -45,15 +43,13 @@ app.use(
   })
 );
 
-// Rate limiting
 const limiter = rateLimit({
-  windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 100, // limit each IP to 100 requests per windowMs
+  windowMs: 15 * 60 * 1000,
+  max: 100,
   message: "Too many requests from this IP, please try again later.",
 });
 app.use("/api/", limiter);
 
-// Session configuration
 app.use(
   session({
     secret: process.env.SESSION_SECRET || "your-secret-key",
@@ -62,20 +58,17 @@ app.use(
     cookie: {
       secure: process.env.NODE_ENV === "production",
       httpOnly: true,
-      maxAge: 24 * 60 * 60 * 1000, // 24 hours
+      maxAge: 24 * 60 * 60 * 1000,
     },
   })
 );
 
-// Passport middleware
 app.use(passport.initialize());
 app.use(passport.session());
 
-// Body parsing middleware
 app.use(express.json({ limit: "10mb" }));
 app.use(express.urlencoded({ extended: true, limit: "10mb" }));
 
-// Health check endpoint
 app.get("/api/health", (req, res) => {
   res.status(200).json({
     status: "OK",
@@ -84,7 +77,6 @@ app.get("/api/health", (req, res) => {
   });
 });
 
-// API routes
 app.use("/api/auth", authRoutes);
 app.use("/api/recruiter", recruiterRoutes);
 app.use("/api/admin", adminRoutes);
@@ -95,12 +87,10 @@ app.use("/api/imports", importRoutes);
 app.use("/api/notifications", notificationRoutes);
 app.use("/api/users", userRoutes);
 
-// 404 handler
 app.use("*", (req, res) => {
   res.status(404).json({ error: "Route not found" });
 });
 
-// Error handler
 app.use(
   (
     err: any,

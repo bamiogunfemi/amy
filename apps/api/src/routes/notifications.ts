@@ -5,7 +5,6 @@ import { AuthenticatedRequest } from "../middleware/auth";
 const router = Router();
 const prisma = new PrismaClient();
 
-// Get notifications
 router.get("/", async (req: AuthenticatedRequest, res) => {
   const session = req.user!;
 
@@ -19,7 +18,6 @@ router.get("/", async (req: AuthenticatedRequest, res) => {
   res.json({ notifications });
 });
 
-// Mark notification as read
 router.put("/:id/read", async (req: AuthenticatedRequest, res) => {
   const { id } = req.params;
   const session = req.user!;

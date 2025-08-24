@@ -7,7 +7,6 @@ import { PrismaClient } from '@amy/db'
 const prisma = new PrismaClient()
 
 export const setupPassport = () => {
-  // Local strategy
   passport.use(new LocalStrategy(
     {
       usernameField: 'email',
@@ -50,7 +49,6 @@ export const setupPassport = () => {
     }
   ))
 
-  // Google OAuth strategy
   passport.use(new GoogleStrategy(
     {
       clientID: process.env.GOOGLE_CLIENT_ID!,
@@ -65,7 +63,6 @@ export const setupPassport = () => {
           return done(null, false, { message: 'Email not provided by Google' })
         }
 
-        // Check if user exists
         let user = await prisma.user.findUnique({
           where: { email },
           include: {
@@ -77,7 +74,6 @@ export const setupPassport = () => {
           return done(null, user)
         }
 
-        // Create new user
         user = await prisma.user.create({
           data: {
             email,
@@ -96,12 +92,10 @@ export const setupPassport = () => {
     }
   ))
 
-  // Serialize user
   passport.serializeUser((user: any, done) => {
     done(null, user.id)
   })
 
-  // Deserialize user
   passport.deserializeUser(async (id: string, done) => {
     try {
       const user = await prisma.user.findUnique({

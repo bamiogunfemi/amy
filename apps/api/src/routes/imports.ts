@@ -9,7 +9,6 @@ interface AuthenticatedRequest extends Request {
 const router = Router();
 const prisma = new PrismaClient();
 
-// Get import sources
 router.get(
   "/sources",
   asyncHandler(async (req: AuthenticatedRequest, res: Response) => {
@@ -31,7 +30,6 @@ router.get(
   })
 );
 
-// Create import source
 router.post(
   "/sources",
   asyncHandler(async (req: AuthenticatedRequest, res: Response) => {
@@ -48,7 +46,6 @@ router.post(
   })
 );
 
-// Get import jobs
 router.get(
   "/jobs",
   asyncHandler(async (req: AuthenticatedRequest, res: Response) => {

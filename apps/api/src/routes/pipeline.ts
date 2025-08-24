@@ -5,7 +5,6 @@ import { AuthenticatedRequest } from "../middleware/auth";
 const router = Router();
 const prisma = new PrismaClient();
 
-// Get pipeline stages
 router.get("/stages", async (req: AuthenticatedRequest, res) => {
   const session = req.user!;
 
@@ -30,7 +29,6 @@ router.get("/stages", async (req: AuthenticatedRequest, res) => {
   res.json({ stages });
 });
 
-// Get applications
 router.get("/applications", async (req: AuthenticatedRequest, res) => {
   const session = req.user!;
 

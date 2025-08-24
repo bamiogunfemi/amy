@@ -6,7 +6,6 @@ import { asyncHandler } from "../middleware/errorHandler";
 const router = Router();
 const prisma = new PrismaClient();
 
-// Get candidates (with search)
 router.get(
   "/",
   asyncHandler(async (req: Request, res) => {
@@ -38,7 +37,6 @@ router.get(
   })
 );
 
-// Get single candidate
 router.get(
   "/:id",
   asyncHandler(async (req: Request, res) => {
@@ -68,7 +66,6 @@ router.get(
   })
 );
 
-// Create candidate
 router.post(
   "/",
   asyncHandler(async (req: Request, res) => {
@@ -94,7 +91,6 @@ router.post(
   })
 );
 
-// Update candidate
 router.put(
   "/:id",
   asyncHandler(async (req: Request, res) => {
@@ -116,7 +112,6 @@ router.put(
   })
 );
 
-// Delete candidate
 router.delete(
   "/:id",
   asyncHandler(async (req: Request, res) => {

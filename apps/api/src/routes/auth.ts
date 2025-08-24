@@ -29,7 +29,6 @@ const router = Router();
 const prisma = new PrismaClient();
 const authService = new AuthService(prisma);
 
-// Login
 router.post(
   "/login",
   asyncHandler(async (req, res) => {
@@ -46,7 +45,6 @@ router.post(
   })
 );
 
-// Refresh token
 router.post(
   "/refresh",
   asyncHandler(async (req, res) => {
@@ -60,7 +58,6 @@ router.post(
   })
 );
 
-// Logout
 router.post(
   "/logout",
   requireAuth(authService),
@@ -73,7 +70,6 @@ router.post(
   })
 );
 
-// Signup
 router.post(
   "/signup",
   asyncHandler(async (req, res) => {
@@ -90,7 +86,6 @@ router.post(
   })
 );
 
-// Request password reset
 router.post(
   "/reset-password",
   asyncHandler(async (req, res) => {
@@ -101,7 +96,6 @@ router.post(
   })
 );
 
-// Verify reset token
 router.get(
   "/reset-password/verify/:token",
   asyncHandler(async (req, res) => {
@@ -112,7 +106,6 @@ router.get(
   })
 );
 
-// Set new password with token
 router.post(
   "/reset-password/set",
   asyncHandler(async (req, res) => {
@@ -123,7 +116,6 @@ router.post(
   })
 );
 
-// Change password (authenticated)
 router.post(
   "/change-password",
   requireAuth(authService),
@@ -138,7 +130,6 @@ router.post(
   })
 );
 
-// Get current user
 router.get(
   "/me",
   requireAuth(authService),
@@ -149,7 +140,6 @@ router.get(
   })
 );
 
-// Verify token (for client-side auth checks)
 router.get(
   "/verify",
   requireAuth(authService),

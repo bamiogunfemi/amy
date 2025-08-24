@@ -20,7 +20,6 @@ export const errorHandler = (
     timestamp: new Date().toISOString(),
   });
 
-  // Prisma errors - simplified for now
   if (error.name === "PrismaClientKnownRequestError") {
     return res.status(400).json({
       error: "Database error",
@@ -36,7 +35,6 @@ export const errorHandler = (
     });
   }
 
-  // Custom operational errors
   if (error.isOperational) {
     return res.status(error.statusCode || 400).json({
       error: error.message,
@@ -44,7 +42,6 @@ export const errorHandler = (
     });
   }
 
-  // Default error response
   const statusCode = error.statusCode || 500;
   const message = statusCode === 500 ? "Internal server error" : error.message;
 

@@ -14,7 +14,6 @@ export const subscriptionMiddleware = async (
       return res.status(401).json({ error: "Authentication required" });
     }
 
-    // Get active subscription
     const subscription = await prisma.subscription.findFirst({
       where: {
         OR: [{ userId: req.user.id }, { companyId: req.user.companyId }],
@@ -26,7 +25,6 @@ export const subscriptionMiddleware = async (
       orderBy: { createdAt: "desc" },
     });
 
-    // Check if user has active subscription or is in trial
     if (!subscription) {
       return res.status(402).json({
         error: "Payment required",
@@ -34,7 +32,6 @@ export const subscriptionMiddleware = async (
       });
     }
 
-    // Check trial expiry
     if (subscription.status === "trialing" && subscription.trialEndsAt) {
       if (subscription.trialEndsAt < new Date()) {
         return res.status(402).json({
@@ -45,7 +42,6 @@ export const subscriptionMiddleware = async (
       }
     }
 
-    // Add subscription info to request
     (req as any).subscription = subscription;
     next();
   } catch (error) {

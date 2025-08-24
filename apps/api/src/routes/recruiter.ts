@@ -7,15 +7,12 @@ import { z } from "zod";
 const router = Router();
 const prisma = new PrismaClient();
 
-// Apply recruiter middleware to all routes
 router.use(requireRecruiter());
 
-// Type for authenticated requests
 interface AuthenticatedRequest extends Request {
   user?: any;
 }
 
-// Zod schemas
 const candidateCreateSchema = z.object({
   firstName: z.string(),
   lastName: z.string(),
@@ -34,7 +31,6 @@ const skillAddSchema = z.object({
   proficiency: z.number().min(1).max(5).optional(),
 });
 
-// Helper function for audit logging
 async function createAuditLog(
   actorUserId: string,
   action: string,
@@ -53,7 +49,6 @@ async function createAuditLog(
   });
 }
 
-// 3.1 Candidates - Basic CRUD
 router.get(
   "/candidates",
   asyncHandler(async (req: AuthenticatedRequest, res) => {
@@ -179,7 +174,6 @@ router.patch(
   })
 );
 
-// 3.2 Skills
 router.post(
   "/candidates/:id/skills",
   asyncHandler(async (req: AuthenticatedRequest, res) => {
@@ -218,7 +212,6 @@ router.post(
   })
 );
 
-// 3.3 Pipeline
 router.get(
   "/pipeline",
   asyncHandler(async (req: AuthenticatedRequest, res) => {
@@ -244,7 +237,6 @@ router.get(
   })
 );
 
-// 3.4 Search
 router.get(
   "/search",
   asyncHandler(async (req: AuthenticatedRequest, res) => {
@@ -311,7 +303,6 @@ router.get(
   })
 );
 
-// 3.5 Notifications
 router.get(
   "/notifications",
   asyncHandler(async (req: AuthenticatedRequest, res) => {
@@ -359,7 +350,6 @@ router.post(
   })
 );
 
-// 3.6 Settings
 router.get(
   "/settings",
   asyncHandler(async (req: AuthenticatedRequest, res) => {

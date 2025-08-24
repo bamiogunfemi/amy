@@ -29,7 +29,6 @@ export const authMiddleware = async (
     const token = authHeader.substring(7);
     const user = await authService.verifyToken(token);
 
-    // Optionally fetch fresh user limited fields
     const freshUser = await prisma.user.findUnique({
       where: { id: user.id },
       select: {

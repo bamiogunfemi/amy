@@ -1,0 +1,460 @@
+---
+title: Apu App Folder Organization & Cleanup Standards
+description: Standards for a clean, DRY.
+alwaysApply: true
+
+---
+# API Organization & Cleanup Standards
+
+## Overview
+
+This rule establishes standards for maintaining a clean, production-ready Express.js API server within the Amy monorepo. It focuses on file organization, code quality, security, and deployment optimization for the `apps/api/` folder.
+
+## Essential File Structure
+
+### Required Files (Keep These)
+
+```bash
+apps/api/
+├── src/
+│   ├── index.ts                 # Server entry point
+│   ├── routes/                  # API route handlers
+│   │   ├── auth.ts             # Authentication endpoints
+│   │   ├── recruiter.ts        # Recruiter-specific endpoints
+│   │   ├── admin.ts            # Admin-specific endpoints
+│   │   ├── candidates.ts       # Candidate management
+│   │   ├── pipeline.ts         # Pipeline management
+│   │   ├── search.ts           # Search functionality
+│   │   ├── imports.ts          # Data import endpoints
+│   │   ├── notifications.ts    # Notification endpoints
+│   │   └── users.ts            # User management
+│   ├── middleware/             # Express middleware
+│   │   ├── auth.ts             # Authentication middleware
+│   │   ├── errorHandler.ts     # Error handling middleware
+│   │   └── subscription.ts     # Subscription middleware
+│   └── config/                 # Configuration files
+│       └── passport.ts         # Passport configuration
+├── package.json                # Dependencies and scripts
+├── tsconfig.json              # TypeScript configuration
+├── eslint.config.js           # ESLint configuration
+├── render.yaml                # Render deployment config
+├── fly.toml                   # Fly.io deployment config
+├── railway.json               # Railway deployment config
+└── Dockerfile                 # Container configuration
+```
+
+### Files to Remove (Unnecessary)
+
+- `eslint.config.cjs` — Duplicate of `eslint.config.js`
+- `dist/` — Build artifact (regenerated)
+- `.turbo/` — Build cache (regenerated)
+- `node_modules/` — Dependencies (regenerated)
+
+## Code Quality Standards
+
+### Route Organization & DRY Principles
+
+- **Use named exports** for route handlers instead of default exports
+- **Group related endpoints** in single route files (e.g., all candidate operations in `candidates.ts`)
+- **Apply middleware consistently** using `router.use()` for route-level middleware
+- **Single responsibility** - each route file handles one domain area
+
+### No Unnecessary Comments
+
+```typescript
+// ❌ Bad — Remove obvious comments
+// Login endpoint
+router.post(
+  "/login",
+  asyncHandler(async (req, res) => {
+    // Implementation
+  })
+);
+
+// ✅ Good — Self-documenting structure
+router.post(
+  "/login",
+  asyncHandler(async (req, res) => {
+    // Implementation
+  })
+);
+```
+
+### Schema Validation Patterns
+
+```typescript
+// ✅ Good: Define schemas at the top of route files
+const loginSchema = z.object({
+  email: z.string().email(),
+  password: z.string(),
+});
+
+const signupSchema = z.object({
+  email: z.string().email(),
+  password: z.string().min(8),
+  name: z.string(),
+  companyName: z.string().optional(),
+});
+
+// ✅ Good: Use consistent validation pattern
+router.post(
+  "/login",
+  asyncHandler(async (req, res) => {
+    const credentials = loginSchema.parse(req.body);
+    const result = await authService.login(credentials);
+    return res.json(result);
+  })
+);
+```
+
+### Error Handling Standards
+
+```typescript
+// ✅ Good: Use asyncHandler for all route handlers
+router.get(
+  "/candidates",
+  asyncHandler(async (req, res) => {
+    const candidates = await prisma.candidate.findMany();
+    res.json({ ok: true, data: candidates });
+  })
+);
+
+// ✅ Good: Consistent error response format
+res.status(400).json({
+  error: "Validation error",
+  code: "VALIDATION_ERROR",
+  details: error.message,
+});
+```
+
+## Security & Middleware Patterns
+
+### Authentication Flow
+
+```typescript
+// ✅ Good: Apply auth middleware to route groups
+router.use(requireRecruiter());
+
+// ✅ Good: Type authenticated requests
+interface AuthenticatedRequest extends Request {
+  user?: any;
+}
+
+router.get(
+  "/candidates",
+  asyncHandler(async (req: AuthenticatedRequest, res) => {
+    const session = req.user!;
+    // Implementation
+  })
+);
+```
+
+### Security Headers & CORS
+
+```typescript
+// ✅ Good: Production-ready CORS configuration
+app.use(
+  cors({
+    origin:
+      process.env.NODE_ENV === "production"
+        ? ["https://amy-web.vercel.app", "https://amy-app.vercel.app"]
+        : ["http://localhost:5173", "http://localhost:5174"],
+    credentials: true,
+  })
+);
+
+// ✅ Good: Rate limiting
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 100,
+  message: "Too many requests from this IP, please try again later.",
+});
+app.use("/api/", limiter);
+```
+
+## Database & Prisma Patterns
+
+### Query Organization
+
+```typescript
+// ✅ Good: Use Promise.all for parallel queries
+const [candidates, total] = await Promise.all([
+  prisma.candidate.findMany({
+    where: { ownerRecruiterId: session.id },
+    skip: (Number(page) - 1) * Number(perPage),
+    take: Number(perPage),
+    include: {
+      skills: { include: { skill: true } },
+      documents: true,
+    },
+    orderBy: { createdAt: "desc" },
+  }),
+  prisma.candidate.count({ where: { ownerRecruiterId: session.id } }),
+]);
+
+// ✅ Good: Consistent response format
+res.json({
+  ok: true,
+  data: {
+    items: candidates,
+    page: Number(page),
+    perPage: Number(perPage),
+    total,
+  },
+});
+```
+
+### Audit Logging
+
+```typescript
+// ✅ Good: Helper function for audit logging
+async function createAuditLog(
+  actorUserId: string,
+  action: string,
+  entity: string,
+  entityId: string,
+  meta?: any
+) {
+  await prisma.auditLog.create({
+    data: {
+      actorUserId,
+      action,
+      entity,
+      entityId,
+      meta: meta || {},
+    },
+  });
+}
+```
+
+## Import & Export Patterns
+
+### Route Exports
+
+```typescript
+// ✅ Good: Named exports for routes
+export const authRoutes = router;
+
+// ❌ Bad: Default exports
+export default router;
+```
+
+### Import Organization
+
+```typescript
+// ✅ Good: External libraries first, then internal imports
+import { Router, Request } from "express";
+import { PrismaClient } from "@amy/db";
+import { AuthService, requireAuth } from "@amy/auth";
+import { z } from "zod";
+
+import { asyncHandler } from "../middleware/errorHandler";
+```
+
+## Environment & Configuration
+
+### Environment Variables
+
+```typescript
+// ✅ Good: Use environment variables with defaults
+const PORT = process.env.PORT || 3001;
+const SESSION_SECRET = process.env.SESSION_SECRET || "your-secret-key";
+
+// ✅ Good: Environment-specific configurations
+const corsOrigins =
+  process.env.NODE_ENV === "production"
+    ? ["https://amy-web.vercel.app", "https://amy-app.vercel.app"]
+    : ["http://localhost:5173", "http://localhost:5174"];
+```
+
+### Health Check Endpoint
+
+```typescript
+// ✅ Good: Comprehensive health check
+app.get("/api/health", (req, res) => {
+  res.status(200).json({
+    status: "OK",
+    timestamp: new Date().toISOString(),
+    environment: process.env.NODE_ENV || "development",
+  });
+});
+```
+
+## Build & Deployment Configuration
+
+### Package.json Scripts
+
+```json
+{
+  "scripts": {
+    "dev": "tsx watch src/index.ts",
+    "build": "pnpm -C ../../packages/db build && pnpm -C ../../packages/config build && pnpm -C ../../packages/auth build && pnpm -C ../../packages/ui build && tsc",
+    "start": "node dist/index.js",
+    "type-check": "tsc --noEmit",
+    "lint": "eslint src"
+  }
+}
+```
+
+### TypeScript Configuration
+
+```json
+{
+  "compilerOptions": {
+    "target": "ES2020",
+    "module": "CommonJS",
+    "outDir": "./dist",
+    "rootDir": "./src",
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true
+  },
+  "include": ["src/**/*"],
+  "exclude": ["node_modules", "dist"]
+}
+```
+
+## Error Handling Standards
+
+### Custom Error Types
+
+```typescript
+// ✅ Good: Custom error interface
+export interface AppError extends Error {
+  statusCode?: number;
+  code?: string;
+  isOperational?: boolean;
+}
+
+// ✅ Good: Error creation helper
+export const createError = (
+  message: string,
+  statusCode: number = 400,
+  code?: string
+): AppError => {
+  const error = new Error(message) as AppError;
+  error.statusCode = statusCode;
+  error.code = code;
+  error.isOperational = true;
+  return error;
+};
+```
+
+### Async Handler Pattern
+
+```typescript
+// ✅ Good: Consistent async error handling
+export const asyncHandler = (
+  fn: (req: Request, res: Response, next: NextFunction) => Promise<any>
+) => {
+  return (req: Request, res: Response, next: NextFunction) => {
+    Promise.resolve(fn(req, res, next)).catch(next);
+  };
+};
+```
+
+## Performance Optimizations
+
+### Database Queries
+
+- **Use includes** for related data instead of separate queries
+- **Implement pagination** for large datasets
+- **Use Promise.all** for parallel operations
+- **Add proper indexes** in Prisma schema
+
+### Response Optimization
+
+- **Enable compression** for all responses
+- **Set appropriate cache headers** for static data
+- **Limit response payload size** with pagination
+- **Use streaming** for large file uploads
+
+## Testing & Quality Assurance
+
+### Pre-commit Checklist
+
+- ✅ **No unnecessary comments** — Remove obvious comments
+- ✅ **DRY principles applied** — No repeated code patterns
+- ✅ **Proper error handling** — All routes use asyncHandler
+- ✅ **Type safety** — All requests/responses properly typed
+- ✅ **Security middleware** — Auth, CORS, rate limiting applied
+- ✅ **Consistent response format** — Standardized JSON responses
+- ✅ **Environment variables** — No hardcoded values
+- ✅ **Build succeeds** — `pnpm build` works
+- ✅ **Lint passes** — `pnpm lint` succeeds
+
+### Code Review Checklist
+
+- [ ] No unnecessary comments
+- [ ] DRY principles respected
+- [ ] Proper error handling with asyncHandler
+- [ ] TypeScript types defined
+- [ ] No hardcoded values
+- [ ] Security middleware applied
+- [ ] Consistent response format
+- [ ] Clean file structure
+- [ ] Build artifacts removed
+
+## File Naming Conventions
+
+### Routes
+
+- **kebab-case**: `auth.ts`, `recruiter.ts`, `candidates.ts`
+- **Descriptive names**: Clear purpose indication
+- **Single responsibility**: One domain per file
+- **Consistent patterns**: All route files follow same structure
+
+### Middleware
+
+- **camelCase**: `errorHandler.ts`, `auth.ts`
+- **Clear purpose**: Names indicate middleware function
+- **Reusable**: Middleware can be applied to multiple routes
+
+### Configuration
+
+- **kebab-case**: `passport.ts`
+- **Standard names**: Follow framework conventions
+- **No duplicates**: Single config file per tool
+
+## Deployment Considerations
+
+### Production Readiness
+
+- **Environment variables** — All config via env vars
+- **Health checks** — `/api/health` endpoint
+- **Error handling** — Proper error responses
+- **Security headers** — Helmet middleware
+- **Rate limiting** — API protection
+- **CORS configuration** — Production origins only
+
+### Container Optimization
+
+- **Multi-stage builds** — Separate build and runtime
+- **Non-root user** — Security best practices
+- **Health checks** — Container health monitoring
+- **Resource limits** — Memory and CPU constraints
+
+## Maintenance Standards
+
+### Regular Cleanup
+
+1. Remove unused imports — Keep dependencies minimal
+2. Update environment types — Add new env vars to types
+3. Check for duplicates — Single config files only
+4. Validate build process — Ensure monorepo build order
+5. Test deployment — Verify production deployment works
+
+### Monitoring & Logging
+
+- **Structured logging** — JSON format for production
+- **Error tracking** — Proper error codes and messages
+- **Performance monitoring** — Response time tracking
+- **Health monitoring** — Regular health check calls
+
+**Remember:** Keep it minimal, clean, DRY, and production-ready. Every file should have a clear purpose and contribute to the API's functionality and maintainability.
+description:
+globs:
+alwaysApply: false
+
+---

@@ -5,7 +5,6 @@ import { AuthenticatedRequest } from "../middleware/auth";
 const router = Router();
 const prisma = new PrismaClient();
 
-// Get current user profile
 router.get("/profile", async (req: AuthenticatedRequest, res) => {
   const session = req.user!;
 
@@ -20,7 +19,6 @@ router.get("/profile", async (req: AuthenticatedRequest, res) => {
   res.json({ user });
 });
 
-// Update user profile
 router.put("/profile", async (req: AuthenticatedRequest, res) => {
   const session = req.user!;
 
