@@ -6,18 +6,16 @@
   "devCommand": "pnpm dev",
   "rewrites": [
     {
-      "source": "/(.*)",
-      "destination": "/index.html"
-    }
-  ],
-  "routes": [
-    {
-      "src": "/favicon.ico",
-      "dest": "/favicon.ico"
+      "source": "/favicon.ico",
+      "destination": "/favicon.ico"
     },
     {
-      "src": "/amy-logo-light.svg",
-      "dest": "/amy-logo-light.svg"
+      "source": "/amy-logo-light.svg",
+      "destination": "/amy-logo-light.svg"
+    },
+    {
+      "source": "/(.*)",
+      "destination": "/index.html"
     }
   ],
   "headers": [
