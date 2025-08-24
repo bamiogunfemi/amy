@@ -3,7 +3,6 @@ import { Button } from '../components/ui/button'
 import { Input } from '../components/ui/input'
 import { useSkills, useCreateSkill, useUpdateSkill, useDeleteSkill } from '@amy/ui'
 
-// Configuration
 const SKILL_CATEGORIES = [
   'LANG', 'FRAMEWORK', 'DB', 'CLOUD', 'TOOL', 'SOFT', 'CERT', 'DOMAIN'
 ] as const
@@ -14,12 +13,11 @@ type SkillForm = {
   category: typeof SKILL_CATEGORIES[number]
 }
 
-// Reusable components
-const SkillForm = ({ 
-  form, 
-  setForm, 
-  onSubmit, 
-  isPending 
+const SkillForm = ({
+  form,
+  setForm,
+  onSubmit,
+  isPending
 }: {
   form: SkillForm
   setForm: (form: SkillForm) => void
@@ -28,19 +26,19 @@ const SkillForm = ({
 }) => (
   <div className="flex items-end space-x-2">
     <div className="grid grid-cols-3 gap-2 w-full">
-      <Input 
-        placeholder="slug" 
-        value={form.slug} 
-        onChange={(e) => setForm({ ...form, slug: e.target.value })} 
+      <Input
+        placeholder="slug"
+        value={form.slug}
+        onChange={(e) => setForm({ ...form, slug: e.target.value })}
       />
-      <Input 
-        placeholder="label" 
-        value={form.label} 
-        onChange={(e) => setForm({ ...form, label: e.target.value })} 
+      <Input
+        placeholder="label"
+        value={form.label}
+        onChange={(e) => setForm({ ...form, label: e.target.value })}
       />
-      <select 
-        className="border rounded-md h-10 px-3" 
-        value={form.category} 
+      <select
+        className="border rounded-md h-10 px-3"
+        value={form.category}
         onChange={(e) => setForm({ ...form, category: e.target.value as typeof SKILL_CATEGORIES[number] })}
       >
         {SKILL_CATEGORIES.map((category) => (
@@ -52,10 +50,10 @@ const SkillForm = ({
   </div>
 )
 
-const SkillItem = ({ 
-  skill, 
-  onUpdate, 
-  onDelete 
+const SkillItem = ({
+  skill,
+  onUpdate,
+  onDelete
 }: {
   skill: any
   onUpdate: () => void
@@ -86,10 +84,10 @@ export default function SkillsManagement() {
   const updateSkill = useUpdateSkill()
   const deleteSkill = useDeleteSkill()
 
-  const [form, setForm] = useState<SkillForm>({ 
-    slug: '', 
-    label: '', 
-    category: 'LANG' 
+  const [form, setForm] = useState<SkillForm>({
+    slug: '',
+    label: '',
+    category: 'LANG'
   })
 
   const handleCreateSkill = () => {
@@ -98,9 +96,9 @@ export default function SkillsManagement() {
   }
 
   const handleUpdateSkill = (skill: any) => {
-    updateSkill.mutate({ 
-      id: skill.id, 
-      data: { label: skill.label + '' } 
+    updateSkill.mutate({
+      id: skill.id,
+      data: { label: skill.label + '' }
     })
   }
 

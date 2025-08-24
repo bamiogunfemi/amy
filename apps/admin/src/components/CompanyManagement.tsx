@@ -1,7 +1,6 @@
 import { Button, useAdminCompanies, useCreateCompany } from '@amy/ui'
 import { Building2, Users, Calendar, Plus } from 'lucide-react'
 
-// Reusable components
 const CompanyCard = ({ company }: { company: any }) => (
   <div className="bg-card border rounded-lg p-6">
     <div className="flex items-start justify-between mb-4">
@@ -61,11 +60,10 @@ const UserItem = ({ user }: { user: any }) => (
         <p className="text-sm text-muted-foreground">{user.email}</p>
       </div>
     </div>
-    <span className={`px-2 py-1 rounded-full text-xs font-medium ${
-      user.role === 'ADMIN'
-        ? 'bg-red-100 text-red-800'
-        : 'bg-blue-100 text-blue-800'
-    }`}>
+    <span className={`px-2 py-1 rounded-full text-xs font-medium ${user.role === 'ADMIN'
+      ? 'bg-red-100 text-red-800'
+      : 'bg-blue-100 text-blue-800'
+      }`}>
       {user.role}
     </span>
   </div>
@@ -96,9 +94,9 @@ export function CompanyManagement() {
   const createCompany = useCreateCompany()
 
   const handleCreateCompany = () => {
-    createCompany.mutate({ 
-      name: 'New Company', 
-      slug: `company-${Date.now()}` 
+    createCompany.mutate({
+      name: 'New Company',
+      slug: `company-${Date.now()}`
     })
   }
 
@@ -110,8 +108,8 @@ export function CompanyManagement() {
     <div className="space-y-6">
       <div className="flex justify-between items-center">
         <h2 className="text-2xl font-bold">Company Management</h2>
-        <Button 
-          onClick={handleCreateCompany} 
+        <Button
+          onClick={handleCreateCompany}
           disabled={createCompany.isPending}
         >
           <Plus className="h-4 w-4 mr-2" />

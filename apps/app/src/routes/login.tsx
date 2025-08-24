@@ -21,6 +21,7 @@ export function LoginPage() {
   const onSubmit = async (data: LoginFormData) => {
     loginMutation.mutate(data, {
       onSuccess: () => {
+        toast.success('Login successful')
         navigate({ to: '/' })
       }
     })
@@ -106,7 +107,7 @@ export function LoginPage() {
 
             <div className="mt-6 text-center">
               <p className="text-sm text-slate-600">
-                Don't have an account?{' '}
+                Don&rsquo;t have an account?{' '}
                 <Link to="/signup" className="text-rose-600 hover:text-rose-700 font-medium">
                   Sign up
                 </Link>

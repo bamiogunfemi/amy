@@ -2,66 +2,20 @@
 import { useState } from 'react'
 import { Button, Card, CardContent, CardHeader, CardTitle, Logo } from '@amy/ui'
 import {
-  Users,
-  UserCheck,
-  Calendar,
-  Search,
   Plus,
   Filter,
-  BarChart3,
-  Briefcase,
   Clock,
   Eye,
   Edit,
   MoreHorizontal,
   LogOut,
+  BarChart3,
+  Search,
 } from 'lucide-react'
 import { useLogout, useRecruiterMetrics, useCandidates, usePipelineStages } from '@amy/ui'
+import { NAVIGATION_ITEMS, METRIC_CARDS } from '../constants'
+import type { MetricCardProps, NavigationItemProps } from '../types'
 
-// Configuration objects
-const NAVIGATION_ITEMS = [
-  { id: 'overview', label: 'Overview', icon: BarChart3 },
-  { id: 'candidates', label: 'Candidates', icon: Users },
-  { id: 'pipeline', label: 'Pipeline', icon: Briefcase },
-  { id: 'search', label: 'Search', icon: Search },
-] as const
-
-const METRIC_CARDS = [
-  {
-    key: 'totalCandidates',
-    label: 'Total Candidates',
-    icon: Users,
-    color: 'from-blue-500 to-blue-600',
-    change: '+20.1% from last month',
-    changeColor: 'text-green-600'
-  },
-  {
-    key: 'activeApplications',
-    label: 'Active Applications',
-    icon: UserCheck,
-    color: 'from-green-500 to-green-600',
-    change: '+5.2% from last week',
-    changeColor: 'text-green-600'
-  },
-  {
-    key: 'interviewsScheduled',
-    label: 'Interviews Scheduled',
-    icon: Calendar,
-    color: 'from-purple-500 to-purple-600',
-    change: 'This week',
-    changeColor: 'text-purple-600'
-  },
-  {
-    key: 'offersExtended',
-    label: 'Offers Extended',
-    icon: Briefcase,
-    color: 'from-orange-500 to-orange-600',
-    change: 'This month',
-    changeColor: 'text-orange-600'
-  }
-] as const
-
-// Reusable components
 const MetricCard = ({
   label,
   value,
@@ -70,15 +24,7 @@ const MetricCard = ({
   change,
   changeColor,
   isLoading
-}: {
-  label: string
-  value: number
-  icon: React.ComponentType<{ className?: string }>
-  color: string
-  change: string
-  changeColor: string
-  isLoading: boolean
-}) => (
+}: MetricCardProps) => (
   <div className="bg-white rounded-2xl p-6 shadow-sm border border-slate-200 hover:shadow-lg transition-all duration-200">
     <div className="flex items-center justify-between mb-4">
       <div className={`w-12 h-12 bg-gradient-to-br ${color} rounded-xl flex items-center justify-center`}>
@@ -103,18 +49,14 @@ const NavigationItem = ({
   item,
   isActive,
   onClick
-}: {
-  item: typeof NAVIGATION_ITEMS[number]
-  isActive: boolean
-  onClick: () => void
-}) => {
+}: NavigationItemProps) => {
   const Icon = item.icon
   return (
     <button
       onClick={onClick}
       className={`w-full flex items-center space-x-3 px-4 py-3 rounded-xl text-left transition-all duration-200 ${isActive
-          ? 'bg-gradient-to-r from-rose-500 to-rose-600 text-white shadow-lg'
-          : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
+        ? 'bg-gradient-to-r from-rose-500 to-rose-600 text-white shadow-lg'
+        : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
         }`}
     >
       <Icon className="h-5 w-5" />
@@ -181,8 +123,8 @@ export function RecruiterDashboard() {
               typeof metrics?.[card.key as keyof typeof metrics] === 'number'
                 ? metrics[card.key as keyof typeof metrics] as number
                 : Array.isArray(metrics?.[card.key as keyof typeof metrics])
-                ? (metrics[card.key as keyof typeof metrics] as any[]).length
-                : 0
+                  ? (metrics[card.key as keyof typeof metrics] as any[]).length
+                  : 0
             }
             icon={card.icon}
             color={card.color}
@@ -461,7 +403,6 @@ export function RecruiterDashboard() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100">
-      {/* Header */}
       <header className="bg-white/80 backdrop-blur-sm border-b border-slate-200 sticky top-0 z-50">
         <div className="px-6 py-4 flex items-center justify-between">
           <Logo size="md" />
@@ -499,7 +440,7 @@ export function RecruiterDashboard() {
               />
             ))}
           </nav>
-          
+
           <div className="px-6 mt-auto pt-8">
             <Button
               variant="ghost"

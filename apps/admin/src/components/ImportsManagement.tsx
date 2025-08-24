@@ -1,11 +1,10 @@
 import { Button } from '../components/ui/button'
 import { useImports, useRetryImport } from '@amy/ui'
 
-// Reusable components
-const ImportJobItem = ({ 
-  job, 
-  onRetry, 
-  isRetrying 
+const ImportJobItem = ({
+  job,
+  onRetry,
+  isRetrying
 }: {
   job: any
   onRetry: () => void
@@ -22,10 +21,10 @@ const ImportJobItem = ({
       )}
     </div>
     <div>
-      <Button 
-        variant="outline" 
-        size="sm" 
-        onClick={onRetry} 
+      <Button
+        variant="outline"
+        size="sm"
+        onClick={onRetry}
         disabled={isRetrying}
       >
         Retry
@@ -61,7 +60,7 @@ export default function ImportsManagement() {
       <div className="flex items-center justify-between">
         <h2 className="text-2xl font-bold">Import Jobs</h2>
       </div>
-      
+
       <div className="grid gap-3">
         {jobs.length === 0 ? (
           <EmptyState />

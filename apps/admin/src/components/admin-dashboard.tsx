@@ -1,19 +1,8 @@
 
-import { useState, useEffect } from 'react'
-import { Button } from '@amy/ui'
+import { useState } from 'react'
+import { Button, Logo } from '@amy/ui'
 import {
-  Users,
-  Building2,
-  UserCheck,
-  Settings,
   LogOut,
-  BarChart3,
-  Shield,
-  Database,
-  CreditCard,
-  Tag,
-  ArrowRightLeft,
-  History,
   Search,
   Filter
 } from 'lucide-react'
@@ -26,61 +15,16 @@ import { toast } from 'sonner'
 import { Badge } from './ui/badge'
 import { useLogout, useBlockUser, useUnblockUser, useDeleteUser, useAdminOverview, useAdminUsers, useAdminAuditLogs } from '@amy/ui'
 import type { AuditLog } from '@amy/ui'
+import { NAVIGATION_ITEMS, METRIC_CARDS } from '../constants'
+import type { MetricCardProps, NavigationItemProps } from '../types'
 
-// Configuration objects
-const NAVIGATION_ITEMS = [
-  { id: 'overview', label: 'Overview', icon: BarChart3 },
-  { id: 'users', label: 'Users', icon: Users },
-  { id: 'companies', label: 'Companies', icon: Building2 },
-  { id: 'billing', label: 'Billing & Trials', icon: CreditCard },
-  { id: 'skills', label: 'Skills', icon: Tag },
-  { id: 'assignments', label: 'Assignments', icon: ArrowRightLeft },
-  { id: 'imports', label: 'Imports', icon: Database },
-  { id: 'audit', label: 'Audit', icon: History },
-  { id: 'settings', label: 'Settings', icon: Settings }
-] as const
-
-const METRIC_CARDS = [
-  {
-    key: 'totalUsers',
-    label: 'Total Users',
-    icon: Users,
-    color: 'text-rose-600'
-  },
-  {
-    key: 'totalCandidates',
-    label: 'Total Candidates',
-    icon: UserCheck,
-    color: 'text-rose-600'
-  },
-  {
-    key: 'totalCompanies',
-    label: 'Total Companies',
-    icon: Building2,
-    color: 'text-rose-600'
-  },
-  {
-    key: 'activeTrials',
-    label: 'Active Trials',
-    icon: CreditCard,
-    color: 'text-rose-600'
-  }
-] as const
-
-// Reusable components
-const MetricCard = ({ 
-  label, 
-  value, 
-  icon: Icon, 
-  color, 
-  isLoading 
-}: {
-  label: string
-  value: number
-  icon: React.ComponentType<{ className?: string }>
-  color: string
-  isLoading: boolean
-}) => (
+const MetricCard = ({
+  label,
+  value,
+  icon: Icon,
+  color,
+  isLoading
+}: MetricCardProps) => (
   <div className="bg-card border rounded-lg p-6">
     <div className="flex items-center justify-between">
       <div>
@@ -96,24 +40,19 @@ const MetricCard = ({
   </div>
 )
 
-const NavigationItem = ({ 
-  item, 
-  isActive, 
-  onClick 
-}: {
-  item: typeof NAVIGATION_ITEMS[number]
-  isActive: boolean
-  onClick: () => void
-}) => {
+const NavigationItem = ({
+  item,
+  isActive,
+  onClick
+}: NavigationItemProps) => {
   const Icon = item.icon
   return (
     <button
       onClick={onClick}
-      className={`flex items-center space-x-3 px-4 py-2 rounded-lg transition-colors ${
-        isActive
-          ? 'bg-primary text-primary-foreground'
-          : 'text-muted-foreground hover:text-foreground hover:bg-muted'
-      }`}
+      className={`flex items-center space-x-3 px-4 py-2 rounded-lg transition-colors ${isActive
+        ? 'bg-primary text-primary-foreground'
+        : 'text-muted-foreground hover:text-foreground hover:bg-muted'
+        }`}
     >
       <Icon className="h-5 w-5" />
       <span>{item.label}</span>
@@ -154,7 +93,7 @@ function AdminDashboardContent() {
     title: '',
     onConfirm: () => { }
   })
-  
+
   const logoutMutation = useLogout()
   const blockUserMutation = useBlockUser()
   const unblockUserMutation = useUnblockUser()
@@ -166,16 +105,7 @@ function AdminDashboardContent() {
   const isOverviewLoading = overviewQuery.isLoading
   const isUsersLoading = usersQuery.isLoading
 
-  useEffect(() => {
-    setupEventListeners()
-  }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
-  const setupEventListeners = () => {
-    window.addEventListener('admin:block', handleBlockUser)
-    window.addEventListener('admin:unblock', handleUnblockUser)
-    window.addEventListener('admin:restrict', handleRestrictUser)
-    window.addEventListener('admin:delete', handleDeleteUser)
-  }
 
   const metrics = overviewQuery.data
   const users = usersQuery.data ?? []
@@ -185,47 +115,38 @@ function AdminDashboardContent() {
     logoutMutation.mutate()
   }
 
-  const handleBlockUser = async (event: globalThis.Event) => {
-    const customEvent = event as globalThis.CustomEvent
-    const { id } = customEvent.detail
-    const user = users.find(u => u.id === id)
-
+  const handleBlockUser = (userId: string) => {
+    const user = users.find(u => u.id === userId)
     setConfirmDialog({
       open: true,
       title: 'Block User',
       desc: `Are you sure you want to block ${user?.name || user?.email}? They will not be able to access the system.`,
-      onConfirm: () => blockUserMutation.mutate({ userId: id }),
+      onConfirm: () => blockUserMutation.mutate({ userId }),
       tone: 'destructive'
     })
   }
 
-  const handleUnblockUser = async (event: globalThis.Event) => {
-    const customEvent = event as globalThis.CustomEvent
-    const { id } = customEvent.detail
-    const user = users.find(u => u.id === id)
-
+  const handleUnblockUser = (userId: string) => {
+    const user = users.find(u => u.id === userId)
     setConfirmDialog({
       open: true,
       title: 'Unblock User',
       desc: `Are you sure you want to unblock ${user?.name || user?.email}?`,
-      onConfirm: () => unblockUserMutation.mutate({ userId: id })
+      onConfirm: () => unblockUserMutation.mutate({ userId })
     })
   }
 
-  const handleRestrictUser = async (_event: globalThis.Event) => {
+  const handleRestrictUser = (_userId: string) => {
     toast.info('Restrict user functionality coming soon')
   }
 
-  const handleDeleteUser = async (event: globalThis.Event) => {
-    const customEvent = event as globalThis.CustomEvent
-    const { id } = customEvent.detail
-    const user = users.find(u => u.id === id)
-
+  const handleDeleteUser = (userId: string) => {
+    const user = users.find(u => u.id === userId)
     setConfirmDialog({
       open: true,
       title: 'Delete User',
       desc: `This will soft delete ${user?.name || user?.email} and scrub their PII. This action cannot be undone.`,
-      onConfirm: () => deleteUserMutation.mutate({ userId: id }),
+      onConfirm: () => deleteUserMutation.mutate({ userId }),
       tone: 'destructive'
     })
   }
@@ -385,12 +306,7 @@ function AdminDashboardContent() {
                             <Button
                               variant="outline"
                               size="sm"
-                              onClick={() => {
-                                const event = new CustomEvent('admin:unblock', {
-                                  detail: { id: user.id }
-                                })
-                                window.dispatchEvent(event)
-                              }}
+                              onClick={() => handleUnblockUser(user.id)}
                             >
                               Unblock
                             </Button>
@@ -398,12 +314,7 @@ function AdminDashboardContent() {
                             <Button
                               variant="outline"
                               size="sm"
-                              onClick={() => {
-                                const event = new CustomEvent('admin:block', {
-                                  detail: { id: user.id }
-                                })
-                                window.dispatchEvent(event)
-                              }}
+                              onClick={() => handleBlockUser(user.id)}
                             >
                               Block
                             </Button>
@@ -411,24 +322,14 @@ function AdminDashboardContent() {
                           <Button
                             variant="outline"
                             size="sm"
-                            onClick={() => {
-                              const event = new CustomEvent('admin:restrict', {
-                                detail: { id: user.id }
-                              })
-                              window.dispatchEvent(event)
-                            }}
+                            onClick={() => handleRestrictUser(user.id)}
                           >
                             Restrict
                           </Button>
                           <Button
                             variant="destructive"
                             size="sm"
-                            onClick={() => {
-                              const event = new CustomEvent('admin:delete', {
-                                detail: { id: user.id }
-                              })
-                              window.dispatchEvent(event)
-                            }}
+                            onClick={() => handleDeleteUser(user.id)}
                           >
                             Delete
                           </Button>
@@ -499,9 +400,7 @@ function AdminDashboardContent() {
       <div className="flex">
         <aside className="w-64 bg-card border-r min-h-screen p-6">
           <div className="flex items-center space-x-2 mb-8">
-            <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
-              <Shield className="h-5 w-5 text-primary-foreground" />
-            </div>
+            <Logo size="sm" />
             <span className="text-xl font-bold">Admin</span>
           </div>
 
