@@ -6,14 +6,6 @@
   "devCommand": "pnpm dev",
   "rewrites": [
     {
-      "source": "/favicon.ico",
-      "destination": "/favicon.ico"
-    },
-    {
-      "source": "/amy-logo-light.svg",
-      "destination": "/amy-logo-light.svg"
-    },
-    {
       "source": "/(.*)",
       "destination": "/index.html"
     }

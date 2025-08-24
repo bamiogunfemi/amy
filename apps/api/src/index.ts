@@ -25,22 +25,50 @@ const PORT = process.env.PORT || 3001;
 app.use(helmet());
 app.use(compression());
 
+// Handle preflight requests
+app.options('*', cors());
+
 app.use(
   cors({
-    origin:
-      process.env.NODE_ENV === "production"
-        ? [
-            "https://amy-web.vercel.app",
-            "https://amy-app.vercel.app",
-            "https://amy-admin.vercel.app",
-          ]
-        : [
-            "http://localhost:5173",
-            "http://localhost:5174",
-            "http://localhost:5175",
-            "http://localhost:5176",
-          ],
+    origin: (origin, callback) => {
+      // Allow requests with no origin (like mobile apps or curl requests)
+      if (!origin) return callback(null, true);
+      
+      const allowedOrigins = [
+        // Production origins
+        "https://amy-web.vercel.app",
+        "https://amy-app.vercel.app", 
+        "https://amy-admin.vercel.app",
+        // Development origins
+        "http://localhost:5173",
+        "http://localhost:5174",
+        "http://localhost:5175",
+        "http://localhost:5176",
+        // Render preview URLs (if any)
+        /^https:\/\/amy-.*\.onrender\.com$/,
+      ];
+      
+      // Check if origin is allowed
+      const isAllowed = allowedOrigins.some(allowedOrigin => {
+        if (typeof allowedOrigin === 'string') {
+          return origin === allowedOrigin;
+        }
+        if (allowedOrigin instanceof RegExp) {
+          return allowedOrigin.test(origin);
+        }
+        return false;
+      });
+      
+      if (isAllowed) {
+        callback(null, true);
+      } else {
+        console.log('CORS blocked origin:', origin);
+        callback(new Error('Not allowed by CORS'));
+      }
+    },
     credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
   })
 );
 

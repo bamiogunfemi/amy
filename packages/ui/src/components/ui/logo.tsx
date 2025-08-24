@@ -16,7 +16,16 @@ export function Logo({ size = 'md', className = '' }: LogoProps) {
         src="/amy-logo-light.svg"
         alt="Amy"
         className={sizeClasses[size]}
+        onError={(e) => {
+          console.error('Failed to load logo:', e);
+          // Fallback to text if image fails
+          e.currentTarget.style.display = 'none';
+          e.currentTarget.nextElementSibling?.classList.remove('hidden');
+        }}
       />
+      <span className={`${sizeClasses[size]} font-bold text-slate-900 hidden`}>
+        Amy
+      </span>
     </div>
   )
 }
