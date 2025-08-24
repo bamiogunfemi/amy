@@ -1,6 +1,6 @@
 
 import { useState } from 'react'
-import { Button, Card, CardContent, CardHeader, CardTitle, Logo } from '@amy/ui'
+import { Button, Card, CardContent, CardHeader, CardTitle, Logo, Avatar } from '@amy/ui'
 import {
   Plus,
   Filter,
@@ -157,11 +157,7 @@ export function RecruiterDashboard() {
           ) : (
             metrics?.recentActivity?.slice(0, 5).map((activity) => (
               <div key={activity.id} className="flex items-center space-x-4 p-3 rounded-lg hover:bg-slate-50 transition-colors">
-                <div className="h-10 w-10 bg-gradient-to-br from-rose-500 to-rose-600 rounded-full flex items-center justify-center">
-                  <span className="text-white text-sm font-medium">
-                    {activity.candidateName.charAt(0)}
-                  </span>
-                </div>
+                <Avatar name={activity.candidateName} size="md" />
                 <div className="flex-1">
                   <p className="text-sm font-medium text-slate-900">{activity.action}</p>
                   <p className="text-xs text-slate-500">
@@ -240,11 +236,7 @@ export function RecruiterDashboard() {
               <CardContent className="pt-6">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center space-x-4">
-                    <div className="h-12 w-12 bg-primary rounded-full flex items-center justify-center">
-                      <span className="text-primary-foreground font-medium">
-                        {candidate.name.charAt(0)}
-                      </span>
-                    </div>
+                    <Avatar name={candidate.name} size="lg" />
                     <div>
                       <h3 className="font-medium">{candidate.name}</h3>
                       <div className="flex items-center space-x-4 text-sm text-muted-foreground">
@@ -329,11 +321,7 @@ export function RecruiterDashboard() {
                   {(stage as { applications?: Array<{ id: string; application?: { candidate?: { name?: string }; createdAt?: string } }> }).applications?.map((app) => (
                     <div key={app.id} className="p-3 border rounded-lg">
                       <div className="flex items-center space-x-2">
-                        <div className="h-8 w-8 bg-primary rounded-full flex items-center justify-center">
-                          <span className="text-primary-foreground text-xs font-medium">
-                            {app.application?.candidate?.name?.charAt(0) || '?'}
-                          </span>
-                        </div>
+                        <Avatar name={app.application?.candidate?.name} size="sm" />
                         <div className="flex-1">
                           <p className="text-sm font-medium">{app.application?.candidate?.name || 'Unknown'}</p>
                           <p className="text-xs text-muted-foreground">
@@ -412,9 +400,7 @@ export function RecruiterDashboard() {
               <p className="text-sm font-medium text-slate-900">{getGreeting()}, Recruiter</p>
 
             </div>
-            <div className="w-8 h-8 bg-gradient-to-br from-rose-500 to-rose-600 rounded-full flex items-center justify-center">
-              <span className="text-white text-sm font-medium">R</span>
-            </div>
+            <Avatar name="Recruiter" size="sm" />
             <Button
               variant="ghost"
               onClick={handleSignOut}

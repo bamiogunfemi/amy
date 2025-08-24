@@ -4,6 +4,7 @@ export { Input } from "./components/input";
 export { Loader } from "./components/ui/loader";
 export { Badge } from "./components/ui/badge";
 export { Logo } from "./components/ui/logo";
+export { Avatar } from "./components/ui/avatar";
 
 export * from "./constants";
 export {

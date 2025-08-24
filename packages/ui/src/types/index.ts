@@ -8,7 +8,7 @@ export const loginSchema = z.object({
 
 export const signupSchema = z.object({
   email: z.string().email("Invalid email address"),
-  password: z.string().min(6, "Password must be at least 6 characters"),
+  password: z.string().min(8, "Password must be at least 8 characters"),
   name: z.string().min(1, "Name is required"),
   role: z.enum(["ADMIN", "RECRUITER"]),
   companyName: z.string().optional(),
@@ -21,12 +21,12 @@ export const resetPasswordSchema = z.object({
 
 export const setNewPasswordSchema = z.object({
   token: z.string(),
-  newPassword: z.string().min(6, "Password must be at least 6 characters"),
+  newPassword: z.string().min(8, "Password must be at least 8 characters"),
 });
 
 export const changePasswordSchema = z.object({
   currentPassword: z.string().min(1, "Current password is required"),
-  newPassword: z.string().min(6, "Password must be at least 6 characters"),
+  newPassword: z.string().min(8, "Password must be at least 8 characters"),
 });
 
 // Admin Schemas

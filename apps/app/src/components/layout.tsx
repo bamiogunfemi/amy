@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { Link, useNavigate, useLocation } from '@tanstack/react-router'
-import { Button, Logo } from '@amy/ui'
+import { Button, Logo, Avatar } from '@amy/ui'
 import { useAuth, useLogout } from '@amy/ui'
 import { toast } from 'sonner'
 import {
@@ -120,11 +120,7 @@ export function Layout({ children }: LayoutProps) {
                 onClick={() => setProfileDropdownOpen(!profileDropdownOpen)}
                 className="flex items-center space-x-3 w-full p-3 rounded-lg hover:bg-slate-50 transition-colors"
               >
-                <div className="w-12 h-12 bg-gradient-to-br from-rose-500 to-rose-600 rounded-sm flex items-center justify-center">
-                  <span className="text-white text-sm font-medium">
-                    {user?.name?.charAt(0) || 'R'}
-                  </span>
-                </div>
+                <Avatar name={user?.name} email={user?.email} size="lg" />
                 <div className=" text-left ">
                   <p className="text-sm font-medium text-slate-900">
                     {userLoading ? 'Loading...' : user?.name || 'Recruiter'}

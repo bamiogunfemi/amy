@@ -1,6 +1,6 @@
 
 import { Link } from '@tanstack/react-router'
-import { Button, Card, CardContent, CardHeader, CardTitle } from '@amy/ui'
+import { Button, Card, CardContent, CardHeader, CardTitle, Avatar } from '@amy/ui'
 import { useRecruiterMetrics } from '@amy/ui'
 import { toast } from 'sonner'
 import {
@@ -31,14 +31,7 @@ export function DashboardPage() {
     return 'Good evening'
   }
 
-  const handleCreateCandidate = async () => {
-    try {
-      // This would open a modal or navigate to create page
-      toast.success('Redirecting to create candidate...')
-    } catch (error) {
-      toast.error('Failed to create candidate')
-    }
-  }
+
 
   const handleUploadCV = () => {
     toast.info('File upload coming soon!')
@@ -70,42 +63,44 @@ export function DashboardPage() {
 
         {/* Quick Actions */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          <Card className="hover:shadow-lg transition-all duration-200 cursor-pointer" onClick={handleCreateCandidate}>
-            <CardContent className="pt-6">
-              <div className="flex items-center space-x-4">
-                <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl flex items-center justify-center">
-                  <Plus className="h-6 w-6 text-white" />
+          <Link to="/candidates/new">
+            <Card className="hover:shadow-lg transition-all duration-200 cursor-pointer group border-2 border-transparent hover:border-blue-200">
+              <CardContent className="pt-6">
+                <div className="flex items-center space-x-4">
+                  <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl flex items-center justify-center group-hover:scale-105 transition-transform">
+                    <Plus className="h-6 w-6 text-white" />
+                  </div>
+                  <div>
+                    <h3 className="font-semibold text-slate-900 group-hover:text-blue-600 transition-colors">New Candidate</h3>
+                    <p className="text-sm text-slate-600">Add a new candidate to your pool</p>
+                  </div>
                 </div>
-                <div>
-                  <h3 className="font-semibold text-slate-900">New Candidate</h3>
-                  <p className="text-sm text-slate-600">Add a new candidate to your pool</p>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
+              </CardContent>
+            </Card>
+          </Link>
 
-          <Card className="hover:shadow-lg transition-all duration-200 cursor-pointer" onClick={handleUploadCV}>
+          <Card className="hover:shadow-lg transition-all duration-200 cursor-pointer group border-2 border-transparent hover:border-green-200" onClick={handleUploadCV}>
             <CardContent className="pt-6">
               <div className="flex items-center space-x-4">
-                <div className="w-12 h-12 bg-gradient-to-br from-green-500 to-green-600 rounded-xl flex items-center justify-center">
+                <div className="w-12 h-12 bg-gradient-to-br from-green-500 to-green-600 rounded-xl flex items-center justify-center group-hover:scale-105 transition-transform">
                   <Upload className="h-6 w-6 text-white" />
                 </div>
                 <div>
-                  <h3 className="font-semibold text-slate-900">Upload CV(s)</h3>
+                  <h3 className="font-semibold text-slate-900 group-hover:text-green-600 transition-colors">Upload CV(s)</h3>
                   <p className="text-sm text-slate-600">Upload and parse candidate documents</p>
                 </div>
               </div>
             </CardContent>
           </Card>
 
-          <Card className="hover:shadow-lg transition-all duration-200 cursor-pointer" onClick={handleCreateJob}>
+          <Card className="hover:shadow-lg transition-all duration-200 cursor-pointer group border-2 border-transparent hover:border-purple-200" onClick={handleCreateJob}>
             <CardContent className="pt-6">
               <div className="flex items-center space-x-4">
-                <div className="w-12 h-12 bg-gradient-to-br from-purple-500 to-purple-600 rounded-xl flex items-center justify-center">
+                <div className="w-12 h-12 bg-gradient-to-br from-purple-500 to-purple-600 rounded-xl flex items-center justify-center group-hover:scale-105 transition-transform">
                   <Briefcase className="h-6 w-6 text-white" />
                 </div>
                 <div>
-                  <h3 className="font-semibold text-slate-900">New Job</h3>
+                  <h3 className="font-semibold text-slate-900 group-hover:text-purple-600 transition-colors">New Job</h3>
                   <p className="text-sm text-slate-600">Create a new job posting</p>
                 </div>
               </div>
@@ -113,14 +108,14 @@ export function DashboardPage() {
           </Card>
 
           <Link to="/pipeline">
-            <Card className="hover:shadow-lg transition-all duration-200 cursor-pointer">
+            <Card className="hover:shadow-lg transition-all duration-200 cursor-pointer group border-2 border-transparent hover:border-orange-200">
               <CardContent className="pt-6">
                 <div className="flex items-center space-x-4">
-                  <div className="w-12 h-12 bg-gradient-to-br from-orange-500 to-orange-600 rounded-xl flex items-center justify-center">
+                  <div className="w-12 h-12 bg-gradient-to-br from-orange-500 to-orange-600 rounded-xl flex items-center justify-center group-hover:scale-105 transition-transform">
                     <BarChart3 className="h-6 w-6 text-white" />
                   </div>
                   <div>
-                    <h3 className="font-semibold text-slate-900">View Pipeline</h3>
+                    <h3 className="font-semibold text-slate-900 group-hover:text-orange-600 transition-colors">View Pipeline</h3>
                     <p className="text-sm text-slate-600">Manage your recruitment pipeline</p>
                   </div>
                 </div>
@@ -222,11 +217,7 @@ export function DashboardPage() {
               ) : (
                 metrics?.recentActivity?.slice(0, 5).map((activity) => (
                   <div key={activity.id} className="flex items-center space-x-4 p-3 rounded-lg hover:bg-muted transition-colors">
-                    <div className="h-10 w-10 bg-gradient-to-br from-rose-500 to-rose-600 rounded-full flex items-center justify-center">
-                      <span className="text-white text-sm font-medium">
-                        {activity.candidateName.charAt(0)}
-                      </span>
-                    </div>
+                    <Avatar name={activity.candidateName} size="md" />
                     <div className="flex-1">
                       <p className="text-sm font-medium">{activity.action}</p>
                       <p className="text-xs text-muted-foreground">
@@ -244,14 +235,14 @@ export function DashboardPage() {
         {/* Quick Links */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           <Link to="/candidates">
-            <Card className="hover:shadow-lg transition-all duration-200 cursor-pointer">
+            <Card className="hover:shadow-lg transition-all duration-200 cursor-pointer group border-2 border-transparent hover:border-blue-200">
               <CardContent className="pt-6">
                 <div className="flex items-center space-x-4">
-                  <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl flex items-center justify-center">
+                  <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl flex items-center justify-center group-hover:scale-105 transition-transform">
                     <Users className="h-6 w-6 text-white" />
                   </div>
                   <div>
-                    <h3 className="font-semibold text-slate-900">Candidates</h3>
+                    <h3 className="font-semibold text-slate-900 group-hover:text-blue-600 transition-colors">Candidates</h3>
                     <p className="text-sm text-slate-600">Manage your candidate pool</p>
                   </div>
                 </div>
@@ -260,14 +251,14 @@ export function DashboardPage() {
           </Link>
 
           <Link to="/jobs">
-            <Card className="hover:shadow-lg transition-all duration-200 cursor-pointer">
+            <Card className="hover:shadow-lg transition-all duration-200 cursor-pointer group border-2 border-transparent hover:border-purple-200">
               <CardContent className="pt-6">
                 <div className="flex items-center space-x-4">
-                  <div className="w-12 h-12 bg-gradient-to-br from-purple-500 to-purple-600 rounded-xl flex items-center justify-center">
+                  <div className="w-12 h-12 bg-gradient-to-br from-purple-500 to-purple-600 rounded-xl flex items-center justify-center group-hover:scale-105 transition-transform">
                     <Briefcase className="h-6 w-6 text-white" />
                   </div>
                   <div>
-                    <h3 className="font-semibold text-slate-900">Jobs</h3>
+                    <h3 className="font-semibold text-slate-900 group-hover:text-purple-600 transition-colors">Jobs</h3>
                     <p className="text-sm text-slate-600">Manage job postings</p>
                   </div>
                 </div>
@@ -276,14 +267,14 @@ export function DashboardPage() {
           </Link>
 
           <Link to="/search">
-            <Card className="hover:shadow-lg transition-all duration-200 cursor-pointer">
+            <Card className="hover:shadow-lg transition-all duration-200 cursor-pointer group border-2 border-transparent hover:border-green-200">
               <CardContent className="pt-6">
                 <div className="flex items-center space-x-4">
-                  <div className="w-12 h-12 bg-gradient-to-br from-green-500 to-green-600 rounded-xl flex items-center justify-center">
+                  <div className="w-12 h-12 bg-gradient-to-br from-green-500 to-green-600 rounded-xl flex items-center justify-center group-hover:scale-105 transition-transform">
                     <FileText className="h-6 w-6 text-white" />
                   </div>
                   <div>
-                    <h3 className="font-semibold text-slate-900">Search</h3>
+                    <h3 className="font-semibold text-slate-900 group-hover:text-green-600 transition-colors">Search</h3>
                     <p className="text-sm text-slate-600">Find candidates and skills</p>
                   </div>
                 </div>

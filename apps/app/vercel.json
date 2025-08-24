@@ -10,9 +10,37 @@
       "destination": "/index.html"
     }
   ],
+  "routes": [
+    {
+      "src": "/favicon.ico",
+      "dest": "/favicon.ico"
+    },
+    {
+      "src": "/amy-logo-light.svg",
+      "dest": "/amy-logo-light.svg"
+    }
+  ],
   "headers": [
     {
       "source": "/assets/(.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=31536000, immutable"
+        }
+      ]
+    },
+    {
+      "source": "/favicon.ico",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=31536000, immutable"
+        }
+      ]
+    },
+    {
+      "source": "/amy-logo-light.svg",
       "headers": [
         {
           "key": "Cache-Control",

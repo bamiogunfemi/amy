@@ -4,6 +4,7 @@ import { LoginPage } from "@/routes/login";
 import { SignupPage } from "@/routes/signup";
 import { ResetPasswordPage } from "@/routes/reset-password";
 import { CandidatesPage } from "@/routes/candidates";
+import { NewCandidatePage } from "@/routes/candidates.new";
 import { PipelinePage } from "@/routes/pipeline";
 import { SearchPage } from "@/routes/search";
 import { JobsPage } from "@/routes/jobs";
@@ -43,6 +44,12 @@ const candidatesRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: "/candidates",
   component: CandidatesPage,
+});
+
+const candidatesNewRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: "/candidates/new",
+  component: NewCandidatePage,
 });
 
 const pipelineRoute = createRoute({
@@ -99,6 +106,7 @@ export const routeTree = rootRoute.addChildren([
   signupRoute,
   resetPasswordRoute,
   candidatesRoute,
+  candidatesNewRoute,
   pipelineRoute,
   searchRoute,
   jobsRoute,

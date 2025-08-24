@@ -77,7 +77,7 @@ export function CandidatesPage() {
               <Upload className="h-4 w-4 mr-2" />
               Upload CV(s)
             </Button>
-            <Button size="sm" onClick={() => navigate({ to: '/candidates' })}>
+            <Button size="sm" onClick={() => navigate({ to: '/candidates/new' })}>
               <Plus className="h-4 w-4 mr-2" />
               New Candidate
             </Button>
