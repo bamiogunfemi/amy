@@ -66,7 +66,7 @@ export function CandidatesPage() {
   return (
     <Layout>
       <div className="max-w-7xl mx-auto space-y-6">
-        {/* Page Header */}
+
         <div className="flex items-center justify-between">
           <div>
             <h1 className="text-3xl font-bold text-slate-900">Candidates</h1>
@@ -84,7 +84,7 @@ export function CandidatesPage() {
           </div>
         </div>
 
-        {/* Search and Filters */}
+
         <Card>
           <CardContent className="pt-6">
             <div className="flex items-center space-x-4">
@@ -146,7 +146,7 @@ export function CandidatesPage() {
           </CardContent>
         </Card>
 
-        {/* Bulk Actions */}
+
         {selectedCandidates.length > 0 && (
           <Card>
             <CardContent className="pt-6">
@@ -185,7 +185,7 @@ export function CandidatesPage() {
           </Card>
         )}
 
-        {/* Candidates Table */}
+
         <Card>
           <CardHeader>
             <div className="flex items-center justify-between">

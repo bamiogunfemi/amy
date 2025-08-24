@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Link, useNavigate, useLocation } from '@tanstack/react-router'
 import { Button, Logo, Avatar } from '@amy/ui'
 import { useAuth, useLogout } from '@amy/ui'
@@ -47,6 +47,19 @@ export function Layout({ children }: LayoutProps) {
 
   const logoutMutation = useLogout()
 
+  // Handle authentication errors - auto logout and redirect
+  useEffect(() => {
+    if (userError && !userLoading) {
+      console.log("Auth error detected, logging out user:", userError)
+      // Clear local storage immediately
+      localStorage.removeItem("amy_token")
+      localStorage.removeItem("amy_refresh_token")
+      // Redirect to login
+      navigate({ to: '/login' })
+      toast.error("Session expired. Please log in again.")
+    }
+  }, [userError, userLoading, navigate])
+
   const handleLogout = async () => {
     try {
       await logoutMutation.mutateAsync()
@@ -66,7 +79,7 @@ export function Layout({ children }: LayoutProps) {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 flex">
-      {/* Mobile sidebar overlay */}
+
       {sidebarOpen && (
         <div
           className="fixed inset-0 z-40 bg-black bg-opacity-50 lg:hidden"
@@ -74,11 +87,11 @@ export function Layout({ children }: LayoutProps) {
         />
       )}
 
-      {/* Sidebar */}
-      <div className={`fixed inset-y-0 left-0 z-50 w-72 bg-white shadow-lg transform transition-transform duration-300 ease-in-out lg:relative lg:translate-x-0 lg:flex-shrink-0 ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'
+
+      <div className={`fixed inset-y-0 left-0 z-50 w-[17rem] bg-white shadow-lg transform transition-transform duration-300 ease-in-out lg:relative lg:translate-x-0 lg:flex-shrink-0 ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'
         }`}>
         <div className="flex flex-col h-full">
-          {/* Logo */}
+
           <div className="flex items-center justify-between p-6 border-b border-slate-200">
             <Logo size="md" />
             <Button
@@ -91,7 +104,7 @@ export function Layout({ children }: LayoutProps) {
             </Button>
           </div>
 
-          {/* Navigation */}
+
           <nav className="flex-1 px-4 py-6 space-y-2">
             {navigation.map((item) => {
               const isActive = location.pathname === item.href
@@ -113,14 +126,14 @@ export function Layout({ children }: LayoutProps) {
             })}
           </nav>
 
-          {/* User Profile */}
-          <div className="p-4 border-t border-slate-200">
+
+          <div className="p-1.5 border-t border-slate-200">
             <div className="relative">
               <button
                 onClick={() => setProfileDropdownOpen(!profileDropdownOpen)}
-                className="flex items-center space-x-3 w-full p-3 rounded-lg hover:bg-slate-50 transition-colors"
+                className="flex items-center space-x-3 w-full p-3 rounded-lg hover:bg-slate-50 transition-colors flex-1"
               >
-                <Avatar name={user?.name} email={user?.email} size="lg" />
+                <Avatar name={user?.name} email={user?.email} size="md" />
                 <div className=" text-left ">
                   <p className="text-sm font-medium text-slate-900">
                     {userLoading ? 'Loading...' : user?.name || 'Recruiter'}
@@ -157,9 +170,9 @@ export function Layout({ children }: LayoutProps) {
         </div>
       </div>
 
-      {/* Main content */}
+
       <div className="flex-1 min-w-0">
-        {/* Top header */}
+
         <header className="bg-white/80 backdrop-blur-sm border-b border-slate-200 sticky top-0 z-30">
           <div className="px-6 py-4 flex items-center justify-between">
             <div className="flex items-center space-x-4">
@@ -185,7 +198,7 @@ export function Layout({ children }: LayoutProps) {
           </div>
         </header>
 
-        {/* Page content */}
+
         <main className="p-8">
           {children}
         </main>

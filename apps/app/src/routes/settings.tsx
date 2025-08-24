@@ -6,7 +6,7 @@ export function SettingsPage() {
   return (
     <Layout>
       <div className="max-w-4xl mx-auto space-y-8">
-        {/* Page Header */}
+
         <div className="flex items-center justify-between">
           <div>
             <h1 className="text-3xl font-bold text-slate-900">Settings</h1>
@@ -14,9 +14,9 @@ export function SettingsPage() {
           </div>
         </div>
 
-        {/* Settings Sections */}
+
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          {/* Account Settings */}
+
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center space-x-2">
@@ -47,7 +47,7 @@ export function SettingsPage() {
             </CardContent>
           </Card>
 
-          {/* Integration Settings */}
+
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center space-x-2">
@@ -75,7 +75,7 @@ export function SettingsPage() {
             </CardContent>
           </Card>
 
-          {/* Display Settings */}
+
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center space-x-2">
@@ -107,7 +107,7 @@ export function SettingsPage() {
             </CardContent>
           </Card>
 
-          {/* Notification Settings */}
+
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center space-x-2">
@@ -135,7 +135,7 @@ export function SettingsPage() {
           </Card>
         </div>
 
-        {/* Save Button */}
+
         <div className="flex justify-end">
           <Button>
             Save Settings

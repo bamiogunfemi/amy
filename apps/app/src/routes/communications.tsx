@@ -6,7 +6,7 @@ export function CommunicationsPage() {
   return (
     <Layout>
       <div className="max-w-7xl mx-auto space-y-6">
-        {/* Page Header */}
+
         <div className="flex items-center justify-between">
           <div>
             <h1 className="text-3xl font-bold text-slate-900">Communications</h1>
@@ -14,7 +14,7 @@ export function CommunicationsPage() {
           </div>
         </div>
 
-        {/* Communication Tools */}
+
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           <Card className="hover:shadow-lg transition-all duration-200 cursor-pointer">
             <CardContent className="pt-6">
@@ -59,7 +59,7 @@ export function CommunicationsPage() {
           </Card>
         </div>
 
-        {/* Recent Communications */}
+
         <Card>
           <CardHeader>
             <CardTitle>Recent Communications</CardTitle>

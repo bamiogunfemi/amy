@@ -58,7 +58,7 @@ export function ProfilePage() {
   return (
     <Layout>
       <div className="max-w-4xl mx-auto space-y-8">
-        {/* Profile Header */}
+
         <div className="bg-gradient-to-r from-rose-500 to-rose-600 rounded-2xl p-8 text-white">
           <div className="flex items-center space-x-6">
             <div className="relative">
@@ -115,9 +115,9 @@ export function ProfilePage() {
           </div>
         </div>
 
-        {/* Profile Information */}
+
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          {/* Personal Information */}
+
           <div className="lg:col-span-2 space-y-6">
             <Card>
               <CardHeader>
@@ -231,7 +231,7 @@ export function ProfilePage() {
             </Card>
           </div>
 
-          {/* Account Information */}
+
           <div className="space-y-6">
             <Card>
               <CardHeader>
@@ -298,7 +298,7 @@ export function ProfilePage() {
             </Card>
           </div>
         </div>
-        </div>
+      </div>
     </Layout>
   )
 }

@@ -97,7 +97,7 @@ export function JobsPage() {
   return (
     <Layout>
       <div className="max-w-7xl mx-auto space-y-6">
-        {/* Page Header */}
+
         <div className="flex items-center justify-between">
           <div>
             <h1 className="text-3xl font-bold text-slate-900">Jobs</h1>
@@ -111,7 +111,7 @@ export function JobsPage() {
           </div>
         </div>
 
-        {/* Search and Filters */}
+
         <Card>
           <CardContent className="pt-6">
             <div className="flex items-center space-x-4">
@@ -178,7 +178,7 @@ export function JobsPage() {
           </CardContent>
         </Card>
 
-        {/* Jobs List */}
+
         <Card>
           <CardHeader>
             <CardTitle>Job Postings ({jobs.length})</CardTitle>

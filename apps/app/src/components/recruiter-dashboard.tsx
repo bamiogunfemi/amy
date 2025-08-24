@@ -135,7 +135,7 @@ export function RecruiterDashboard() {
         ))}
       </div>
 
-      {/* Recent Activity */}
+
       <div className="bg-white rounded-2xl p-6 shadow-sm border border-slate-200">
         <div className="flex items-center justify-between mb-6">
           <h3 className="text-lg font-semibold text-slate-900">Recent Activity</h3>
@@ -414,7 +414,7 @@ export function RecruiterDashboard() {
       </header>
 
       <div className="flex">
-        {/* Sidebar */}
+
         <aside className="w-64 bg-white/80 backdrop-blur-sm border-r border-slate-200 min-h-screen">
           <nav className="p-6 space-y-2">
             {NAVIGATION_ITEMS.map((item) => (
@@ -440,7 +440,7 @@ export function RecruiterDashboard() {
           </div>
         </aside>
 
-        {/* Main content */}
+
         <main className="flex-1 p-8">
           <div className="max-w-7xl mx-auto">
             {renderContent()}

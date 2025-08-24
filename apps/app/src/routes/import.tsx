@@ -6,7 +6,7 @@ export function ImportPage() {
   return (
     <Layout>
       <div className="max-w-7xl mx-auto space-y-6">
-        {/* Page Header */}
+
         <div className="flex items-center justify-between">
           <div>
             <h1 className="text-3xl font-bold text-slate-900">Import Data</h1>
@@ -14,7 +14,7 @@ export function ImportPage() {
           </div>
         </div>
 
-        {/* Import Options */}
+
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           <Card className="hover:shadow-lg transition-all duration-200 cursor-pointer">
             <CardContent className="pt-6">
@@ -73,7 +73,7 @@ export function ImportPage() {
           </Card>
         </div>
 
-        {/* Recent Imports */}
+
         <Card>
           <CardHeader>
             <CardTitle>Recent Imports</CardTitle>

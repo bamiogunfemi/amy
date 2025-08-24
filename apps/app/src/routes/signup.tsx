@@ -1,9 +1,10 @@
 import { useState } from 'react'
 import { Link, useNavigate } from '@tanstack/react-router'
-import { Button, Input, Card, CardContent, CardHeader, CardTitle, Logo } from '@amy/ui'
+import { Button, Card, CardContent, CardHeader, CardTitle, Logo } from '@amy/ui'
 import { useSignupForm, useSignup } from '@amy/ui'
-import { Eye, EyeOff } from 'lucide-react'
 import type { SignupFormData } from '@amy/ui'
+
+import { FormField } from '@/components/auth/form-field'
 
 export function SignupPage() {
   const [showPassword, setShowPassword] = useState(false)
@@ -42,72 +43,39 @@ export function SignupPage() {
           </CardHeader>
           <CardContent>
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-              <div>
-                <label className="block text-sm font-medium text-slate-700 mb-2">
-                  Full Name
-                </label>
-                <Input
-                  type="text"
-                  placeholder="Enter your full name"
-                  {...register('name')}
-                  className={errors.name ? 'border-red-500' : ''}
-                />
-                {errors.name && (
-                  <p className="text-red-500 text-sm mt-1">{errors.name.message}</p>
-                )}
-              </div>
+              <FormField
+                label="Full Name"
+                type="text"
+                placeholder="Enter your full name"
+                register={register('name')}
+                error={errors.name}
+              />
 
-              <div>
-                <label className="block text-sm font-medium text-slate-700 mb-2">
-                  Email Address
-                </label>
-                <Input
-                  type="email"
-                  placeholder="Enter your email"
-                  {...register('email')}
-                  className={errors.email ? 'border-red-500' : ''}
-                />
-                {errors.email && (
-                  <p className="text-red-500 text-sm mt-1">{errors.email.message}</p>
-                )}
-              </div>
+              <FormField
+                label="Email Address"
+                type="email"
+                placeholder="Enter your email"
+                register={register('email')}
+                error={errors.email}
+              />
 
-              <div>
-                <label className="block text-sm font-medium text-slate-700 mb-2">
-                  Password
-                </label>
-                <div className="relative">
-                  <Input
-                    type={showPassword ? 'text' : 'password'}
-                    placeholder="Create a password"
-                    {...register('password')}
-                    className={errors.password ? 'border-red-500 pr-10' : 'pr-10'}
-                  />
-                  <button
-                    type="button"
-                    onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-slate-400 hover:text-slate-600"
-                  >
-                    {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-                  </button>
-                </div>
-                {errors.password && (
-                  <p className="text-red-500 text-sm mt-1">{errors.password.message}</p>
-                )}
-              </div>
+              <FormField
+                label="Password"
+                type="password"
+                placeholder="Create a password"
+                register={register('password')}
+                error={errors.password}
+                isPassword={true}
+                onTogglePassword={() => setShowPassword(!showPassword)}
+                showPassword={showPassword}
+              />
 
-
-
-              <div>
-                <label className="block text-sm font-medium text-slate-700 mb-2">
-                  Company Name (Optional)
-                </label>
-                <Input
-                  type="text"
-                  placeholder="Enter your company name"
-                  {...register('companyName')}
-                />
-              </div>
+              <FormField
+                label="Company Name (Optional)"
+                type="text"
+                placeholder="Enter your company name"
+                register={register('companyName')}
+              />
 
               <div className="space-y-3">
                 <label className="flex items-start space-x-3">

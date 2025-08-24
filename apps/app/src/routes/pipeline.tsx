@@ -44,7 +44,7 @@ export function PipelinePage() {
   return (
     <Layout>
       <div className="max-w-7xl mx-auto space-y-6">
-        {/* Page Header */}
+
         <div className="flex items-center justify-between">
           <div>
             <h1 className="text-3xl font-bold text-slate-900">Pipeline</h1>
@@ -62,7 +62,7 @@ export function PipelinePage() {
           </div>
         </div>
 
-        {/* Pipeline Board */}
+
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
           {pipelineQuery.isLoading ? (
             Array.from({ length: 4 }).map((_, i) => (

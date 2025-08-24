@@ -1,27 +1,17 @@
 
-import { Link } from '@tanstack/react-router'
-import { Button, Card, CardContent, CardHeader, CardTitle, Avatar } from '@amy/ui'
+import { Button, Card, CardContent, CardHeader, CardTitle } from '@amy/ui'
 import { useRecruiterMetrics } from '@amy/ui'
 import { toast } from 'sonner'
-import {
-  Users,
-  Briefcase,
-  FileText,
-  Upload,
-  Plus,
-  BarChart3,
-  Calendar,
-  UserCheck,
-  ArrowRight,
-  Clock,
-  CheckCircle
-} from 'lucide-react'
+import { BarChart3, ArrowRight } from 'lucide-react'
 
 import { Layout } from '@/components/layout'
+import { QuickActionCard } from '@/components/dashboard/quick-action-card'
+import { MetricCard } from '@/components/dashboard/metric-card'
+import { ActivityItem } from '@/components/dashboard/activity-item'
+import { QUICK_ACTIONS, METRICS, NAVIGATION_CARDS } from '@/components/dashboard/dashboard-config'
 
 export function DashboardPage() {
   const metricsQuery = useRecruiterMetrics()
-
   const metrics = metricsQuery.data
 
   const getGreeting = () => {
@@ -31,8 +21,6 @@ export function DashboardPage() {
     return 'Good evening'
   }
 
-
-
   const handleUploadCV = () => {
     toast.info('File upload coming soon!')
   }
@@ -41,16 +29,25 @@ export function DashboardPage() {
     toast.info('Job creation coming soon!')
   }
 
+  const quickActionsWithHandlers = QUICK_ACTIONS.map(action => {
+    if (action.title === 'Upload CV(s)') {
+      return { ...action, onClick: handleUploadCV }
+    }
+    if (action.title === 'New Job') {
+      return { ...action, onClick: handleCreateJob }
+    }
+    return action
+  })
+
   return (
     <Layout>
       <div className="max-w-7xl mx-auto space-y-8">
-        {/* Welcome Section */}
         <div className="bg-gradient-to-r from-rose-500 to-rose-600 rounded-2xl p-8 text-white">
           <div className="flex items-center justify-between">
             <div>
               <h2 className="text-3xl font-bold mb-2">{getGreeting()}! 👋</h2>
               <p className="text-rose-100 text-lg">
-                Here's what's happening with your recruitment pipeline today
+                Here&#39;s what&#39;s happening with your recruitment pipeline today
               </p>
             </div>
             <div className="hidden md:block">
@@ -61,137 +58,32 @@ export function DashboardPage() {
           </div>
         </div>
 
-        {/* Quick Actions */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          <Link to="/candidates/new">
-            <Card className="hover:shadow-lg transition-all duration-200 cursor-pointer group border-2 border-transparent hover:border-blue-200">
-              <CardContent className="pt-6">
-                <div className="flex items-center space-x-4">
-                  <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl flex items-center justify-center group-hover:scale-105 transition-transform">
-                    <Plus className="h-6 w-6 text-white" />
-                  </div>
-                  <div>
-                    <h3 className="font-semibold text-slate-900 group-hover:text-blue-600 transition-colors">New Candidate</h3>
-                    <p className="text-sm text-slate-600">Add a new candidate to your pool</p>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          </Link>
-
-          <Card className="hover:shadow-lg transition-all duration-200 cursor-pointer group border-2 border-transparent hover:border-green-200" onClick={handleUploadCV}>
-            <CardContent className="pt-6">
-              <div className="flex items-center space-x-4">
-                <div className="w-12 h-12 bg-gradient-to-br from-green-500 to-green-600 rounded-xl flex items-center justify-center group-hover:scale-105 transition-transform">
-                  <Upload className="h-6 w-6 text-white" />
-                </div>
-                <div>
-                  <h3 className="font-semibold text-slate-900 group-hover:text-green-600 transition-colors">Upload CV(s)</h3>
-                  <p className="text-sm text-slate-600">Upload and parse candidate documents</p>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card className="hover:shadow-lg transition-all duration-200 cursor-pointer group border-2 border-transparent hover:border-purple-200" onClick={handleCreateJob}>
-            <CardContent className="pt-6">
-              <div className="flex items-center space-x-4">
-                <div className="w-12 h-12 bg-gradient-to-br from-purple-500 to-purple-600 rounded-xl flex items-center justify-center group-hover:scale-105 transition-transform">
-                  <Briefcase className="h-6 w-6 text-white" />
-                </div>
-                <div>
-                  <h3 className="font-semibold text-slate-900 group-hover:text-purple-600 transition-colors">New Job</h3>
-                  <p className="text-sm text-slate-600">Create a new job posting</p>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-
-          <Link to="/pipeline">
-            <Card className="hover:shadow-lg transition-all duration-200 cursor-pointer group border-2 border-transparent hover:border-orange-200">
-              <CardContent className="pt-6">
-                <div className="flex items-center space-x-4">
-                  <div className="w-12 h-12 bg-gradient-to-br from-orange-500 to-orange-600 rounded-xl flex items-center justify-center group-hover:scale-105 transition-transform">
-                    <BarChart3 className="h-6 w-6 text-white" />
-                  </div>
-                  <div>
-                    <h3 className="font-semibold text-slate-900 group-hover:text-orange-600 transition-colors">View Pipeline</h3>
-                    <p className="text-sm text-slate-600">Manage your recruitment pipeline</p>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          </Link>
+          {quickActionsWithHandlers.map((action) => (
+            <QuickActionCard
+              key={action.title}
+              title={action.title}
+              description={action.description}
+              icon={action.icon}
+              href={action.href}
+              onClick={action.onClick}
+              color={action.color}
+            />
+          ))}
         </div>
 
-        {/* Stats Cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          <Card>
-            <CardContent className="pt-6">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm font-medium text-muted-foreground">Total Candidates</p>
-                  {metricsQuery.isLoading ? (
-                    <div className="h-7 w-16 bg-muted rounded animate-pulse" />
-                  ) : (
-                    <p className="text-2xl font-bold">{metrics?.totalCandidates || 0}</p>
-                  )}
-                </div>
-                <Users className="h-8 w-8 text-rose-600" />
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardContent className="pt-6">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm font-medium text-muted-foreground">Active Applications</p>
-                  {metricsQuery.isLoading ? (
-                    <div className="h-7 w-16 bg-muted rounded animate-pulse" />
-                  ) : (
-                    <p className="text-2xl font-bold">{metrics?.activeApplications || 0}</p>
-                  )}
-                </div>
-                <UserCheck className="h-8 w-8 text-rose-600" />
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardContent className="pt-6">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm font-medium text-muted-foreground">Interviews Scheduled</p>
-                  {metricsQuery.isLoading ? (
-                    <div className="h-7 w-16 bg-muted rounded animate-pulse" />
-                  ) : (
-                    <p className="text-2xl font-bold">{metrics?.interviewsScheduled || 0}</p>
-                  )}
-                </div>
-                <Calendar className="h-8 w-8 text-rose-600" />
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardContent className="pt-6">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm font-medium text-muted-foreground">Offers Extended</p>
-                  {metricsQuery.isLoading ? (
-                    <div className="h-7 w-16 bg-muted rounded animate-pulse" />
-                  ) : (
-                    <p className="text-2xl font-bold">{metrics?.offersExtended || 0}</p>
-                  )}
-                </div>
-                <CheckCircle className="h-8 w-8 text-rose-600" />
-              </div>
-            </CardContent>
-          </Card>
+          {METRICS.map((metric) => (
+            <MetricCard
+              key={metric.key}
+              title={metric.title}
+              value={metrics?.[metric.key as keyof typeof metrics] as number || 0}
+              icon={metric.icon}
+              isLoading={metricsQuery.isLoading}
+            />
+          ))}
         </div>
 
-        {/* Recent Activity */}
         <Card>
           <CardHeader>
             <div className="flex items-center justify-between">
@@ -215,72 +107,31 @@ export function DashboardPage() {
                   </div>
                 ))
               ) : (
-                metrics?.recentActivity?.slice(0, 5).map((activity) => (
-                  <div key={activity.id} className="flex items-center space-x-4 p-3 rounded-lg hover:bg-muted transition-colors">
-                    <Avatar name={activity.candidateName} size="md" />
-                    <div className="flex-1">
-                      <p className="text-sm font-medium">{activity.action}</p>
-                      <p className="text-xs text-muted-foreground">
-                        {activity.candidateName} • {new Date(activity.timestamp).toLocaleDateString()}
-                      </p>
-                    </div>
-                    <Clock className="h-4 w-4 text-muted-foreground" />
-                  </div>
+                metrics?.recentActivity?.slice(0, 5).map((activity: any) => (
+                  <ActivityItem
+                    key={activity.id}
+                    id={activity.id}
+                    action={activity.action}
+                    candidateName={activity.candidateName}
+                    timestamp={activity.timestamp}
+                  />
                 ))
               )}
             </div>
           </CardContent>
         </Card>
 
-        {/* Quick Links */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <Link to="/candidates">
-            <Card className="hover:shadow-lg transition-all duration-200 cursor-pointer group border-2 border-transparent hover:border-blue-200">
-              <CardContent className="pt-6">
-                <div className="flex items-center space-x-4">
-                  <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl flex items-center justify-center group-hover:scale-105 transition-transform">
-                    <Users className="h-6 w-6 text-white" />
-                  </div>
-                  <div>
-                    <h3 className="font-semibold text-slate-900 group-hover:text-blue-600 transition-colors">Candidates</h3>
-                    <p className="text-sm text-slate-600">Manage your candidate pool</p>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          </Link>
-
-          <Link to="/jobs">
-            <Card className="hover:shadow-lg transition-all duration-200 cursor-pointer group border-2 border-transparent hover:border-purple-200">
-              <CardContent className="pt-6">
-                <div className="flex items-center space-x-4">
-                  <div className="w-12 h-12 bg-gradient-to-br from-purple-500 to-purple-600 rounded-xl flex items-center justify-center group-hover:scale-105 transition-transform">
-                    <Briefcase className="h-6 w-6 text-white" />
-                  </div>
-                  <div>
-                    <h3 className="font-semibold text-slate-900 group-hover:text-purple-600 transition-colors">Jobs</h3>
-                    <p className="text-sm text-slate-600">Manage job postings</p>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          </Link>
-
-          <Link to="/search">
-            <Card className="hover:shadow-lg transition-all duration-200 cursor-pointer group border-2 border-transparent hover:border-green-200">
-              <CardContent className="pt-6">
-                <div className="flex items-center space-x-4">
-                  <div className="w-12 h-12 bg-gradient-to-br from-green-500 to-green-600 rounded-xl flex items-center justify-center group-hover:scale-105 transition-transform">
-                    <FileText className="h-6 w-6 text-white" />
-                  </div>
-                  <div>
-                    <h3 className="font-semibold text-slate-900 group-hover:text-green-600 transition-colors">Search</h3>
-                    <p className="text-sm text-slate-600">Find candidates and skills</p>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          </Link>
+          {NAVIGATION_CARDS.map((card) => (
+            <QuickActionCard
+              key={card.title}
+              title={card.title}
+              description={card.description}
+              icon={card.icon}
+              href={card.href}
+              color={card.color}
+            />
+          ))}
         </div>
       </div>
     </Layout>

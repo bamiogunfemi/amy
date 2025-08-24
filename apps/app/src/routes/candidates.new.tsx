@@ -37,7 +37,7 @@ export function NewCandidatePage() {
   return (
     <Layout>
       <div className="max-w-4xl mx-auto space-y-6">
-        {/* Page Header */}
+
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-4">
             <Button
@@ -56,7 +56,7 @@ export function NewCandidatePage() {
           </div>
         </div>
 
-        {/* Form */}
+
         <Card>
           <CardHeader>
             <CardTitle>Candidate Information</CardTitle>
@@ -160,7 +160,7 @@ export function NewCandidatePage() {
                 )}
               </div>
 
-              {/* Action Buttons */}
+
               <div className="flex items-center justify-end space-x-3 pt-6 border-t border-slate-200">
                 <Button
                   type="button"
