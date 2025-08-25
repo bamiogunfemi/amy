@@ -24,24 +24,12 @@ export default defineConfig({
     assetsDir: "assets",
     rollupOptions: {
       output: {
-        assetFileNames: (assetInfo) => {
-          const info = assetInfo.name?.split(".") || [];
-          const ext = info[info.length - 1];
-          // Keep favicon and logo at root level without hash
-          if (
-            assetInfo.name === "favicon.ico" ||
-            assetInfo.name === "amy-logo-light.svg"
-          ) {
-            return "[name][extname]";
-          }
-          if (/png|jpe?g|svg|gif|tiff|bmp|ico/i.test(ext || "")) {
-            return `assets/images/[name]-[hash][extname]`;
-          }
-          return `assets/[name]-[hash][extname]`;
-        },
+        // keep favicon root-only; let Vite hash everything else
+        assetFileNames: (assetInfo) =>
+          assetInfo.name === "favicon.ico"
+            ? "favicon.ico"
+            : "assets/[name]-[hash][extname]",
       },
     },
   },
-  publicDir: "public",
-  base: "/",
 });

@@ -1,9 +1,8 @@
 ---
-title: Apu App Folder Organization & Cleanup Standards
 description: Standards for a clean, DRY.
-alwaysApply: true
-
+alwaysApply: false
 ---
+
 # API Organization & Cleanup Standards
 
 ## Overview
