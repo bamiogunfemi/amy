@@ -21,10 +21,9 @@ export default defineConfig({
   build: {
     outDir: "dist",
     sourcemap: true,
-    assetsDir: "assets",
+    assetsDir: "public",
     rollupOptions: {
       output: {
-        // keep favicon root-only; let Vite hash everything else
         assetFileNames: (assetInfo) =>
           assetInfo.name === "favicon.ico"
             ? "favicon.ico"
