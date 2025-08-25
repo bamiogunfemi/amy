@@ -107,7 +107,7 @@ export function DashboardPage() {
                   </div>
                 ))
               ) : (
-                metrics?.recentActivity?.slice(0, 5).map((activity: any) => (
+                metrics?.recentActivity?.slice(0, 5).map((activity: { id: string; action: string; candidateName: string; timestamp: string }) => (
                   <ActivityItem
                     key={activity.id}
                     id={activity.id}
