@@ -98,23 +98,24 @@ export const FOOTER_LINKS = [
     links: [
       { href: "#features", label: "Features" },
       { href: "#pricing", label: "Pricing" },
-      { href: "#", label: "API" },
-    ],
-  },
-  {
-    title: "Company",
-    links: [
-      { href: "#", label: "About" },
-      { href: "#", label: "Blog" },
-      { href: "#", label: "Careers" },
+      {
+        href: `${import.meta.env.VITE_DASHBOARD_URL}/login`,
+        label: "Dashboard",
+      },
     ],
   },
   {
     title: "Support",
     links: [
-      { href: "#", label: "Help Center" },
-      { href: "#", label: "Contact" },
-      { href: "#", label: "Status" },
+      { href: "mailto:support@amyrecruit.com", label: "Contact Support" },
+      { href: `${import.meta.env.VITE_DASHBOARD_URL}/login`, label: "Sign In" },
+    ],
+  },
+  {
+    title: "Legal",
+    links: [
+      { href: "/privacy-policy", label: "Privacy Policy" },
+      { href: "/terms-of-service", label: "Terms of Service" },
     ],
   },
 ] as const;
