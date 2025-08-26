@@ -84,6 +84,7 @@ model User {
   createdAt               DateTime          @default(now())
   updatedAt               DateTime          @updatedAt
   deletedAt               DateTime?
+  Job                     Job[]
 
   @@map("users")
 }
@@ -139,6 +140,11 @@ model Candidate {
   applications      Application[]
   createdAt         DateTime                 @default(now())
   updatedAt         DateTime                 @updatedAt
+  claimedYoe        Int?
+  experiences       Experience[]
+  deletedAt         DateTime?
+  blacklists        Blacklist[]
+  JobApplication    JobApplication[]
 
   @@index([ownerRecruiterId])
   @@index([companyId])
@@ -202,6 +208,42 @@ model Application {
   @@map("applications")
 }
 
+// New Job model for recruiter-managed postings
+model Job {
+  id               String           @id @default(uuid())
+  ownerRecruiterId String
+  title            String
+  description      String?
+  location         String?
+  seniority        String?
+  status           String           @default("ACTIVE") // ACTIVE|DRAFT|CLOSED
+  applications     JobApplication[]
+  createdAt        DateTime         @default(now())
+  updatedAt        DateTime         @updatedAt
+
+  ownerRecruiter User @relation(fields: [ownerRecruiterId], references: [id])
+
+  @@index([ownerRecruiterId, status])
+  @@map("jobs")
+}
+
+// Link candidates to jobs without altering existing Application model
+model JobApplication {
+  id          String   @id @default(uuid())
+  jobId       String
+  candidateId String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  job       Job       @relation(fields: [jobId], references: [id])
+  candidate Candidate @relation(fields: [candidateId], references: [id])
+
+  @@unique([jobId, candidateId])
+  @@index([jobId])
+  @@index([candidateId])
+  @@map("job_applications")
+}
+
 model PipelineStage {
   id           String             @id @default(uuid())
   recruiterId  String
@@ -224,6 +266,20 @@ model ApplicationStage {
   enteredAt     DateTime      @default(now())
 
   @@map("application_stages")
+}
+
+// Work experiences to compute actual YOE
+model Experience {
+  id          String    @id @default(uuid())
+  candidateId String
+  title       String
+  company     String
+  startDate   DateTime
+  endDate     DateTime?
+  candidate   Candidate @relation(fields: [candidateId], references: [id])
+
+  @@index([candidateId])
+  @@map("experiences")
 }
 
 model Notification {
@@ -320,6 +376,29 @@ model ImportJob {
   completedAt DateTime?
 
   @@map("import_jobs")
+}
+
+// Blacklist entries for candidates
+model Blacklist {
+  id          String    @id @default(uuid())
+  candidateId String
+  reason      String
+  createdAt   DateTime  @default(now())
+  candidate   Candidate @relation(fields: [candidateId], references: [id])
+
+  @@index([candidateId])
+  @@map("blacklists")
+}
+
+// Matching weights per tenant (company)
+model MatchWeights {
+  tenantId     String   @id
+  skillsWeight Float    @default(0.6)
+  yoeWeight    Float    @default(0.3)
+  eduWeight    Float    @default(0.1)
+  updatedAt    DateTime @updatedAt
+
+  @@map("match_weights")
 }
 
 model Subscription {

@@ -9,6 +9,8 @@ import dotenv from "dotenv";
 
 import { authRoutes } from "./routes/auth";
 import { recruiterRoutes } from "./routes/recruiter";
+import { recruiterJobsRoutes } from "./routes/recruiter.jobs";
+import { recruiterPipelineRoutes } from "./routes/recruiter.pipeline";
 import { adminRoutes } from "./routes/admin";
 import { candidateRoutes } from "./routes/candidates";
 import { pipelineRoutes } from "./routes/pipeline";
@@ -26,18 +28,18 @@ app.use(helmet());
 app.use(compression());
 
 // Handle preflight requests
-app.options('*', cors());
+app.options("*", cors());
 
 app.use(
   cors({
     origin: (origin, callback) => {
       // Allow requests with no origin (like mobile apps or curl requests)
       if (!origin) return callback(null, true);
-      
+
       const allowedOrigins = [
         // Production origins
         "https://amy-web.vercel.app",
-        "https://amy-app.vercel.app", 
+        "https://amy-app.vercel.app",
         "https://amy-admin.vercel.app",
         // Development origins
         "http://localhost:5173",
@@ -47,10 +49,10 @@ app.use(
         // Render preview URLs (if any)
         /^https:\/\/amy-.*\.onrender\.com$/,
       ];
-      
+
       // Check if origin is allowed
-      const isAllowed = allowedOrigins.some(allowedOrigin => {
-        if (typeof allowedOrigin === 'string') {
+      const isAllowed = allowedOrigins.some((allowedOrigin) => {
+        if (typeof allowedOrigin === "string") {
           return origin === allowedOrigin;
         }
         if (allowedOrigin instanceof RegExp) {
@@ -58,17 +60,17 @@ app.use(
         }
         return false;
       });
-      
+
       if (isAllowed) {
         callback(null, true);
       } else {
-        console.log('CORS blocked origin:', origin);
-        callback(new Error('Not allowed by CORS'));
+        console.log("CORS blocked origin:", origin);
+        callback(new Error("Not allowed by CORS"));
       }
     },
     credentials: true,
-    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization'],
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"],
   })
 );
 
@@ -108,6 +110,8 @@ app.get("/api/health", (req, res) => {
 
 app.use("/api/auth", authRoutes);
 app.use("/api/recruiter", recruiterRoutes);
+app.use("/api/recruiter", recruiterJobsRoutes);
+app.use("/api/recruiter", recruiterPipelineRoutes);
 app.use("/api/admin", adminRoutes);
 app.use("/api/candidates", candidateRoutes);
 app.use("/api/pipeline", pipelineRoutes);
