@@ -105,6 +105,57 @@ export const usePipelineStages = () => {
   });
 };
 
+// Move application between stages (pipeline persistence)
+export const useMoveApplication = () => {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async (data: { applicationId: string; toStage: string }) => {
+      const res = await apiClient.patch<ApiResponse<any>>(
+        "/api/recruiter/pipeline/move",
+        data
+      );
+      return res.data.data;
+    },
+    onMutate: async (variables) => {
+      await qc.cancelQueries({ queryKey: ["recruiter", "pipeline"] });
+      const previous = qc.getQueryData<PipelineData>(["recruiter", "pipeline"]);
+      if (previous) {
+        // optimistic update: remove from any column and push to target column id if present
+        const next: PipelineData = JSON.parse(JSON.stringify(previous));
+        Object.keys(next.columns).forEach((stageId) => {
+          next.columns[stageId] = next.columns[stageId].filter(
+            (a: any) => a.id !== variables.applicationId
+          ) as any;
+        });
+        // We don't know target stageId from label; UI should pass stageId in toStage when backed by enum or map
+        if (next.columns[variables.toStage as keyof typeof next.columns]) {
+          const moved = (previous as any).columns?.[variables.toStage]?.find?.(
+            (a: any) => a.id === variables.applicationId
+          );
+          if (!moved) {
+            // insert lightweight item
+            (next.columns as any)[variables.toStage] = [
+              ...((next.columns as any)[variables.toStage] || []),
+              { id: variables.applicationId },
+            ];
+          }
+        }
+        qc.setQueryData(["recruiter", "pipeline"], next);
+      }
+      return { previous };
+    },
+    onError: (_err, _vars, ctx) => {
+      if (ctx?.previous)
+        qc.setQueryData(["recruiter", "pipeline"], ctx.previous);
+      toast.error("Failed to move application");
+    },
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ["recruiter", "pipeline"] });
+      toast.success("Application moved");
+    },
+  });
+};
+
 export const useApplications = () => {
   return useMutation({
     mutationFn: async (data: { candidateId: string; jobId: string }) => {
@@ -150,14 +201,160 @@ export const useSearchSkills = (query: string) => {
 };
 
 // Dashboard Metrics
-export const useRecruiterMetrics = () => {
+export const useRecruiterMetrics = (jobId?: string) => {
   return useQuery({
-    queryKey: ["recruiter", "metrics"],
+    queryKey: ["recruiter", "metrics", jobId || null],
     queryFn: async (): Promise<RecruiterMetrics> => {
       const res = await apiClient.get<{ ok: boolean; data: RecruiterMetrics }>(
-        "/api/recruiter/metrics"
+        "/api/recruiter/metrics",
+        { params: jobId ? { jobId } : undefined }
       );
       return res.data.data;
+    },
+  });
+};
+
+// Jobs CRUD and membership
+export interface JobInput {
+  title: string;
+  description?: string;
+  location?: string;
+  seniority?: string;
+  status?: "ACTIVE" | "DRAFT" | "CLOSED";
+}
+
+export const useJobs = (params?: {
+  page?: number;
+  perPage?: number;
+  status?: string;
+}) => {
+  return useQuery({
+    queryKey: ["recruiter", "jobs", params],
+    queryFn: async () => {
+      const res = await apiClient.get<
+        ApiResponse<{
+          items: any[];
+          page: number;
+          perPage: number;
+          total: number;
+        }>
+      >("/api/recruiter/jobs", { params });
+      return res.data.data!;
+    },
+  });
+};
+
+export const useJob = (id?: string) => {
+  return useQuery({
+    queryKey: ["recruiter", "jobs", id],
+    enabled: !!id,
+    queryFn: async () => {
+      const res = await apiClient.get<ApiResponse<any>>(
+        `/api/recruiter/jobs/${id}`
+      );
+      return res.data.data;
+    },
+  });
+};
+
+export const useCreateJob = () => {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async (data: JobInput) => {
+      const res = await apiClient.post<ApiResponse<any>>(
+        `/api/recruiter/jobs`,
+        data
+      );
+      return res.data.data;
+    },
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ["recruiter", "jobs"] });
+      toast.success("Job created");
+    },
+  });
+};
+
+export const useUpdateJob = () => {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async ({
+      id,
+      data,
+    }: {
+      id: string;
+      data: Partial<JobInput>;
+    }) => {
+      const res = await apiClient.patch<ApiResponse<any>>(
+        `/api/recruiter/jobs/${id}`,
+        data
+      );
+      return res.data.data;
+    },
+    onSuccess: (_d, { id }) => {
+      qc.invalidateQueries({ queryKey: ["recruiter", "jobs"] });
+      qc.invalidateQueries({ queryKey: ["recruiter", "jobs", id] });
+      toast.success("Job updated");
+    },
+  });
+};
+
+export const useDeleteJob = () => {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async (id: string) => {
+      await apiClient.delete(`/api/recruiter/jobs/${id}`);
+    },
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ["recruiter", "jobs"] });
+      toast.success("Job deleted");
+    },
+  });
+};
+
+export const useAddToJob = () => {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async ({
+      jobId,
+      candidateId,
+    }: {
+      jobId: string;
+      candidateId: string;
+    }) => {
+      const res = await apiClient.post<ApiResponse<any>>(
+        `/api/recruiter/jobs/${jobId}/applications`,
+        { candidateId }
+      );
+      return res.data.data;
+    },
+    onSuccess: (_d, { jobId }) => {
+      qc.invalidateQueries({
+        queryKey: ["recruiter", "jobs", jobId, "applications"],
+      });
+      toast.success("Added to job");
+    },
+  });
+};
+
+export const useRemoveFromJob = () => {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async ({
+      jobId,
+      applicationId,
+    }: {
+      jobId: string;
+      applicationId: string;
+    }) => {
+      await apiClient.delete(
+        `/api/recruiter/jobs/${jobId}/applications/${applicationId}`
+      );
+    },
+    onSuccess: (_d, { jobId }) => {
+      qc.invalidateQueries({
+        queryKey: ["recruiter", "jobs", jobId, "applications"],
+      });
+      toast.success("Removed from job");
     },
   });
 };

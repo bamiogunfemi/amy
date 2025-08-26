@@ -3,6 +3,7 @@ import { useNavigate } from '@tanstack/react-router'
 import { Button, Card, CardContent, CardHeader, CardTitle, Input, Badge } from '@amy/ui'
 import { toast } from 'sonner'
 import { Layout } from '@/components/layout'
+import { useJobs, useDeleteJob, useCreateJob, useUpdateJob, type JobInput } from '@amy/ui'
 import {
   Briefcase,
   Plus,
@@ -23,53 +24,44 @@ export function JobsPage() {
   const navigate = useNavigate()
   const [searchQuery, setSearchQuery] = useState('')
   const [showFilters, setShowFilters] = useState(false)
+  const [showModal, setShowModal] = useState(false)
+  const [editingId, setEditingId] = useState<string | null>(null)
+  const [form, setForm] = useState<JobInput>({ title: '', status: 'ACTIVE' })
 
-  // Mock data - in real app this would come from useJobs hook
-  const jobs = [
-    {
-      id: '1',
-      title: 'Senior Frontend Developer',
-      location: 'Remote',
-      type: 'Full-time',
-      seniority: 'Senior',
-      salaryMin: 80000,
-      salaryMax: 120000,
-      status: 'ACTIVE',
-      applicationsCount: 12,
-      createdAt: new Date('2024-01-15'),
-    },
-    {
-      id: '2',
-      title: 'Product Manager',
-      location: 'San Francisco, CA',
-      type: 'Full-time',
-      seniority: 'Mid-level',
-      salaryMin: 90000,
-      salaryMax: 140000,
-      status: 'ACTIVE',
-      applicationsCount: 8,
-      createdAt: new Date('2024-01-10'),
-    },
-    {
-      id: '3',
-      title: 'DevOps Engineer',
-      location: 'New York, NY',
-      type: 'Full-time',
-      seniority: 'Senior',
-      salaryMin: 100000,
-      salaryMax: 150000,
-      status: 'DRAFT',
-      applicationsCount: 0,
-      createdAt: new Date('2024-01-05'),
-    },
-  ]
+  const jobsQuery = useJobs()
+  const jobs = jobsQuery.data?.items ?? []
+  const deleteJob = useDeleteJob()
+  const createJob = useCreateJob()
+  const updateJob = useUpdateJob()
 
-  const handleDeleteJob = async () => {
-    try {
-      // This would call the DELETE endpoint
-      toast.success('Job deleted successfully')
-    } catch (error) {
-      toast.error('Failed to delete job')
+  const handleDeleteJob = (id: string) => {
+    deleteJob.mutate(id)
+  }
+
+  const openCreate = () => {
+    setEditingId(null)
+    setForm({ title: '', status: 'ACTIVE' })
+    setShowModal(true)
+  }
+
+  const openEdit = (job: any) => {
+    setEditingId(job.id)
+    setForm({
+      title: job.title,
+      description: job.description ?? '',
+      location: job.location ?? '',
+      seniority: job.seniority ?? '',
+      status: job.status ?? 'ACTIVE',
+    })
+    setShowModal(true)
+  }
+
+  const handleSave = () => {
+    if (!form.title.trim()) return toast.error('Title is required')
+    if (editingId) {
+      updateJob.mutate({ id: editingId, data: form }, { onSuccess: () => setShowModal(false) })
+    } else {
+      createJob.mutate(form, { onSuccess: () => setShowModal(false) })
     }
   }
 
@@ -104,7 +96,7 @@ export function JobsPage() {
             <p className="text-slate-600 mt-1">Manage your job postings and applications</p>
           </div>
           <div className="flex items-center space-x-3">
-            <Button size="sm" onClick={() => navigate({ to: '/jobs' })}>
+            <Button size="sm" onClick={openCreate}>
               <Plus className="h-4 w-4 mr-2" />
               New Job
             </Button>
@@ -196,7 +188,7 @@ export function JobsPage() {
               </div>
             ) : (
               <div className="space-y-4">
-                {jobs.map((job) => (
+                {jobs.map((job: any) => (
                   <div
                     key={job.id}
                     className="flex items-center space-x-4 p-4 border rounded-lg hover:bg-slate-50 transition-colors"
@@ -237,25 +229,13 @@ export function JobsPage() {
                     </div>
 
                     <div className="flex items-center space-x-2">
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => navigate({ to: '/jobs' })}
-                      >
+                      <Button variant="ghost" size="sm" onClick={() => navigate({ to: '/jobs' })}>
                         <Eye className="h-4 w-4" />
                       </Button>
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => navigate({ to: '/jobs' })}
-                      >
+                      <Button variant="ghost" size="sm" onClick={() => openEdit(job)}>
                         <Edit className="h-4 w-4" />
                       </Button>
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => handleDeleteJob()}
-                      >
+                      <Button variant="ghost" size="sm" onClick={() => handleDeleteJob(job.id)}>
                         <Trash2 className="h-4 w-4" />
                       </Button>
                       <Button variant="ghost" size="sm">
@@ -268,6 +248,22 @@ export function JobsPage() {
             )}
           </CardContent>
         </Card>
+        {showModal && (
+          <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4">
+            <div className="bg-white rounded-xl p-6 w-full max-w-md space-y-4">
+              <h3 className="text-lg font-semibold">{editingId ? 'Edit Job' : 'New Job'}</h3>
+              <div className="space-y-3">
+                <Input placeholder="Title" value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })} />
+                <Input placeholder="Location" value={form.location ?? ''} onChange={(e) => setForm({ ...form, location: e.target.value })} />
+                <Input placeholder="Seniority" value={form.seniority ?? ''} onChange={(e) => setForm({ ...form, seniority: e.target.value })} />
+              </div>
+              <div className="flex justify-end gap-2 pt-2">
+                <Button variant="outline" onClick={() => setShowModal(false)}>Cancel</Button>
+                <Button onClick={handleSave}>{editingId ? 'Save' : 'Create'}</Button>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </Layout>
   )

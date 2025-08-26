@@ -1,43 +1,19 @@
 
 import { Button, Logo } from '@amy/ui'
-import { ArrowRight } from 'lucide-react'
-import { NAV_LINKS, FEATURES, PRICING_PLANS, FOOTER_LINKS } from '../constants'
-import type { FeatureCardProps, PricingCardProps, FooterSectionProps } from '../types'
+import { ArrowRight, Sparkles, FileSpreadsheet, Table, FileDown, Shuffle } from 'lucide-react'
+import { FOOTER_LINKS } from '../constants'
+import type { FooterSectionProps } from '../types'
 
-const NavLink = ({ href, label }: { href: string; label: string }) => (
-  <a href={href} className="text-muted-foreground hover:text-foreground transition-colors">
-    {label}
-  </a>
-)
-
-const FeatureCard = ({ icon: Icon, title, description }: FeatureCardProps) => (
-  <div className="bg-background p-6 rounded-lg border">
-    <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center mb-4">
-      <Icon className="h-6 w-6 text-primary" />
+const Section = ({ title, subtitle, children }: { title: string; subtitle?: string; children: React.ReactNode }) => (
+  <section className="py-20 px-4">
+    <div className="container mx-auto">
+      <div className="text-center mb-12">
+        <h2 className="text-3xl md:text-4xl font-bold mb-3">{title}</h2>
+        {subtitle && <p className="text-lg text-muted-foreground max-w-3xl mx-auto">{subtitle}</p>}
+      </div>
+      {children}
     </div>
-    <h3 className="text-xl font-semibold mb-2">{title}</h3>
-    <p className="text-muted-foreground">{description}</p>
-  </div>
-)
-
-const PricingCard = ({ name, price, period, features, cta, variant, popular }: PricingCardProps) => (
-  <div className={`bg-background p-8 rounded-lg border ${popular ? 'border-primary' : ''}`}>
-    <h3 className="text-2xl font-bold mb-2">{name}</h3>
-    <div className="text-3xl font-bold mb-4">
-      {price}<span className="text-lg text-muted-foreground">{period}</span>
-    </div>
-    <ul className="space-y-3 mb-8">
-      {features.map((feature, index) => (
-        <li key={index} className="flex items-center">
-          <span className="w-2 h-2 bg-primary rounded-full mr-3" />
-          {feature}
-        </li>
-      ))}
-    </ul>
-    <Button variant={variant} className="w-full" asChild>
-      <a href={`${import.meta.env.VITE_DASHBOARD_URL}/signup`}>{cta}</a>
-    </Button>
-  </div>
+  </section>
 )
 
 const FooterSection = ({ title, links }: FooterSectionProps) => (
@@ -64,11 +40,7 @@ export function LandingPage() {
             <Logo />
 
           </div>
-          <nav className="hidden md:flex items-center space-x-8">
-            {NAV_LINKS.map((link, index) => (
-              <NavLink key={index} {...link} />
-            ))}
-          </nav>
+          <div />
           <div className="flex items-center space-x-4">
             <Button variant="ghost" asChild>
               <a href={`${import.meta.env.VITE_DASHBOARD_URL}/login`}>Sign In</a>
@@ -80,77 +52,100 @@ export function LandingPage() {
         </div>
       </header>
 
-      <section className="py-20 px-4">
+      <section className="py-24 px-4">
         <div className="container mx-auto text-center">
-          <h1 className="text-5xl md:text-6xl font-bold mb-6">
-            Modern Recruitment
-            <br />
-            <span className="text-muted-foreground">Made Simple</span>
+          <h1 className="text-5xl md:text-6xl font-extrabold mb-6">
+            <span className="bg-gradient-to-r from-[#e01d4b] to-rose-800 bg-clip-text text-transparent">Amy</span>
+            <span className="ml-3">Talent Intelligence Workspace</span>
           </h1>
-          <p className="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto">
-            A minimalist recruitment platform with strict isolation, dual tenancy,
-            and comprehensive import capabilities for modern recruiters.
+          <p className="text-lg md:text-xl text-muted-foreground mb-8 max-w-3xl mx-auto">
+            Build lists from anywhere. Know who’s best, instantly. Pipelines that stick.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Button size="lg" asChild>
               <a href={`${import.meta.env.VITE_DASHBOARD_URL}/signup`}>
-                Start Free Trial
+                Recruiter Signup
                 <ArrowRight className="ml-2 h-4 w-4" />
               </a>
             </Button>
             <Button variant="outline" size="lg" asChild>
-              <a href="#features">Learn More</a>
+              <a href="#proof">See Proof</a>
             </Button>
           </div>
         </div>
       </section>
 
-      <section id="features" className="py-20 px-4 bg-muted/50">
-        <div className="container mx-auto">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">
-              Everything you need to manage candidates
-            </h2>
-            <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-              Built for recruiters who value simplicity, security, and efficiency.
-            </p>
-          </div>
+      <Section title="Build lists from anywhere" subtitle="Manual, CSV upload, Google Sheets, Airtable, or your database.">
+        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+          {[{ icon: Sparkles, label: 'Manual' }, { icon: FileDown, label: 'CSV Upload' }, { icon: FileSpreadsheet, label: 'Google Sheets' }, { icon: Table, label: 'Airtable' }].map(({ icon: Icon, label }) => (
+            <div key={label} className="bg-background p-6 rounded-lg border flex items-center gap-4">
+              <div className="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center">
+                <Icon className="h-5 w-5 text-primary" />
+              </div>
+              <div className="text-left">
+                <p className="font-medium">{label}</p>
+                <p className="text-sm text-muted-foreground">Map columns → create candidates</p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </Section>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {FEATURES.map((feature, index) => (
-              <FeatureCard key={index} {...feature} />
-            ))}
+      <Section title="Know who’s best, instantly" subtitle="Claimed vs actual YOE, skill gaps, and a transparent match score per job.">
+        <div className="grid md:grid-cols-3 gap-5">
+          <div className="rounded-xl border bg-background p-5 shadow-sm hover:shadow-md transition">
+            <div className="w-9 h-9 rounded-md bg-primary/10 text-primary flex items-center justify-center mb-3">
+              <svg className="h-5 w-5" viewBox="0 0 24 24" fill="none"><path d="M12 3v18M3 12h18" stroke="currentColor" strokeWidth="2" /></svg>
+            </div>
+            <h3 className="text-base font-semibold mb-1.5">Claimed vs Actual YOE</h3>
+            <p className="text-sm text-muted-foreground">Infer years from work history and dedupe overlaps for a fair, consistent view.</p>
+          </div>
+          <div className="rounded-xl border bg-background p-5 shadow-sm hover:shadow-md transition">
+            <div className="w-9 h-9 rounded-md bg-primary/10 text-primary flex items-center justify-center mb-3">
+              <svg className="h-5 w-5" viewBox="0 0 24 24" fill="none"><rect x="4" y="5" width="16" height="14" rx="2" stroke="currentColor" strokeWidth="2" /><path d="M8 9h8M8 13h5" stroke="currentColor" strokeWidth="2" /></svg>
+            </div>
+            <h3 className="text-base font-semibold mb-1.5">Skill gaps</h3>
+            <p className="text-sm text-muted-foreground">Compare JD skills vs candidate skills and highlight what’s missing at a glance.</p>
+          </div>
+          <div className="rounded-xl border bg-background p-5 shadow-sm hover:shadow-md transition">
+            <div className="w-9 h-9 rounded-md bg-primary/10 text-primary flex items-center justify-center mb-3">
+              <svg className="h-5 w-5" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="currentColor" strokeWidth="2" /><path d="M12 12l5-2" stroke="currentColor" strokeWidth="2" strokeLinecap="round" /></svg>
+            </div>
+            <h3 className="text-base font-semibold mb-1.5">Match score</h3>
+            <p className="text-sm text-muted-foreground">Weighted score (skills, YOE, education) that you can tune per tenant.</p>
           </div>
         </div>
-      </section>
+      </Section>
 
-      <section id="pricing" className="py-20 px-4">
-        <div className="container mx-auto">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">
-              Simple, transparent pricing
-            </h2>
-            <p className="text-xl text-muted-foreground">
-              Start free, scale as you grow.
-            </p>
+      <Section title="Pipelines that stick" subtitle="Drag and drop persists to your backend instantly.">
+        <div className="bg-background p-5 rounded-xl border shadow-sm flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <Shuffle className="h-5 w-5 text-primary" />
+            <p className="text-sm text-muted-foreground">Move candidates between stages with optimistic updates and rollback.</p>
           </div>
-
-          <div className="grid md:grid-cols-3 gap-8 max-w-4xl mx-auto">
-            {PRICING_PLANS.map((plan, index) => (
-              <PricingCard key={index} {...plan} />
-            ))}
-          </div>
+          <Button variant="outline" className="shadow-sm" asChild>
+            <a href={`${import.meta.env.VITE_DASHBOARD_URL}/pipeline`}>View Pipeline</a>
+          </Button>
         </div>
-      </section>
+      </Section>
+
+      <Section title="Proof" subtitle="Metrics that matter to recruiters and hiring managers." >
+        <div id="proof" className="grid md:grid-cols-3 gap-5">
+          {[{ t: 'Time to Stage', d: 'Median days from applied to interview.' }, { t: 'Source Quality', d: 'Per‑source conversion to interview/offer.' }, { t: 'Top Skills', d: 'Most common skills in your pipeline.' }].map((x) => (
+            <div key={x.t} className="bg-background p-5 rounded-xl border shadow-sm">
+              <h3 className="text-base font-semibold mb-1.5">{x.t}</h3>
+              <p className="text-sm text-muted-foreground">{x.d}</p>
+            </div>
+          ))}
+        </div>
+      </Section>
 
       <footer className="border-t py-12 px-4">
         <div className="container mx-auto">
           <div className="grid md:grid-cols-4 gap-8">
             <div>
               <Logo size="sm" />
-              <p className="text-muted-foreground mt-4">
-                Modern recruitment platform for forward-thinking recruiters.
-              </p>
+              <p className="text-muted-foreground mt-4">Talent Intelligence Workspace for modern recruiters.</p>
             </div>
 
             {FOOTER_LINKS.map((section, index) => (

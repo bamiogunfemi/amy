@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { useNavigate } from '@tanstack/react-router'
 import { Button, Card, CardContent, CardHeader, CardTitle, Input, Badge } from '@amy/ui'
-import { useCandidates } from '@amy/ui'
+import { useCandidates, useAddToJob } from '@amy/ui'
 import { toast } from 'sonner'
 import { Layout } from '@/components/layout'
 import {
@@ -29,6 +29,8 @@ export function CandidatesPage() {
 
   const candidatesQuery = useCandidates()
   const candidates = candidatesQuery.data || []
+  const addToJob = useAddToJob()
+  const [targetJobId, setTargetJobId] = useState<string>("")
 
   const handleDeleteCandidate = async () => {
     try {
@@ -42,6 +44,15 @@ export function CandidatesPage() {
   const handleBulkAction = (action: string) => {
     if (selectedCandidates.length === 0) {
       toast.error('Please select candidates first')
+      return
+    }
+    if (action === 'Add to Job') {
+      if (!targetJobId) {
+        toast.error('Provide a Job ID to add to')
+        return
+      }
+      selectedCandidates.forEach((id) => addToJob.mutate({ jobId: targetJobId, candidateId: id }))
+      toast.success('Added to job')
       return
     }
     toast.info(`${action} action for ${selectedCandidates.length} candidates`)
@@ -179,6 +190,7 @@ export function CandidatesPage() {
                     <Plus className="h-4 w-4 mr-2" />
                     Add to Job
                   </Button>
+                  <input value={targetJobId} onChange={(e) => setTargetJobId(e.target.value)} placeholder="Job ID" className="border rounded px-2 py-1 text-xs" />
                 </div>
               </div>
             </CardContent>

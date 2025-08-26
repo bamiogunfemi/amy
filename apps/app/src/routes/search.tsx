@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { useNavigate } from '@tanstack/react-router'
+import { useNavigate, useRouter } from '@tanstack/react-router'
 import { Button, Card, CardContent, CardHeader, CardTitle, Input, Badge } from '@amy/ui'
 import { useSearch, useSearchSkills } from '@amy/ui'
 import { toast } from 'sonner'
@@ -19,6 +19,7 @@ import {
 
 export function SearchPage() {
   const navigate = useNavigate()
+  const router = useRouter()
   const [searchQuery, setSearchQuery] = useState('')
   const [selectedSkills, setSelectedSkills] = useState<string[]>([])
   const [showFilters, setShowFilters] = useState(false)
@@ -60,7 +61,7 @@ export function SearchPage() {
       toast.error('Please enter a search query')
       return
     }
-    // The search will be triggered by the query parameter
+    router.navigate({ to: '/search', search: { q: searchQuery } })
   }
 
   return (

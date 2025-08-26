@@ -5,6 +5,11 @@ export { Loader } from "./components/ui/loader";
 export { Badge } from "./components/ui/badge";
 export { Logo } from "./components/ui/logo";
 export { Avatar } from "./components/ui/avatar";
+export { MatchBadge } from "./components/ui/MatchBadge";
+export { YoeBadge } from "./components/ui/YoeBadge";
+export { SkillDiff } from "./components/ui/SkillDiff";
+export { SourceBadge } from "./components/ui/SourceBadge";
+export { ImportWizard } from "./components/ImportWizard";
 
 export * from "./constants";
 export {

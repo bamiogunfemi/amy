@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { Button, Card, CardContent, CardHeader, CardTitle, Badge } from '@amy/ui'
-import { usePipelineStages } from '@amy/ui'
+import { usePipelineStages, useMoveApplication } from '@amy/ui'
 import { toast } from 'sonner'
 import { Layout } from '@/components/layout'
 import {
@@ -15,6 +15,7 @@ export function PipelinePage() {
 
   const pipelineQuery = usePipelineStages()
   const pipeline = pipelineQuery.data || { stages: [], columns: {} }
+  const moveMutation = useMoveApplication()
 
   const handleDragStart = (e: React.DragEvent, applicationId: string) => {
     setDraggedApplication(applicationId)
@@ -26,13 +27,14 @@ export function PipelinePage() {
     e.dataTransfer.dropEffect = 'move'
   }
 
-  const handleDrop = async (e: React.DragEvent) => {
+  const handleDrop = async (e: React.DragEvent, toStageId?: string) => {
     e.preventDefault()
 
     if (!draggedApplication) return
 
     try {
-      // This would call the move endpoint
+      if (!toStageId) return
+      await moveMutation.mutateAsync({ applicationId: draggedApplication, toStage: toStageId })
       toast.success('Application moved successfully')
     } catch (error) {
       toast.error('Failed to move application')
@@ -94,7 +96,7 @@ export function PipelinePage() {
               <Card
                 key={stage.id}
                 onDragOver={handleDragOver}
-                onDrop={(e) => handleDrop(e)}
+                onDrop={(e) => handleDrop(e, stage.id)}
                 className="min-h-[600px]"
               >
                 <CardHeader>
