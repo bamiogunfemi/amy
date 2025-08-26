@@ -27,7 +27,7 @@ export default defineConfig({
         assetFileNames: (assetInfo) => {
           const info = assetInfo.name?.split(".") || [];
           const ext = info[info.length - 1];
-          // Keep favicon and logo at root level
+          // Keep favicon and logo at root level without hash
           if (
             assetInfo.name === "favicon.ico" ||
             assetInfo.name === "amy-logo-light.svg"

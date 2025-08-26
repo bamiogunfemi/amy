@@ -13,12 +13,11 @@ export function Logo({ size = 'md', className = '' }: LogoProps) {
   return (
     <div className={`flex items-center ${className}`}>
       <img
-        src="/amy-logo-light.svg"
+        src="./amy-logo-light.svg"
         alt="Amy"
         className={sizeClasses[size]}
         onError={(e) => {
           console.error('Failed to load logo:', e);
-          // Fallback to text if image fails
           e.currentTarget.style.display = 'none';
           e.currentTarget.nextElementSibling?.classList.remove('hidden');
         }}
@@ -26,9 +25,7 @@ export function Logo({ size = 'md', className = '' }: LogoProps) {
           console.log('Logo loaded successfully');
         }}
       />
-      <span className={`${sizeClasses[size]} font-bold text-slate-900 hidden`}>
-        Amy
-      </span>
+      <span className="text-xl font-bold bg-gradient-to-r from-[#e01d4b] to-rose-800 bg-clip-text text-transparent hidden"> Amy </span>
     </div>
   )
 }
