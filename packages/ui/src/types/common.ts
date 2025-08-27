@@ -156,17 +156,19 @@ export interface UserProfileData {
 
 export interface CandidateData {
   id: string;
-  name: string;
+  firstName: string;
+  lastName: string;
   email?: string;
   phone?: string;
-  skills: string[];
-  experience?: number;
+  location?: string;
+  experienceLevel?: string;
+  headline?: string;
+  summary?: string;
   source: string;
-  notes?: string;
-  status: string;
   ownerRecruiterId: string;
   createdAt: Date;
   updatedAt: Date;
+  skills: SkillData[];
 }
 
 export interface JobData {
@@ -235,7 +237,7 @@ export interface SearchResult {
 
 export interface SkillData {
   id: string;
-  name: string;
+  label: string; // API returns 'label' for skill name
   category: string;
   slug: string;
   usageCount: number;

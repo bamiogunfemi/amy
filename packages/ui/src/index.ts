@@ -10,6 +10,7 @@ export { YoeBadge } from "./components/ui/YoeBadge";
 export { SkillDiff } from "./components/ui/SkillDiff";
 export { SourceBadge } from "./components/ui/SourceBadge";
 export { ImportWizard } from "./components/ImportWizard";
+export { SkillsSelector } from "./components/SkillsSelector";
 
 export * from "./constants";
 export {

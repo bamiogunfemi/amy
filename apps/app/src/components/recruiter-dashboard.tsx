@@ -1,6 +1,13 @@
-
-import { useState } from 'react'
-import { Button, Card, CardContent, CardHeader, CardTitle, Logo, Avatar } from '@amy/ui'
+import { useState } from "react";
+import {
+  Button,
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+  Logo,
+  Avatar,
+} from "@amy/ui";
 import {
   Plus,
   Filter,
@@ -11,10 +18,15 @@ import {
   LogOut,
   BarChart3,
   Search,
-} from 'lucide-react'
-import { useLogout, useRecruiterMetrics, useCandidates, usePipelineStages } from '@amy/ui'
-import { NAVIGATION_ITEMS, METRIC_CARDS } from '../constants'
-import type { MetricCardProps, NavigationItemProps } from '../types'
+} from "lucide-react";
+import {
+  useLogout,
+  useRecruiterMetrics,
+  useCandidates,
+  usePipelineStages,
+} from "@amy/ui";
+import { NAVIGATION_ITEMS, METRIC_CARDS } from "../constants";
+import type { MetricCardProps, NavigationItemProps } from "../types";
 
 const MetricCard = ({
   label,
@@ -23,11 +35,13 @@ const MetricCard = ({
   color,
   change,
   changeColor,
-  isLoading
+  isLoading,
 }: MetricCardProps) => (
   <div className="bg-white rounded-2xl p-6 shadow-sm border border-slate-200 hover:shadow-lg transition-all duration-200">
     <div className="flex items-center justify-between mb-4">
-      <div className={`w-12 h-12 bg-gradient-to-br ${color} rounded-xl flex items-center justify-center`}>
+      <div
+        className={`w-12 h-12 bg-gradient-to-br ${color} rounded-xl flex items-center justify-center`}
+      >
         <Icon className="h-6 w-6 text-white" />
       </div>
       <span className="text-2xl font-bold text-slate-900">
@@ -39,31 +53,26 @@ const MetricCard = ({
       </span>
     </div>
     <h3 className="text-sm font-semibold text-slate-900 mb-1">{label}</h3>
-    <p className={`text-xs font-medium ${changeColor}`}>
-      {change}
-    </p>
+    <p className={`text-xs font-medium ${changeColor}`}>{change}</p>
   </div>
-)
+);
 
-const NavigationItem = ({
-  item,
-  isActive,
-  onClick
-}: NavigationItemProps) => {
-  const Icon = item.icon
+const NavigationItem = ({ item, isActive, onClick }: NavigationItemProps) => {
+  const Icon = item.icon;
   return (
     <button
       onClick={onClick}
-      className={`w-full flex items-center space-x-3 px-4 py-3 rounded-xl text-left transition-all duration-200 ${isActive
-        ? 'bg-gradient-to-r from-rose-500 to-rose-600 text-white shadow-lg'
-        : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
-        }`}
+      className={`w-full flex items-center space-x-3 px-4 py-3 rounded-xl text-left transition-all duration-200 ${
+        isActive
+          ? "bg-gradient-to-r from-rose-500 to-rose-600 text-white shadow-lg"
+          : "text-slate-600 hover:bg-slate-100 hover:text-slate-900"
+      }`}
     >
       <Icon className="h-5 w-5" />
       <span className="font-medium">{item.label}</span>
     </button>
-  )
-}
+  );
+};
 
 const WelcomeSection = ({ greeting }: { greeting: string }) => (
   <div className="bg-gradient-to-r from-rose-500 to-rose-600 rounded-2xl p-8 text-white">
@@ -81,34 +90,32 @@ const WelcomeSection = ({ greeting }: { greeting: string }) => (
       </div>
     </div>
   </div>
-)
+);
 
 export function RecruiterDashboard() {
-  const [activeTab, setActiveTab] = useState('overview')
-  const [searchQuery, setSearchQuery] = useState('')
-  const [showFilters, setShowFilters] = useState(false)
+  const [activeTab, setActiveTab] = useState("overview");
+  const [searchQuery, setSearchQuery] = useState("");
+  const [showFilters, setShowFilters] = useState(false);
 
-  const logoutMutation = useLogout()
-  const metricsQuery = useRecruiterMetrics()
-  const candidatesQuery = useCandidates()
-  const pipelineQuery = usePipelineStages()
+  const logoutMutation = useLogout();
+  const metricsQuery = useRecruiterMetrics();
+  const candidatesQuery = useCandidates();
+  const pipelineQuery = usePipelineStages();
 
-
-  const metrics = metricsQuery.data
-  const candidates = candidatesQuery.data ?? []
-  const pipelineStages = pipelineQuery.data?.stages ?? []
-
+  const metrics = metricsQuery.data;
+  const candidates = candidatesQuery.data ?? [];
+  const pipelineStages = pipelineQuery.data?.stages ?? [];
 
   const handleSignOut = () => {
-    logoutMutation.mutate()
-  }
+    logoutMutation.mutate();
+  };
 
   const getGreeting = () => {
-    const hour = new Date().getHours()
-    if (hour < 12) return 'Good morning'
-    if (hour < 18) return 'Good afternoon'
-    return 'Good evening'
-  }
+    const hour = new Date().getHours();
+    if (hour < 12) return "Good morning";
+    if (hour < 18) return "Good afternoon";
+    return "Good evening";
+  };
 
   const renderOverview = () => (
     <div className="space-y-8">
@@ -120,11 +127,12 @@ export function RecruiterDashboard() {
             key={card.key}
             label={card.label}
             value={
-              typeof metrics?.[card.key as keyof typeof metrics] === 'number'
-                ? metrics[card.key as keyof typeof metrics] as number
+              typeof metrics?.[card.key as keyof typeof metrics] === "number"
+                ? (metrics[card.key as keyof typeof metrics] as number)
                 : Array.isArray(metrics?.[card.key as keyof typeof metrics])
-                  ? (metrics[card.key as keyof typeof metrics] as unknown[]).length
-                  : 0
+                ? (metrics[card.key as keyof typeof metrics] as unknown[])
+                    .length
+                : 0
             }
             icon={card.icon}
             color={card.color}
@@ -135,50 +143,66 @@ export function RecruiterDashboard() {
         ))}
       </div>
 
-
       <div className="bg-white rounded-2xl p-6 shadow-sm border border-slate-200">
         <div className="flex items-center justify-between mb-6">
-          <h3 className="text-lg font-semibold text-slate-900">Recent Activity</h3>
-          <Button variant="ghost" size="sm" className="text-rose-600 hover:text-rose-700">
+          <h3 className="text-lg font-semibold text-slate-900">
+            Recent Activity
+          </h3>
+          <Button
+            variant="ghost"
+            size="sm"
+            className="text-rose-600 hover:text-rose-700"
+          >
             View all
           </Button>
         </div>
         <div className="space-y-4">
-          {metricsQuery.isLoading ? (
-            Array.from({ length: 5 }).map((_, i) => (
-              <div key={i} className="flex items-center space-x-4 p-3 rounded-lg bg-slate-50">
-                <div className="h-10 w-10 bg-slate-200 rounded-full animate-pulse" />
-                <div className="space-y-2 flex-1">
-                  <div className="h-4 w-48 bg-slate-200 rounded animate-pulse" />
-                  <div className="h-3 w-24 bg-slate-200 rounded animate-pulse" />
+          {metricsQuery.isLoading
+            ? Array.from({ length: 5 }).map((_, i) => (
+                <div
+                  key={i}
+                  className="flex items-center space-x-4 p-3 rounded-lg bg-slate-50"
+                >
+                  <div className="h-10 w-10 bg-slate-200 rounded-full animate-pulse" />
+                  <div className="space-y-2 flex-1">
+                    <div className="h-4 w-48 bg-slate-200 rounded animate-pulse" />
+                    <div className="h-3 w-24 bg-slate-200 rounded animate-pulse" />
+                  </div>
                 </div>
-              </div>
-            ))
-          ) : (
-            metrics?.recentActivity?.slice(0, 5).map((activity) => (
-              <div key={activity.id} className="flex items-center space-x-4 p-3 rounded-lg hover:bg-slate-50 transition-colors">
-                <Avatar name={activity.candidateName} size="md" />
-                <div className="flex-1">
-                  <p className="text-sm font-medium text-slate-900">{activity.action}</p>
-                  <p className="text-xs text-slate-500">
-                    {activity.candidateName} • {new Date(activity.timestamp).toLocaleDateString()}
-                  </p>
+              ))
+            : metrics?.recentActivity?.slice(0, 5).map((activity) => (
+                <div
+                  key={activity.id}
+                  className="flex items-center space-x-4 p-3 rounded-lg hover:bg-slate-50 transition-colors"
+                >
+                  <Avatar name={activity.candidateName} size="md" />
+                  <div className="flex-1">
+                    <p className="text-sm font-medium text-slate-900">
+                      {activity.action}
+                    </p>
+                    <p className="text-xs text-slate-500">
+                      {activity.candidateName} •{" "}
+                      {new Date(activity.timestamp).toLocaleDateString()}
+                    </p>
+                  </div>
+                  <Clock className="h-4 w-4 text-slate-400" />
                 </div>
-                <Clock className="h-4 w-4 text-slate-400" />
-              </div>
-            ))
-          )}
+              ))}
         </div>
       </div>
     </div>
-  )
+  );
 
   const renderCandidates = () => (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
         <h2 className="text-2xl font-bold">Candidates</h2>
         <div className="flex items-center space-x-2">
-          <Button variant="outline" size="sm" onClick={() => setShowFilters(!showFilters)}>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => setShowFilters(!showFilters)}
+          >
             <Filter className="h-4 w-4 mr-2" />
             Filter
           </Button>
@@ -215,69 +239,74 @@ export function RecruiterDashboard() {
       )}
 
       <div className="grid gap-4">
-        {candidatesQuery.isLoading ? (
-          Array.from({ length: 5 }).map((_, i) => (
-            <Card key={i}>
-              <CardContent className="pt-6">
-                <div className="flex items-center space-x-4">
-                  <div className="h-12 w-12 bg-muted rounded-full animate-pulse" />
-                  <div className="space-y-2 flex-1">
-                    <div className="h-4 w-32 bg-muted rounded animate-pulse" />
-                    <div className="h-3 w-48 bg-muted rounded animate-pulse" />
-                  </div>
-                  <div className="h-8 w-24 bg-muted rounded animate-pulse" />
-                </div>
-              </CardContent>
-            </Card>
-          ))
-        ) : (
-          candidates.map((candidate) => (
-            <Card key={candidate.id}>
-              <CardContent className="pt-6">
-                <div className="flex items-center justify-between">
+        {candidatesQuery.isLoading
+          ? Array.from({ length: 5 }).map((_, i) => (
+              <Card key={i}>
+                <CardContent className="pt-6">
                   <div className="flex items-center space-x-4">
-                    <Avatar name={candidate.name} size="lg" />
-                    <div>
-                      <h3 className="font-medium">{candidate.name}</h3>
-                      <div className="flex items-center space-x-4 text-sm text-muted-foreground">
-                        {candidate.email && (
+                    <div className="h-12 w-12 bg-muted rounded-full animate-pulse" />
+                    <div className="space-y-2 flex-1">
+                      <div className="h-4 w-32 bg-muted rounded animate-pulse" />
+                      <div className="h-3 w-48 bg-muted rounded animate-pulse" />
+                    </div>
+                    <div className="h-8 w-24 bg-muted rounded animate-pulse" />
+                  </div>
+                </CardContent>
+              </Card>
+            ))
+          : candidates.map((candidate) => (
+              <Card key={candidate.id}>
+                <CardContent className="pt-6">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center space-x-4">
+                      <Avatar
+                        name={`${candidate.firstName} ${candidate.lastName}`}
+                        size="lg"
+                      />
+                      <div>
+                        <h3 className="font-medium">{`${candidate.firstName} ${candidate.lastName}`}</h3>
+                        <div className="flex items-center space-x-4 text-sm text-muted-foreground">
+                          {candidate.email && (
+                            <div className="flex items-center space-x-1">
+                              <span className="text-xs">📧</span>
+                              <span>{candidate.email}</span>
+                            </div>
+                          )}
+                          {candidate.phone && (
+                            <div className="flex items-center space-x-1">
+                              <span className="text-xs">📞</span>
+                              <span>{candidate.phone}</span>
+                            </div>
+                          )}
                           <div className="flex items-center space-x-1">
-                            <span className="text-xs">📧</span>
-                            <span>{candidate.email}</span>
+                            <Clock className="h-3 w-3" />
+                            <span>
+                              {new Date(
+                                candidate.createdAt
+                              ).toLocaleDateString()}
+                            </span>
                           </div>
-                        )}
-                        {candidate.phone && (
-                          <div className="flex items-center space-x-1">
-                            <span className="text-xs">📞</span>
-                            <span>{candidate.phone}</span>
-                          </div>
-                        )}
-                        <div className="flex items-center space-x-1">
-                          <Clock className="h-3 w-3" />
-                          <span>{new Date(candidate.createdAt).toLocaleDateString()}</span>
                         </div>
                       </div>
                     </div>
+                    <div className="flex items-center space-x-2">
+                      <Button variant="outline" size="sm">
+                        <Eye className="h-4 w-4" />
+                      </Button>
+                      <Button variant="outline" size="sm">
+                        <Edit className="h-4 w-4" />
+                      </Button>
+                      <Button variant="outline" size="sm">
+                        <MoreHorizontal className="h-4 w-4" />
+                      </Button>
+                    </div>
                   </div>
-                  <div className="flex items-center space-x-2">
-                    <Button variant="outline" size="sm">
-                      <Eye className="h-4 w-4" />
-                    </Button>
-                    <Button variant="outline" size="sm">
-                      <Edit className="h-4 w-4" />
-                    </Button>
-                    <Button variant="outline" size="sm">
-                      <MoreHorizontal className="h-4 w-4" />
-                    </Button>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          ))
-        )}
+                </CardContent>
+              </Card>
+            ))}
       </div>
     </div>
-  )
+  );
 
   const renderPipeline = () => (
     <div className="space-y-6">
@@ -290,55 +319,76 @@ export function RecruiterDashboard() {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
-        {pipelineQuery.isLoading ? (
-          Array.from({ length: 4 }).map((_, i) => (
-            <Card key={i}>
-              <CardHeader>
-                <div className="h-6 w-24 bg-muted rounded animate-pulse" />
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-3">
-                  {Array.from({ length: 3 }).map((_, j) => (
-                    <div key={j} className="h-20 bg-muted rounded animate-pulse" />
-                  ))}
-                </div>
-              </CardContent>
-            </Card>
-          ))
-        ) : (
-          pipelineStages.map((stage) => (
-            <Card key={stage.id}>
-              <CardHeader>
-                <CardTitle className="flex items-center justify-between">
-                  <span>{stage.name}</span>
-                  <span className="text-sm text-muted-foreground">
-                    {(stage as { applications?: unknown[] }).applications?.length || 0}
-                  </span>
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-3">
-                  {(stage as { applications?: Array<{ id: string; application?: { candidate?: { name?: string }; createdAt?: string } }> }).applications?.map((app) => (
-                    <div key={app.id} className="p-3 border rounded-lg">
-                      <div className="flex items-center space-x-2">
-                        <Avatar name={app.application?.candidate?.name} size="sm" />
-                        <div className="flex-1">
-                          <p className="text-sm font-medium">{app.application?.candidate?.name || 'Unknown'}</p>
-                          <p className="text-xs text-muted-foreground">
-                            {app.application?.createdAt ? new Date(app.application.createdAt).toLocaleDateString() : 'Unknown date'}
-                          </p>
+        {pipelineQuery.isLoading
+          ? Array.from({ length: 4 }).map((_, i) => (
+              <Card key={i}>
+                <CardHeader>
+                  <div className="h-6 w-24 bg-muted rounded animate-pulse" />
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-3">
+                    {Array.from({ length: 3 }).map((_, j) => (
+                      <div
+                        key={j}
+                        className="h-20 bg-muted rounded animate-pulse"
+                      />
+                    ))}
+                  </div>
+                </CardContent>
+              </Card>
+            ))
+          : pipelineStages.map((stage) => (
+              <Card key={stage.id}>
+                <CardHeader>
+                  <CardTitle className="flex items-center justify-between">
+                    <span>{stage.name}</span>
+                    <span className="text-sm text-muted-foreground">
+                      {(stage as { applications?: unknown[] }).applications
+                        ?.length || 0}
+                    </span>
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-3">
+                    {(
+                      stage as {
+                        applications?: Array<{
+                          id: string;
+                          application?: {
+                            candidate?: { name?: string };
+                            createdAt?: string;
+                          };
+                        }>;
+                      }
+                    ).applications?.map((app) => (
+                      <div key={app.id} className="p-3 border rounded-lg">
+                        <div className="flex items-center space-x-2">
+                          <Avatar
+                            name={app.application?.candidate?.name}
+                            size="sm"
+                          />
+                          <div className="flex-1">
+                            <p className="text-sm font-medium">
+                              {app.application?.candidate?.name || "Unknown"}
+                            </p>
+                            <p className="text-xs text-muted-foreground">
+                              {app.application?.createdAt
+                                ? new Date(
+                                    app.application.createdAt
+                                  ).toLocaleDateString()
+                                : "Unknown date"}
+                            </p>
+                          </div>
                         </div>
                       </div>
-                    </div>
-                  ))}
-                </div>
-              </CardContent>
-            </Card>
-          ))
-        )}
+                    ))}
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
       </div>
     </div>
-  )
+  );
 
   const renderSearch = () => (
     <div className="space-y-6">
@@ -365,29 +415,30 @@ export function RecruiterDashboard() {
 
             {searchQuery && (
               <div className="text-sm text-muted-foreground">
-                Search results for &rdquo;{searchQuery}&rdquo; will appear here...
+                Search results for &rdquo;{searchQuery}&rdquo; will appear
+                here...
               </div>
             )}
           </div>
         </CardContent>
       </Card>
     </div>
-  )
+  );
 
   const renderContent = () => {
     switch (activeTab) {
-      case 'overview':
-        return renderOverview()
-      case 'candidates':
-        return renderCandidates()
-      case 'pipeline':
-        return renderPipeline()
-      case 'search':
-        return renderSearch()
+      case "overview":
+        return renderOverview();
+      case "candidates":
+        return renderCandidates();
+      case "pipeline":
+        return renderPipeline();
+      case "search":
+        return renderSearch();
       default:
-        return renderOverview()
+        return renderOverview();
     }
-  }
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100">
@@ -397,8 +448,9 @@ export function RecruiterDashboard() {
 
           <div className="flex items-center space-x-4">
             <div className="text-right">
-              <p className="text-sm font-medium text-slate-900">{getGreeting()}, Recruiter</p>
-
+              <p className="text-sm font-medium text-slate-900">
+                {getGreeting()}, Recruiter
+              </p>
             </div>
             <Avatar name="Recruiter" size="sm" />
             <Button
@@ -407,14 +459,13 @@ export function RecruiterDashboard() {
               disabled={logoutMutation.isPending}
               className="text-slate-600 hover:text-slate-900"
             >
-              {logoutMutation.isPending ? 'Signing out...' : 'Sign Out'}
+              {logoutMutation.isPending ? "Signing out..." : "Sign Out"}
             </Button>
           </div>
         </div>
       </header>
 
       <div className="flex">
-
         <aside className="w-64 bg-white/80 backdrop-blur-sm border-r border-slate-200 min-h-screen">
           <nav className="p-6 space-y-2">
             {NAVIGATION_ITEMS.map((item) => (
@@ -435,18 +486,15 @@ export function RecruiterDashboard() {
               disabled={logoutMutation.isPending}
             >
               <LogOut className="h-5 w-5 mr-3" />
-              {logoutMutation.isPending ? 'Signing out...' : 'Sign Out'}
+              {logoutMutation.isPending ? "Signing out..." : "Sign Out"}
             </Button>
           </div>
         </aside>
 
-
         <main className="flex-1 p-8">
-          <div className="max-w-7xl mx-auto">
-            {renderContent()}
-          </div>
+          <div className="max-w-7xl mx-auto">{renderContent()}</div>
         </main>
       </div>
     </div>
-  )
+  );
 }

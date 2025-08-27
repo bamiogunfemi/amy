@@ -28,7 +28,6 @@ const moveSchema = z.object({
  *     tags:
  *       - Recruiter Pipeline
  *     summary: Move candidate in pipeline
-  *     summary: Move candidate in pipeline
  *     description: Update candidate's position in the recruitment pipeline
  *     responses:
  *       200:
@@ -41,7 +40,7 @@ const moveSchema = z.object({
  *         $ref: '#/components/responses/NotFoundError'
  *       500:
  *         $ref: '#/components/responses/InternalServerError'
-  */
+ */
 router.patch(
   "/pipeline/move",
   asyncHandler(async (req: any, res) => {
