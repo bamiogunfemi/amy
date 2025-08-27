@@ -1,5 +1,5 @@
-import { useForm } from 'react-hook-form'
-import { zodResolver } from '@hookform/resolvers/zod'
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 import {
   loginSchema,
   signupSchema,
@@ -27,146 +27,152 @@ import {
   type UnblockUserData,
   type DeleteUserData,
   type ExtendTrialData,
-} from '../types'
+} from "../types";
 
 export const useLoginForm = () => {
   return useForm<LoginFormData>({
     resolver: zodResolver(loginSchema),
     defaultValues: {
-      email: '',
-      password: '',
+      email: "",
+      password: "",
     },
-  })
-}
+  });
+};
 
 export const useSignupForm = () => {
   return useForm<SignupFormData>({
     resolver: zodResolver(signupSchema),
     defaultValues: {
-      email: '',
-      password: '',
-      name: '',
-      role: 'RECRUITER',
-      companyName: '',
-      companySlug: '',
+      email: "",
+      password: "",
+      name: "",
+      role: "RECRUITER",
+      companyName: "",
+      companySlug: "",
     },
-  })
-}
+  });
+};
 
 export const useResetPasswordForm = () => {
   return useForm<ResetPasswordFormData>({
     resolver: zodResolver(resetPasswordSchema),
     defaultValues: {
-      email: '',
+      email: "",
     },
-  })
-}
+  });
+};
 
 export const useSetNewPasswordForm = () => {
   return useForm<SetNewPasswordFormData>({
     resolver: zodResolver(setNewPasswordSchema),
     defaultValues: {
-      token: '',
-      newPassword: '',
+      token: "",
+      newPassword: "",
     },
-  })
-}
+  });
+};
 
 export const useChangePasswordForm = () => {
   return useForm<ChangePasswordFormData>({
     resolver: zodResolver(changePasswordSchema),
     defaultValues: {
-      currentPassword: '',
-      newPassword: '',
+      currentPassword: "",
+      newPassword: "",
     },
-  })
-}
+  });
+};
 
 export const useCreateCandidateForm = () => {
   return useForm<CreateCandidateData>({
     resolver: zodResolver(createCandidateSchema),
     defaultValues: {
-      name: '',
-      email: '',
-      phone: '',
-      skills: [],
-      experience: 0,
-      source: 'MANUAL',
-      notes: '',
+      firstName: "",
+      lastName: "",
+      email: "",
+      phone: "",
+      location: "",
+      experienceLevel: "",
+      headline: "",
+      summary: "",
     },
-  })
-}
+  });
+};
 
-export const useUpdateCandidateForm = (defaultValues?: Partial<UpdateCandidateData>) => {
+export const useUpdateCandidateForm = (
+  defaultValues?: Partial<UpdateCandidateData>
+) => {
   return useForm<UpdateCandidateData>({
     resolver: zodResolver(updateCandidateSchema),
     defaultValues: {
-      name: '',
-      email: '',
-      phone: '',
-      skills: [],
-      experience: 0,
-      source: 'MANUAL',
-      notes: '',
+      firstName: "",
+      lastName: "",
+      email: "",
+      phone: "",
+      location: "",
+      experienceLevel: "",
+      headline: "",
+      summary: "",
       ...defaultValues,
     },
-  })
-}
+  });
+};
 
 export const useCreateCompanyForm = () => {
   return useForm<CreateCompanyData>({
     resolver: zodResolver(createCompanySchema),
     defaultValues: {
-      name: '',
-      slug: '',
+      name: "",
+      slug: "",
     },
-  })
-}
+  });
+};
 
-export const useUpdateCompanyForm = (defaultValues?: Partial<UpdateCompanyData>) => {
+export const useUpdateCompanyForm = (
+  defaultValues?: Partial<UpdateCompanyData>
+) => {
   return useForm<UpdateCompanyData>({
     resolver: zodResolver(updateCompanySchema),
     defaultValues: {
-      name: '',
-      slug: '',
+      name: "",
+      slug: "",
       ...defaultValues,
     },
-  })
-}
+  });
+};
 
 export const useBlockUserForm = () => {
   return useForm<BlockUserData>({
     resolver: zodResolver(blockUserSchema),
     defaultValues: {
-      userId: '',
+      userId: "",
     },
-  })
-}
+  });
+};
 
 export const useUnblockUserForm = () => {
   return useForm<UnblockUserData>({
     resolver: zodResolver(unblockUserSchema),
     defaultValues: {
-      userId: '',
+      userId: "",
     },
-  })
-}
+  });
+};
 
 export const useDeleteUserForm = () => {
   return useForm<DeleteUserData>({
     resolver: zodResolver(deleteUserSchema),
     defaultValues: {
-      userId: '',
+      userId: "",
     },
-  })
-}
+  });
+};
 
 export const useExtendTrialForm = () => {
   return useForm<ExtendTrialData>({
     resolver: zodResolver(extendTrialSchema),
     defaultValues: {
-      userId: '',
+      userId: "",
       days: 30,
     },
-  })
-}
+  });
+};

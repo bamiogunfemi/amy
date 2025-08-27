@@ -200,6 +200,21 @@ export const useSearchSkills = (query: string) => {
   });
 };
 
+// New hook for skills search in candidate form
+export const useSkillsSearch = (query: string) => {
+  return useQuery({
+    queryKey: ["skills", "search", query],
+    queryFn: async (): Promise<SkillData[]> => {
+      const res = await apiClient.get<{ skills: SkillData[] }>(
+        "/api/search/skills",
+        { params: { q: query } }
+      );
+      return res.data.skills;
+    },
+    enabled: !!query && query.length > 1,
+  });
+};
+
 // Dashboard Metrics
 export const useRecruiterMetrics = (jobId?: string) => {
   return useQuery({

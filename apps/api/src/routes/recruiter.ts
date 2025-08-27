@@ -1,12 +1,16 @@
 import { Router, Request } from "express";
 import { PrismaClient } from "@amy/db";
-import { requireRecruiter } from "@amy/auth";
+import { requireAuth, requireRecruiter } from "@amy/auth";
+import { AuthService } from "@amy/auth";
 import { asyncHandler } from "../middleware/errorHandler";
 import { z } from "zod";
 
 const router = Router();
 const prisma = new PrismaClient();
+const authService = new AuthService(prisma);
 
+// First authenticate the user, then check if they're a recruiter
+router.use(requireAuth(authService));
 router.use(requireRecruiter());
 
 interface AuthenticatedRequest extends Request {
@@ -22,7 +26,28 @@ const candidateCreateSchema = z.object({
   experienceLevel: z.string().optional(),
   headline: z.string().optional(),
   summary: z.string().optional(),
+  source: z
+    .enum([
+      "MANUAL",
+      "UPLOAD",
+      "DRIVE",
+      "CSV",
+      "EXCEL",
+      "AIRTABLE",
+      "GOOGLE_SHEETS",
+      "ADMIN_ASSIGN",
+    ])
+    .optional(),
 });
+
+const candidateSkillsSchema = z.array(
+  z.object({
+    id: z.string(),
+    name: z.string(),
+    category: z.string(),
+    proficiency: z.number().min(1).max(5),
+  })
+);
 
 const candidateUpdateSchema = candidateCreateSchema.partial();
 
@@ -66,7 +91,7 @@ async function createAuditLog(
  *         $ref: '#/components/responses/NotFoundError'
  *       500:
  *         $ref: '#/components/responses/InternalServerError'
-  */
+ */
 router.get(
   "/candidates",
   asyncHandler(async (req: AuthenticatedRequest, res) => {
@@ -113,6 +138,11 @@ router.post(
     const session = req.user!;
     const body = candidateCreateSchema.parse(req.body);
 
+    // Parse skills separately to avoid schema conflicts
+    const skillsData = req.body.skills
+      ? candidateSkillsSchema.parse(req.body.skills)
+      : [];
+
     const candidate = await prisma.candidate.create({
       data: {
         firstName: body.firstName,
@@ -123,10 +153,33 @@ router.post(
         experienceLevel: body.experienceLevel,
         headline: body.headline,
         summary: body.summary,
+        source: body.source || "MANUAL",
+
         ownerRecruiterId: session.id,
-        source: "MANUAL",
       },
     });
+
+    // Add skills if provided
+    if (skillsData.length > 0) {
+      const skillsToCreate = skillsData.map((skill) => ({
+        candidateId: candidate.id,
+        skillId: skill.id,
+        proficiency: skill.proficiency,
+      }));
+
+      await prisma.candidateSkill.createMany({
+        data: skillsToCreate,
+        skipDuplicates: true, // Skip if skill already exists for this candidate
+      });
+
+      await createAuditLog(
+        session.id,
+        "ADD_SKILLS_TO_CANDIDATE",
+        "CANDIDATE",
+        candidate.id,
+        { skillsCount: skillsData.length }
+      );
+    }
 
     await createAuditLog(
       session.id,
@@ -135,7 +188,19 @@ router.post(
       candidate.id
     );
 
-    res.json({ ok: true, data: candidate });
+    // Return candidate with skills
+    const candidateWithSkills = await prisma.candidate.findUnique({
+      where: { id: candidate.id },
+      include: {
+        skills: {
+          include: {
+            skill: true,
+          },
+        },
+      },
+    });
+
+    res.json({ ok: true, data: candidateWithSkills });
   })
 );
 
@@ -156,7 +221,7 @@ router.post(
  *         $ref: '#/components/responses/NotFoundError'
  *       500:
  *         $ref: '#/components/responses/InternalServerError'
-  */
+ */
 router.get(
   "/candidates/:id",
   asyncHandler(async (req: AuthenticatedRequest, res) => {
@@ -227,7 +292,7 @@ router.patch(
  *         $ref: '#/components/responses/UnauthorizedError'
  *       500:
  *         $ref: '#/components/responses/InternalServerError'
-  */
+ */
 router.post(
   "/candidates/:id/skills",
   asyncHandler(async (req: AuthenticatedRequest, res) => {
@@ -283,7 +348,7 @@ router.post(
  *         $ref: '#/components/responses/NotFoundError'
  *       500:
  *         $ref: '#/components/responses/InternalServerError'
-  */
+ */
 router.get(
   "/pipeline",
   asyncHandler(async (req: AuthenticatedRequest, res) => {
@@ -326,7 +391,7 @@ router.get(
  *         $ref: '#/components/responses/NotFoundError'
  *       500:
  *         $ref: '#/components/responses/InternalServerError'
-  */
+ */
 router.get(
   "/search",
   asyncHandler(async (req: AuthenticatedRequest, res) => {
@@ -410,7 +475,7 @@ router.get(
  *         $ref: '#/components/responses/NotFoundError'
  *       500:
  *         $ref: '#/components/responses/InternalServerError'
-  */
+ */
 router.get(
   "/notifications",
   asyncHandler(async (req: AuthenticatedRequest, res) => {
@@ -460,7 +525,7 @@ router.get(
  *         $ref: '#/components/responses/UnauthorizedError'
  *       500:
  *         $ref: '#/components/responses/InternalServerError'
-  */
+ */
 router.post(
   "/notifications/:id/read",
   asyncHandler(async (req: AuthenticatedRequest, res) => {
@@ -493,7 +558,7 @@ router.post(
  *         $ref: '#/components/responses/NotFoundError'
  *       500:
  *         $ref: '#/components/responses/InternalServerError'
-  */
+ */
 router.get(
   "/settings",
   asyncHandler(async (req: AuthenticatedRequest, res) => {

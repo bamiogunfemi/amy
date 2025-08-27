@@ -1,9 +1,17 @@
-import { useState } from 'react'
-import { useNavigate } from '@tanstack/react-router'
-import { Button, Card, CardContent, CardHeader, CardTitle, Input, Badge } from '@amy/ui'
-import { useCandidates, useAddToJob } from '@amy/ui'
-import { toast } from 'sonner'
-import { Layout } from '@/components/layout'
+import { useState } from "react";
+import { useNavigate } from "@tanstack/react-router";
+import {
+  Button,
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+  Input,
+  Badge,
+} from "@amy/ui";
+import { useCandidates, useAddToJob } from "@amy/ui";
+import { toast } from "sonner";
+import { Layout } from "@/components/layout";
 import {
   Users,
   Plus,
@@ -18,66 +26,65 @@ import {
   Phone,
   Calendar,
   FileText,
-  Tag
-} from 'lucide-react'
+  Tag,
+} from "lucide-react";
 
 export function CandidatesPage() {
-  const navigate = useNavigate()
-  const [searchQuery, setSearchQuery] = useState('')
-  const [showFilters, setShowFilters] = useState(false)
-  const [selectedCandidates, setSelectedCandidates] = useState<string[]>([])
+  const navigate = useNavigate();
+  const [searchQuery, setSearchQuery] = useState("");
+  const [showFilters, setShowFilters] = useState(false);
+  const [selectedCandidates, setSelectedCandidates] = useState<string[]>([]);
 
-  const candidatesQuery = useCandidates()
-  const candidates = candidatesQuery.data || []
-  const addToJob = useAddToJob()
-  const [targetJobId, setTargetJobId] = useState<string>("")
+  const candidatesQuery = useCandidates();
+  const candidates = candidatesQuery.data || [];
+  const addToJob = useAddToJob();
+  const [targetJobId, setTargetJobId] = useState<string>("");
 
   const handleDeleteCandidate = async () => {
     try {
       // This would call the DELETE endpoint
-      toast.success('Candidate deleted successfully')
+      toast.success("Candidate deleted successfully");
     } catch (error) {
-      toast.error('Failed to delete candidate')
+      toast.error("Failed to delete candidate");
     }
-  }
+  };
 
   const handleBulkAction = (action: string) => {
     if (selectedCandidates.length === 0) {
-      toast.error('Please select candidates first')
-      return
+      toast.error("Please select candidates first");
+      return;
     }
-    if (action === 'Add to Job') {
+    if (action === "Add to Job") {
       if (!targetJobId) {
-        toast.error('Provide a Job ID to add to')
-        return
+        toast.error("Provide a Job ID to add to");
+        return;
       }
-      selectedCandidates.forEach((id) => addToJob.mutate({ jobId: targetJobId, candidateId: id }))
-      toast.success('Added to job')
-      return
+      selectedCandidates.forEach((id) =>
+        addToJob.mutate({ jobId: targetJobId, candidateId: id })
+      );
+      toast.success("Added to job");
+      return;
     }
-    toast.info(`${action} action for ${selectedCandidates.length} candidates`)
-  }
+    toast.info(`${action} action for ${selectedCandidates.length} candidates`);
+  };
 
   const handleSelectAll = () => {
     if (selectedCandidates.length === candidates.length) {
-      setSelectedCandidates([])
+      setSelectedCandidates([]);
     } else {
-      setSelectedCandidates(candidates.map(c => c.id))
+      setSelectedCandidates(candidates.map((c) => c.id));
     }
-  }
+  };
 
   const handleSelectCandidate = (id: string) => {
-    setSelectedCandidates(prev =>
-      prev.includes(id)
-        ? prev.filter(c => c !== id)
-        : [...prev, id]
-    )
-  }
+    setSelectedCandidates((prev) =>
+      prev.includes(id) ? prev.filter((c) => c !== id) : [...prev, id]
+    );
+  };
 
   return (
     <Layout>
       <div className="max-w-7xl mx-auto space-y-6">
-
         <div className="flex items-center justify-between">
           <div>
             <h1 className="text-3xl font-bold text-slate-900">Candidates</h1>
@@ -88,13 +95,15 @@ export function CandidatesPage() {
               <Upload className="h-4 w-4 mr-2" />
               Upload CV(s)
             </Button>
-            <Button size="sm" onClick={() => navigate({ to: '/candidates/new' })}>
+            <Button
+              size="sm"
+              onClick={() => navigate({ to: "/candidates/new" })}
+            >
               <Plus className="h-4 w-4 mr-2" />
               New Candidate
             </Button>
           </div>
         </div>
-
 
         <Card>
           <CardContent className="pt-6">
@@ -122,8 +131,16 @@ export function CandidatesPage() {
               <div className="mt-4 pt-4 border-t border-slate-200">
                 <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
                   <div>
-                    <label className="block text-sm font-medium text-slate-700 mb-1">Source</label>
-                    <select className="w-full border border-slate-300 rounded-md px-3 py-2 text-sm">
+                    <label
+                      htmlFor="source-filter"
+                      className="block text-sm font-medium text-slate-700 mb-1"
+                    >
+                      Source
+                    </label>
+                    <select
+                      id="source-filter"
+                      className="w-full border border-slate-300 rounded-md px-3 py-2 text-sm"
+                    >
                       <option value="">All Sources</option>
                       <option value="manual">Manual</option>
                       <option value="upload">Upload</option>
@@ -131,8 +148,16 @@ export function CandidatesPage() {
                     </select>
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-slate-700 mb-1">Experience</label>
-                    <select className="w-full border border-slate-300 rounded-md px-3 py-2 text-sm">
+                    <label
+                      htmlFor="experience-filter"
+                      className="block text-sm font-medium text-slate-700 mb-1"
+                    >
+                      Experience
+                    </label>
+                    <select
+                      id="experience-filter"
+                      className="w-full border border-slate-300 rounded-md px-3 py-2 text-sm"
+                    >
                       <option value="">All Levels</option>
                       <option value="junior">Junior</option>
                       <option value="mid">Mid-level</option>
@@ -140,15 +165,25 @@ export function CandidatesPage() {
                     </select>
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-slate-700 mb-1">Has Documents</label>
-                    <select className="w-full border border-slate-300 rounded-md px-3 py-2 text-sm">
+                    <label
+                      htmlFor="documents-filter"
+                      className="block text-sm font-medium text-slate-700 mb-1"
+                    >
+                      Has Documents
+                    </label>
+                    <select
+                      id="documents-filter"
+                      className="w-full border border-slate-300 rounded-md px-3 py-2 text-sm"
+                    >
                       <option value="">All</option>
                       <option value="true">Yes</option>
                       <option value="false">No</option>
                     </select>
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-slate-700 mb-1">Location</label>
+                    <label className="block text-sm font-medium text-slate-700 mb-1">
+                      Location
+                    </label>
                     <Input placeholder="City, Country" className="text-sm" />
                   </div>
                 </div>
@@ -156,7 +191,6 @@ export function CandidatesPage() {
             )}
           </CardContent>
         </Card>
-
 
         {selectedCandidates.length > 0 && (
           <Card>
@@ -169,7 +203,7 @@ export function CandidatesPage() {
                   <Button
                     variant="outline"
                     size="sm"
-                    onClick={() => handleBulkAction('Add Skills')}
+                    onClick={() => handleBulkAction("Add Skills")}
                   >
                     <Tag className="h-4 w-4 mr-2" />
                     Add Skills
@@ -177,7 +211,7 @@ export function CandidatesPage() {
                   <Button
                     variant="outline"
                     size="sm"
-                    onClick={() => handleBulkAction('Export')}
+                    onClick={() => handleBulkAction("Export")}
                   >
                     <FileText className="h-4 w-4 mr-2" />
                     Export
@@ -185,31 +219,48 @@ export function CandidatesPage() {
                   <Button
                     variant="outline"
                     size="sm"
-                    onClick={() => handleBulkAction('Add to Job')}
+                    onClick={() => handleBulkAction("Add to Job")}
                   >
                     <Plus className="h-4 w-4 mr-2" />
                     Add to Job
                   </Button>
-                  <input value={targetJobId} onChange={(e) => setTargetJobId(e.target.value)} placeholder="Job ID" className="border rounded px-2 py-1 text-xs" />
+                  <label htmlFor="job-id-input" className="sr-only">
+                    Job ID
+                  </label>
+                  <input
+                    id="job-id-input"
+                    value={targetJobId}
+                    onChange={(e) => setTargetJobId(e.target.value)}
+                    placeholder="Job ID"
+                    className="border rounded px-2 py-1 text-xs"
+                  />
                 </div>
               </div>
             </CardContent>
           </Card>
         )}
 
-
         <Card>
           <CardHeader>
             <div className="flex items-center justify-between">
               <CardTitle>Candidates ({candidates.length})</CardTitle>
               <div className="flex items-center space-x-2">
-                <input
-                  type="checkbox"
-                  checked={selectedCandidates.length === candidates.length && candidates.length > 0}
-                  onChange={handleSelectAll}
-                  className="h-4 w-4 text-rose-600 border-slate-300 rounded focus:ring-rose-500"
-                />
-                <span className="text-sm text-slate-600">Select all</span>
+                <label
+                  htmlFor="select-all"
+                  className="flex items-center space-x-2 cursor-pointer"
+                >
+                  <input
+                    id="select-all"
+                    type="checkbox"
+                    checked={
+                      selectedCandidates.length === candidates.length &&
+                      candidates.length > 0
+                    }
+                    onChange={handleSelectAll}
+                    className="h-4 w-4 text-rose-600 border-slate-300 rounded focus:ring-rose-500"
+                  />
+                  <span className="text-sm text-slate-600">Select all</span>
+                </label>
               </div>
             </div>
           </CardHeader>
@@ -217,7 +268,10 @@ export function CandidatesPage() {
             {candidatesQuery.isLoading ? (
               <div className="space-y-4">
                 {Array.from({ length: 5 }).map((_, i) => (
-                  <div key={i} className="flex items-center space-x-4 p-4 border rounded-lg">
+                  <div
+                    key={i}
+                    className="flex items-center space-x-4 p-4 border rounded-lg"
+                  >
                     <div className="h-12 w-12 bg-muted rounded-full animate-pulse" />
                     <div className="space-y-2 flex-1">
                       <div className="h-4 w-32 bg-muted rounded animate-pulse" />
@@ -230,9 +284,13 @@ export function CandidatesPage() {
             ) : candidates.length === 0 ? (
               <div className="text-center py-12">
                 <Users className="h-12 w-12 text-slate-400 mx-auto mb-4" />
-                <h3 className="text-lg font-medium text-slate-900 mb-2">No candidates yet</h3>
-                <p className="text-slate-600 mb-4">Get started by adding your first candidate</p>
-                <Button onClick={() => navigate({ to: '/candidates' })}>
+                <h3 className="text-lg font-medium text-slate-900 mb-2">
+                  No candidates yet
+                </h3>
+                <p className="text-slate-600 mb-4">
+                  Get started by adding your first candidate
+                </p>
+                <Button onClick={() => navigate({ to: "/candidates" })}>
                   <Plus className="h-4 w-4 mr-2" />
                   Add Candidate
                 </Button>
@@ -244,22 +302,28 @@ export function CandidatesPage() {
                     key={candidate.id}
                     className="flex items-center space-x-4 p-4 border rounded-lg hover:bg-slate-50 transition-colors"
                   >
-                    <input
-                      type="checkbox"
-                      checked={selectedCandidates.includes(candidate.id)}
-                      onChange={() => handleSelectCandidate(candidate.id)}
-                      className="h-4 w-4 text-rose-600 border-slate-300 rounded focus:ring-rose-500"
-                    />
+                    <label
+                      htmlFor={`candidate-${candidate.id}`}
+                      className="cursor-pointer"
+                    >
+                      <input
+                        id={`candidate-${candidate.id}`}
+                        type="checkbox"
+                        checked={selectedCandidates.includes(candidate.id)}
+                        onChange={() => handleSelectCandidate(candidate.id)}
+                        className="h-4 w-4 text-rose-600 border-slate-300 rounded focus:ring-rose-500"
+                      />
+                    </label>
 
                     <div className="h-12 w-12 bg-gradient-to-br from-rose-500 to-rose-600 rounded-full flex items-center justify-center">
                       <span className="text-white font-medium">
-                        {candidate.name.charAt(0)}
+                        {candidate.firstName.charAt(0)}
                       </span>
                     </div>
 
                     <div className="flex-1">
                       <div className="flex items-center space-x-2 mb-1">
-                        <h3 className="font-medium text-slate-900">{candidate.name}</h3>
+                        <h3 className="font-medium text-slate-900">{`${candidate.firstName} ${candidate.lastName}`}</h3>
                         <Badge variant="secondary" className="text-xs">
                           {candidate.source}
                         </Badge>
@@ -279,7 +343,9 @@ export function CandidatesPage() {
                         )}
                         <div className="flex items-center space-x-1">
                           <Calendar className="h-3 w-3" />
-                          <span>{new Date(candidate.createdAt).toLocaleDateString()}</span>
+                          <span>
+                            {new Date(candidate.createdAt).toLocaleDateString()}
+                          </span>
                         </div>
                       </div>
                     </div>
@@ -288,7 +354,7 @@ export function CandidatesPage() {
                       <Button
                         variant="ghost"
                         size="sm"
-                        onClick={() => navigate({ to: '/candidates' })}
+                        onClick={() => navigate({ to: "/candidates" })}
                       >
                         <Eye className="h-4 w-4" />
                       </Button>
@@ -314,5 +380,5 @@ export function CandidatesPage() {
         </Card>
       </div>
     </Layout>
-  )
+  );
 }

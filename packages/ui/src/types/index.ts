@@ -49,22 +49,14 @@ export const extendTrialSchema = z.object({
 
 // Candidate Schemas
 export const createCandidateSchema = z.object({
-  name: z.string().min(1, "Name is required"),
+  firstName: z.string().min(1, "First name is required"),
+  lastName: z.string().min(1, "Last name is required"),
   email: z.string().email("Invalid email address").optional(),
   phone: z.string().optional(),
-  skills: z.array(z.string()).optional(),
-  experience: z.number().min(0).optional(),
-  source: z.enum([
-    "MANUAL",
-    "UPLOAD",
-    "DRIVE",
-    "CSV",
-    "EXCEL",
-    "AIRTABLE",
-    "GOOGLE_SHEETS",
-    "ADMIN_ASSIGN",
-  ]),
-  notes: z.string().optional(),
+  location: z.string().optional(),
+  experienceLevel: z.string().optional(),
+  headline: z.string().optional(),
+  summary: z.string().optional(),
 });
 
 export const updateCandidateSchema = createCandidateSchema.partial();
@@ -94,6 +86,14 @@ export type UpdateCandidateData = z.infer<typeof updateCandidateSchema>;
 
 export type CreateCompanyData = z.infer<typeof createCompanySchema>;
 export type UpdateCompanyData = z.infer<typeof updateCompanySchema>;
+
+// Skills Types
+export interface SelectedSkill {
+  id: string;
+  name: string; // Use 'name' to match SkillData interface
+  category: string;
+  proficiency: number;
+}
 
 // API Response Types
 export interface AuthUser {
@@ -178,14 +178,15 @@ export interface Company {
 
 export interface Candidate {
   id: string;
-  name: string;
+  firstName: string;
+  lastName: string;
   email?: string;
   phone?: string;
-  skills: string[];
-  experience?: number;
+  location?: string;
+  experienceLevel?: string;
+  headline?: string;
+  summary?: string;
   source: string;
-  notes?: string;
-  status: string;
   createdAt: string;
   updatedAt: string;
 }
@@ -293,7 +294,8 @@ export interface SearchResult {
 // Additional Recruiter Types
 export interface CandidateWithCounts {
   id: string;
-  name: string;
+  firstName: string;
+  lastName: string;
   email?: string;
   phone?: string;
   location?: string;
@@ -308,7 +310,8 @@ export interface CandidateWithCounts {
 
 export interface CandidateDetail {
   id: string;
-  name: string;
+  firstName: string;
+  lastName: string;
   email?: string;
   phone?: string;
   location?: string;
