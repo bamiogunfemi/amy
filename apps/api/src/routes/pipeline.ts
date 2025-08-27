@@ -5,6 +5,24 @@ import { AuthenticatedRequest } from "../middleware/auth";
 const router = Router();
 const prisma = new PrismaClient();
 
+/**
+ * @swagger
+ * /stages:
+ *   get:
+ *     tags:
+ *       - Pipeline
+ *     summary: Get pipeline stages
+ *     description: Retrieve recruiter's custom pipeline stages with candidate counts
+ *     responses:
+ *       200:
+ *         description: Retrieve recruiter's custom pipeline stages with candidate counts
+ *       401:
+ *         $ref: '#/components/responses/UnauthorizedError'
+ *       404:
+ *         $ref: '#/components/responses/NotFoundError'
+ *       500:
+ *         $ref: '#/components/responses/InternalServerError'
+  */
 router.get("/stages", async (req: AuthenticatedRequest, res) => {
   const session = req.user!;
 
@@ -29,6 +47,24 @@ router.get("/stages", async (req: AuthenticatedRequest, res) => {
   res.json({ stages });
 });
 
+/**
+ * @swagger
+ * /applications:
+ *   get:
+ *     tags:
+ *       - Pipeline
+ *     summary: List applications
+ *     description: Get all job applications in the recruiter's pipeline
+ *     responses:
+ *       200:
+ *         description: Get all job applications in the recruiter's pipeline
+ *       401:
+ *         $ref: '#/components/responses/UnauthorizedError'
+ *       404:
+ *         $ref: '#/components/responses/NotFoundError'
+ *       500:
+ *         $ref: '#/components/responses/InternalServerError'
+  */
 router.get("/applications", async (req: AuthenticatedRequest, res) => {
   const session = req.user!;
 

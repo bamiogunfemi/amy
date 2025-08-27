@@ -9,6 +9,24 @@ interface AuthenticatedRequest extends Request {
 const router = Router();
 const prisma = new PrismaClient();
 
+/**
+ * @swagger
+ * /sources:
+ *   get:
+ *     tags:
+ *       - Imports
+ *     summary: List import sources
+ *     description: Get available data import sources and their configurations
+ *     responses:
+ *       200:
+ *         description: Get available data import sources and their configurations
+ *       401:
+ *         $ref: '#/components/responses/UnauthorizedError'
+ *       404:
+ *         $ref: '#/components/responses/NotFoundError'
+ *       500:
+ *         $ref: '#/components/responses/InternalServerError'
+  */
 router.get(
   "/sources",
   asyncHandler(async (req: AuthenticatedRequest, res: Response) => {
@@ -46,6 +64,24 @@ router.post(
   })
 );
 
+/**
+ * @swagger
+ * /jobs:
+ *   get:
+ *     tags:
+ *       - Imports
+ *     summary: List jobs
+ *     description: Retrieve all job postings with filtering and status information
+ *     responses:
+ *       200:
+ *         description: Retrieve all job postings with filtering and status information
+ *       401:
+ *         $ref: '#/components/responses/UnauthorizedError'
+ *       404:
+ *         $ref: '#/components/responses/NotFoundError'
+ *       500:
+ *         $ref: '#/components/responses/InternalServerError'
+  */
 router.get(
   "/jobs",
   asyncHandler(async (req: AuthenticatedRequest, res: Response) => {

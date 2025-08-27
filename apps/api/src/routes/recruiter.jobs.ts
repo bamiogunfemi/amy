@@ -38,6 +38,24 @@ router.post(
   })
 );
 
+/**
+ * @swagger
+ * /jobs:
+ *   get:
+ *     tags:
+ *       - Recruiter Jobs
+ *     summary: List jobs
+ *     description: Retrieve all job postings with filtering and status information
+ *     responses:
+ *       200:
+ *         description: Retrieve all job postings with filtering and status information
+ *       401:
+ *         $ref: '#/components/responses/UnauthorizedError'
+ *       404:
+ *         $ref: '#/components/responses/NotFoundError'
+ *       500:
+ *         $ref: '#/components/responses/InternalServerError'
+  */
 router.get(
   "/jobs",
   asyncHandler(async (req: any, res) => {
@@ -66,6 +84,24 @@ router.get(
   })
 );
 
+/**
+ * @swagger
+ * /jobs/:id:
+ *   get:
+ *     tags:
+ *       - Recruiter Jobs
+ *     summary: Get job details
+ *     description: View detailed information about a specific job posting
+ *     responses:
+ *       200:
+ *         description: Success
+ *       401:
+ *         $ref: '#/components/responses/UnauthorizedError'
+ *       404:
+ *         $ref: '#/components/responses/NotFoundError'
+ *       500:
+ *         $ref: '#/components/responses/InternalServerError'
+  */
 router.get(
   "/jobs/:id",
   asyncHandler(async (req: any, res) => {
@@ -113,6 +149,24 @@ router.delete(
 
 const addToJobSchema = z.object({ candidateId: z.string().uuid() });
 
+/**
+ * @swagger
+ * /jobs/:id/applications:
+ *   post:
+ *     tags:
+ *       - Recruiter Jobs
+ *     summary: Apply to job
+ *     description: Submit a candidate application for a specific job posting
+ *     responses:
+ *       201:
+ *         $ref: '#/components/responses/Created'
+ *       400:
+ *         $ref: '#/components/responses/ValidationError'
+ *       401:
+ *         $ref: '#/components/responses/UnauthorizedError'
+ *       500:
+ *         $ref: '#/components/responses/InternalServerError'
+  */
 router.post(
   "/jobs/:id/applications",
   asyncHandler(async (req: any, res) => {
@@ -134,6 +188,24 @@ router.post(
   })
 );
 
+/**
+ * @swagger
+ * /jobs/:id/applications/:applicationId:
+ *   delete:
+ *     tags:
+ *       - Recruiter Jobs
+ *     summary: Remove application
+ *     description: Withdraw or remove a candidate's application from a job
+ *     responses:
+ *       200:
+ *         $ref: '#/components/responses/Success'
+ *       401:
+ *         $ref: '#/components/responses/UnauthorizedError'
+ *       404:
+ *         $ref: '#/components/responses/NotFoundError'
+ *       500:
+ *         $ref: '#/components/responses/InternalServerError'
+  */
 router.delete(
   "/jobs/:id/applications/:applicationId",
   asyncHandler(async (req: any, res) => {

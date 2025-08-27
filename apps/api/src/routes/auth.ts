@@ -29,6 +29,60 @@ const router = Router();
 const prisma = new PrismaClient();
 const authService = new AuthService(prisma);
 
+/**
+ * @swagger
+ * /auth/login:
+ *   post:
+ *     tags:
+ *       - Authentication
+ *     summary: User login
+ *     description: Authenticate user with email and password, returns JWT tokens for API access
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - email
+ *               - password
+ *             properties:
+ *               email:
+ *                 type: string
+ *                 format: email
+ *                 example: recruiter@demo.com
+ *               password:
+ *                 type: string
+ *                 minLength: 8
+ *                 example: recruiter123
+ *     responses:
+ *       200:
+ *         description: Authenticate user with email and password, returns JWT tokens for API access
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 accessToken:
+ *                   type: string
+ *                   example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+ *                 refreshToken:
+ *                   type: string
+ *                   example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+ *                 user:
+ *                   $ref: '#/components/schemas/User'
+ *       403:
+ *         description: Authenticate user with email and password, returns JWT tokens for API access
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: Invalid email or password
+ *     security: []
+ */
 router.post(
   "/login",
   asyncHandler(async (req, res) => {

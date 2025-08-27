@@ -49,6 +49,24 @@ async function createAuditLog(
   });
 }
 
+/**
+ * @swagger
+ * /candidates:
+ *   get:
+ *     tags:
+ *       - Recruiter
+ *     summary: GET /candidates
+ *     description: Get operation for /candidates
+ *     responses:
+ *       200:
+ *         description: Get operation for /candidates
+ *       401:
+ *         $ref: '#/components/responses/UnauthorizedError'
+ *       404:
+ *         $ref: '#/components/responses/NotFoundError'
+ *       500:
+ *         $ref: '#/components/responses/InternalServerError'
+  */
 router.get(
   "/candidates",
   asyncHandler(async (req: AuthenticatedRequest, res) => {
@@ -121,6 +139,24 @@ router.post(
   })
 );
 
+/**
+ * @swagger
+ * /candidates/:id:
+ *   get:
+ *     tags:
+ *       - Recruiter
+ *     summary: Recruiter candidate details
+ *     description: View detailed candidate information with recruiter-specific data
+ *     responses:
+ *       200:
+ *         description: Success
+ *       401:
+ *         $ref: '#/components/responses/UnauthorizedError'
+ *       404:
+ *         $ref: '#/components/responses/NotFoundError'
+ *       500:
+ *         $ref: '#/components/responses/InternalServerError'
+  */
 router.get(
   "/candidates/:id",
   asyncHandler(async (req: AuthenticatedRequest, res) => {
@@ -174,6 +210,24 @@ router.patch(
   })
 );
 
+/**
+ * @swagger
+ * /candidates/:id/skills:
+ *   post:
+ *     tags:
+ *       - Recruiter
+ *     summary: POST /candidates/:id/skills
+ *     description: Post operation for /candidates/:id/skills
+ *     responses:
+ *       201:
+ *         $ref: '#/components/responses/Created'
+ *       400:
+ *         $ref: '#/components/responses/ValidationError'
+ *       401:
+ *         $ref: '#/components/responses/UnauthorizedError'
+ *       500:
+ *         $ref: '#/components/responses/InternalServerError'
+  */
 router.post(
   "/candidates/:id/skills",
   asyncHandler(async (req: AuthenticatedRequest, res) => {
@@ -212,6 +266,24 @@ router.post(
   })
 );
 
+/**
+ * @swagger
+ * /pipeline:
+ *   get:
+ *     tags:
+ *       - Recruiter
+ *     summary: GET /pipeline
+ *     description: Get operation for /pipeline
+ *     responses:
+ *       200:
+ *         description: Get operation for /pipeline
+ *       401:
+ *         $ref: '#/components/responses/UnauthorizedError'
+ *       404:
+ *         $ref: '#/components/responses/NotFoundError'
+ *       500:
+ *         $ref: '#/components/responses/InternalServerError'
+  */
 router.get(
   "/pipeline",
   asyncHandler(async (req: AuthenticatedRequest, res) => {
@@ -237,6 +309,24 @@ router.get(
   })
 );
 
+/**
+ * @swagger
+ * /search:
+ *   get:
+ *     tags:
+ *       - Recruiter
+ *     summary: Search candidates
+ *     description: Full-text search across candidate profiles using PostgreSQL with ranking
+ *     responses:
+ *       200:
+ *         description: Full-text search across candidate profiles using PostgreSQL with ranking
+ *       401:
+ *         $ref: '#/components/responses/UnauthorizedError'
+ *       404:
+ *         $ref: '#/components/responses/NotFoundError'
+ *       500:
+ *         $ref: '#/components/responses/InternalServerError'
+  */
 router.get(
   "/search",
   asyncHandler(async (req: AuthenticatedRequest, res) => {
@@ -303,6 +393,24 @@ router.get(
   })
 );
 
+/**
+ * @swagger
+ * /notifications:
+ *   get:
+ *     tags:
+ *       - Recruiter
+ *     summary: List notifications
+ *     description: Retrieve user notifications with read status and timestamps
+ *     responses:
+ *       200:
+ *         description: Retrieve user notifications with read status and timestamps
+ *       401:
+ *         $ref: '#/components/responses/UnauthorizedError'
+ *       404:
+ *         $ref: '#/components/responses/NotFoundError'
+ *       500:
+ *         $ref: '#/components/responses/InternalServerError'
+  */
 router.get(
   "/notifications",
   asyncHandler(async (req: AuthenticatedRequest, res) => {
@@ -335,6 +443,24 @@ router.get(
   })
 );
 
+/**
+ * @swagger
+ * /notifications/:id/read:
+ *   post:
+ *     tags:
+ *       - Recruiter
+ *     summary: Mark notification read
+ *     description: Mark a specific notification as read by the recruiter
+ *     responses:
+ *       201:
+ *         $ref: '#/components/responses/Created'
+ *       400:
+ *         $ref: '#/components/responses/ValidationError'
+ *       401:
+ *         $ref: '#/components/responses/UnauthorizedError'
+ *       500:
+ *         $ref: '#/components/responses/InternalServerError'
+  */
 router.post(
   "/notifications/:id/read",
   asyncHandler(async (req: AuthenticatedRequest, res) => {
@@ -350,6 +476,24 @@ router.post(
   })
 );
 
+/**
+ * @swagger
+ * /settings:
+ *   get:
+ *     tags:
+ *       - Recruiter
+ *     summary: Get user settings
+ *     description: Retrieve user preferences and configuration options
+ *     responses:
+ *       200:
+ *         description: Retrieve user preferences and configuration options
+ *       401:
+ *         $ref: '#/components/responses/UnauthorizedError'
+ *       404:
+ *         $ref: '#/components/responses/NotFoundError'
+ *       500:
+ *         $ref: '#/components/responses/InternalServerError'
+  */
 router.get(
   "/settings",
   asyncHandler(async (req: AuthenticatedRequest, res) => {

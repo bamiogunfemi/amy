@@ -76,7 +76,7 @@ pnpm dev
 
 This will start:
 
-- **API Server**: http://localhost:3000
+- **API Server**: http://localhost:3001
 - **Landing Page**: http://localhost:5173
 - **Recruiter Dashboard**: http://localhost:5174
 - **Admin Dashboard**: http://localhost:5175
@@ -90,7 +90,34 @@ After seeding the database:
 
 ## 🛠️ Development
 
-### Available Scripts
+### Quick Start with Makefile
+
+```bash
+# Show all available commands
+make help
+
+# Complete setup for new developers
+make setup
+
+# Start development (most common)
+make dev                   # Start all apps
+make dev-api              # Start API only
+
+# Database operations
+make db-setup             # Complete DB setup
+make db-studio            # Open Prisma Studio
+
+# Swagger documentation
+make swagger-generate     # Generate API docs
+make swagger-open         # Open docs in browser
+
+# Testing and quality
+make test                 # Run tests
+make lint                 # Lint code
+make build                # Build all apps
+```
+
+### Available Scripts (pnpm)
 
 ```bash
 # Development
@@ -118,6 +145,8 @@ pnpm test:e2e              # Run E2E tests
 pnpm lint                  # Lint all apps
 pnpm type-check            # Type check all apps
 ```
+
+> 💡 **Tip**: Use `make help` to see all available commands, or check [`MAKEFILE_REFERENCE.md`](MAKEFILE_REFERENCE.md) for a quick reference guide.
 
 ### Development Services
 
@@ -225,7 +254,7 @@ Tests cover:
 
 ## 📚 API Documentation
 
-The API server runs on port 3000 with the following endpoints:
+The API server runs on port 3001 with the following endpoints:
 
 - `GET /healthz` - Health check
 - `POST /api/auth/signup` - User registration
@@ -264,7 +293,11 @@ MIT License - see LICENSE file for details.
 - [ ] API rate limiting
 - [ ] Webhook support
 - [ ] Multi-language support
+
 # amy
+
 # amy
+
 # amy
+
 # amy

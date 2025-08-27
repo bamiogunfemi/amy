@@ -21,6 +21,27 @@ const moveSchema = z.object({
   ]),
 });
 
+/**
+ * @swagger
+ * /pipeline/move:
+ *   patch:
+ *     tags:
+ *       - Recruiter Pipeline
+ *     summary: Move candidate in pipeline
+  *     summary: Move candidate in pipeline
+ *     description: Update candidate's position in the recruitment pipeline
+ *     responses:
+ *       200:
+ *         $ref: '#/components/responses/Success'
+ *       400:
+ *         $ref: '#/components/responses/ValidationError'
+ *       401:
+ *         $ref: '#/components/responses/UnauthorizedError'
+ *       404:
+ *         $ref: '#/components/responses/NotFoundError'
+ *       500:
+ *         $ref: '#/components/responses/InternalServerError'
+  */
 router.patch(
   "/pipeline/move",
   asyncHandler(async (req: any, res) => {
