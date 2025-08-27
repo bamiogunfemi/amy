@@ -6,6 +6,47 @@ import { asyncHandler } from "../middleware/errorHandler";
 const router = Router();
 const prisma = new PrismaClient();
 
+/**
+ * @swagger
+ * /:
+ *   get:
+ *     tags:
+ *       - Candidates
+ *     summary: List candidates
+ *     description: Retrieve all candidates owned by the authenticated recruiter with pagination support
+ *     parameters:
+ *       - name: page
+ *         in: query
+ *         description: Retrieve all candidates owned by the authenticated recruiter with pagination support
+ *         schema:
+ *           type: integer
+ *           minimum: 1
+ *           default: 1
+ *       - name: limit
+ *         in: query
+ *         description: Retrieve all candidates owned by the authenticated recruiter with pagination support
+ *         schema:
+ *           type: integer
+ *           minimum: 1
+ *           maximum: 100
+ *           default: 20
+ *     responses:
+ *       200:
+ *         description: Retrieve all candidates owned by the authenticated recruiter with pagination support
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 candidates:
+ *                   type: array
+ *                   items:
+ *                     $ref: '#/components/schemas/Candidate'
+ *       401:
+ *         $ref: '#/components/responses/UnauthorizedError'
+ *       500:
+ *         $ref: '#/components/responses/InternalServerError'
+ */
 router.get(
   "/",
   asyncHandler(async (req: Request, res) => {
@@ -37,6 +78,39 @@ router.get(
   })
 );
 
+/**
+ * @swagger
+ * /:id:
+ *   get:
+ *     tags:
+ *       - Candidates
+ *     summary: Get candidate details
+ *     description: Retrieve detailed information about a specific candidate including skills and documents
+ *     parameters:
+ *       - name: id
+ *         in: path
+ *         required: true
+ *         description: Candidate ID
+ *         schema:
+ *           type: string
+ *           format: uuid
+ *     responses:
+ *       200:
+ *         description: Candidate details retrieved successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 candidate:
+ *                   $ref: '#/components/schemas/Candidate'
+ *       401:
+ *         $ref: '#/components/responses/UnauthorizedError'
+ *       404:
+ *         $ref: '#/components/responses/NotFoundError'
+ *       500:
+ *         $ref: '#/components/responses/InternalServerError'
+ */
 router.get(
   "/:id",
   asyncHandler(async (req: Request, res) => {

@@ -6,6 +6,7 @@ import rateLimit from "express-rate-limit";
 import session from "express-session";
 import passport from "passport";
 import dotenv from "dotenv";
+import swaggerUi from "swagger-ui-express";
 
 import { authRoutes } from "./routes/auth";
 import { recruiterRoutes } from "./routes/recruiter";
@@ -18,6 +19,7 @@ import { searchRoutes } from "./routes/search";
 import { importRoutes } from "./routes/imports";
 import { notificationRoutes } from "./routes/notifications";
 import { userRoutes } from "./routes/users";
+import { specs, swaggerUiOptions } from "./swagger";
 
 dotenv.config();
 
@@ -100,12 +102,38 @@ app.use(passport.session());
 app.use(express.json({ limit: "10mb" }));
 app.use(express.urlencoded({ extended: true, limit: "10mb" }));
 
+/**
+ * @swagger
+ * /health:
+ *   get:
+ *     tags:
+ *       - System
+ *     summary: Health check
+ *     description: Check if the API is running and healthy
+ *     responses:
+ *       200:
+ *         description: API is healthy
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/HealthCheck'
+ *     security: []
+ */
 app.get("/api/health", (req, res) => {
   res.status(200).json({
     status: "OK",
     timestamp: new Date().toISOString(),
     environment: process.env.NODE_ENV || "development",
   });
+});
+
+// Swagger API Documentation
+app.use("/api/docs", swaggerUi.serve, swaggerUi.setup(specs, swaggerUiOptions));
+
+// API Documentation JSON
+app.get("/api/docs.json", (req, res) => {
+  res.setHeader("Content-Type", "application/json");
+  res.send(specs);
 });
 
 app.use("/api/auth", authRoutes);
@@ -139,5 +167,7 @@ app.use(
 app.listen(PORT, () => {
   console.log(`🚀 Server running on port ${PORT}`);
   console.log(`📊 Health check: http://localhost:${PORT}/api/health`);
+  console.log(`📚 API Documentation: http://localhost:${PORT}/api/docs`);
+  console.log(`📄 OpenAPI Spec: http://localhost:${PORT}/api/docs.json`);
   console.log(`🌍 Environment: ${process.env.NODE_ENV || "development"}`);
 });

@@ -20,6 +20,24 @@ const prisma = new PrismaClient();
 
 router.use(requireAdmin());
 
+/**
+ * @swagger
+ * /overview:
+ *   get:
+ *     tags:
+ *       - Admin
+ *     summary: Admin dashboard overview
+ *     description: Get system-wide statistics and metrics for administrative monitoring
+ *     responses:
+ *       200:
+ *         description: Get system-wide statistics and metrics for administrative monitoring
+ *       401:
+ *         $ref: '#/components/responses/UnauthorizedError'
+ *       404:
+ *         $ref: '#/components/responses/NotFoundError'
+ *       500:
+ *         $ref: '#/components/responses/InternalServerError'
+  */
 router.get(
   "/overview",
   asyncHandler(async (req: Request, res) => {
@@ -55,6 +73,24 @@ router.get(
   })
 );
 
+/**
+ * @swagger
+ * /users:
+ *   get:
+ *     tags:
+ *       - Admin
+ *     summary: List all users
+ *     description: Retrieve all users in the system with filtering and pagination options
+ *     responses:
+ *       200:
+ *         description: Retrieve all users in the system with filtering and pagination options
+ *       401:
+ *         $ref: '#/components/responses/UnauthorizedError'
+ *       404:
+ *         $ref: '#/components/responses/NotFoundError'
+ *       500:
+ *         $ref: '#/components/responses/InternalServerError'
+  */
 router.get(
   "/users",
   asyncHandler(async (req: Request, res) => {
@@ -70,6 +106,24 @@ router.get(
   })
 );
 
+/**
+ * @swagger
+ * /users/block:
+ *   post:
+ *     tags:
+ *       - Admin
+ *     summary: Block user account
+ *     description: Suspend user access to the platform while preserving their data
+ *     responses:
+ *       201:
+ *         $ref: '#/components/responses/Created'
+ *       400:
+ *         $ref: '#/components/responses/ValidationError'
+ *       401:
+ *         $ref: '#/components/responses/UnauthorizedError'
+ *       500:
+ *         $ref: '#/components/responses/InternalServerError'
+  */
 router.post(
   "/users/block",
   asyncHandler(async (req: Request, res) => {
@@ -85,6 +139,24 @@ router.post(
   })
 );
 
+/**
+ * @swagger
+ * /users/unblock:
+ *   post:
+ *     tags:
+ *       - Admin
+ *     summary: Unblock user account
+ *     description: Restore user access to the platform after suspension
+ *     responses:
+ *       201:
+ *         $ref: '#/components/responses/Created'
+ *       400:
+ *         $ref: '#/components/responses/ValidationError'
+ *       401:
+ *         $ref: '#/components/responses/UnauthorizedError'
+ *       500:
+ *         $ref: '#/components/responses/InternalServerError'
+  */
 router.post(
   "/users/unblock",
   asyncHandler(async (req: Request, res) => {
@@ -99,6 +171,24 @@ router.post(
   })
 );
 
+/**
+ * @swagger
+ * /users/delete:
+ *   post:
+ *     tags:
+ *       - Admin
+ *     summary: Delete user account
+ *     description: Permanently remove user account and all associated data
+ *     responses:
+ *       201:
+ *         $ref: '#/components/responses/Created'
+ *       400:
+ *         $ref: '#/components/responses/ValidationError'
+ *       401:
+ *         $ref: '#/components/responses/UnauthorizedError'
+ *       500:
+ *         $ref: '#/components/responses/InternalServerError'
+  */
 router.post(
   "/users/delete",
   asyncHandler(async (req: Request, res) => {
@@ -113,6 +203,24 @@ router.post(
   })
 );
 
+/**
+ * @swagger
+ * /companies:
+ *   get:
+ *     tags:
+ *       - Admin
+ *     summary: List companies
+ *     description: Retrieve all companies registered on the platform
+ *     responses:
+ *       200:
+ *         description: Retrieve all companies registered on the platform
+ *       401:
+ *         $ref: '#/components/responses/UnauthorizedError'
+ *       404:
+ *         $ref: '#/components/responses/NotFoundError'
+ *       500:
+ *         $ref: '#/components/responses/InternalServerError'
+  */
 router.get(
   "/companies",
   asyncHandler(async (req: Request, res) => {
@@ -160,6 +268,26 @@ router.post(
   })
 );
 
+/**
+ * @swagger
+ * /companies/:id:
+ *   put:
+ *     tags:
+ *       - Admin
+ *     summary: Update company
+ *     description: Modify company profile information and settings
+ *     responses:
+ *       200:
+ *         $ref: '#/components/responses/Success'
+ *       400:
+ *         $ref: '#/components/responses/ValidationError'
+ *       401:
+ *         $ref: '#/components/responses/UnauthorizedError'
+ *       404:
+ *         $ref: '#/components/responses/NotFoundError'
+ *       500:
+ *         $ref: '#/components/responses/InternalServerError'
+  */
 router.put(
   "/companies/:id",
   asyncHandler(async (req: Request, res) => {
@@ -172,6 +300,24 @@ router.put(
   })
 );
 
+/**
+ * @swagger
+ * /subscriptions/extend-trial:
+ *   post:
+ *     tags:
+ *       - Admin
+ *     summary: Extend trial period
+ *     description: Grant additional trial days to a user account
+ *     responses:
+ *       201:
+ *         $ref: '#/components/responses/Created'
+ *       400:
+ *         $ref: '#/components/responses/ValidationError'
+ *       401:
+ *         $ref: '#/components/responses/UnauthorizedError'
+ *       500:
+ *         $ref: '#/components/responses/InternalServerError'
+  */
 router.post(
   "/subscriptions/extend-trial",
   asyncHandler(async (req: Request, res) => {
@@ -197,6 +343,24 @@ router.post(
   })
 );
 
+/**
+ * @swagger
+ * /skills:
+ *   get:
+ *     tags:
+ *       - Admin
+ *     summary: List skills
+ *     description: Retrieve all skills in the system with categories and usage statistics
+ *     responses:
+ *       200:
+ *         description: Retrieve all skills in the system with categories and usage statistics
+ *       401:
+ *         $ref: '#/components/responses/UnauthorizedError'
+ *       404:
+ *         $ref: '#/components/responses/NotFoundError'
+ *       500:
+ *         $ref: '#/components/responses/InternalServerError'
+  */
 router.get(
   "/skills",
   asyncHandler(async (_req: Request, res) => {
@@ -220,6 +384,26 @@ router.post(
   })
 );
 
+/**
+ * @swagger
+ * /skills/:id:
+ *   put:
+ *     tags:
+ *       - Admin
+ *     summary: Update skill
+ *     description: Modify skill information including name, category, and description
+ *     responses:
+ *       200:
+ *         $ref: '#/components/responses/Success'
+ *       400:
+ *         $ref: '#/components/responses/ValidationError'
+ *       401:
+ *         $ref: '#/components/responses/UnauthorizedError'
+ *       404:
+ *         $ref: '#/components/responses/NotFoundError'
+ *       500:
+ *         $ref: '#/components/responses/InternalServerError'
+  */
 router.put(
   "/skills/:id",
   asyncHandler(async (req: Request, res) => {
@@ -244,6 +428,24 @@ router.delete(
   })
 );
 
+/**
+ * @swagger
+ * /imports:
+ *   get:
+ *     tags:
+ *       - Admin
+ *     summary: List import jobs
+ *     description: Retrieve all data import operations with status and progress information
+ *     responses:
+ *       200:
+ *         description: Retrieve all data import operations with status and progress information
+ *       401:
+ *         $ref: '#/components/responses/UnauthorizedError'
+ *       404:
+ *         $ref: '#/components/responses/NotFoundError'
+ *       500:
+ *         $ref: '#/components/responses/InternalServerError'
+  */
 router.get(
   "/imports",
   asyncHandler(async (req: Request, res) => {
@@ -258,6 +460,24 @@ router.get(
   })
 );
 
+/**
+ * @swagger
+ * /imports/:id/retry:
+ *   post:
+ *     tags:
+ *       - Admin
+ *     summary: Retry failed import
+ *     description: Restart a failed import job with the same configuration
+ *     responses:
+ *       201:
+ *         $ref: '#/components/responses/Created'
+ *       400:
+ *         $ref: '#/components/responses/ValidationError'
+ *       401:
+ *         $ref: '#/components/responses/UnauthorizedError'
+ *       500:
+ *         $ref: '#/components/responses/InternalServerError'
+  */
 router.post(
   "/imports/:id/retry",
   asyncHandler(async (req: Request, res) => {
@@ -269,6 +489,24 @@ router.post(
   })
 );
 
+/**
+ * @swagger
+ * /audit-logs:
+ *   get:
+ *     tags:
+ *       - Admin
+ *     summary: View audit logs
+ *     description: Access system audit trail for security and compliance monitoring
+ *     responses:
+ *       200:
+ *         description: Access system audit trail for security and compliance monitoring
+ *       401:
+ *         $ref: '#/components/responses/UnauthorizedError'
+ *       404:
+ *         $ref: '#/components/responses/NotFoundError'
+ *       500:
+ *         $ref: '#/components/responses/InternalServerError'
+  */
 router.get(
   "/audit-logs",
   asyncHandler(async (req: Request, res) => {
